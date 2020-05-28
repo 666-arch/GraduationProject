@@ -1,0 +1,64 @@
+﻿@using BlogSystem.Dto
+@using PagedList.Mvc
+@model PagedList.IPagedList<ArticleDto>
+@{
+    ViewBag.Title = "ArticleIndex";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+<div class="search-wrap">
+    <div class="search-content">
+        <form action="/jscss/admin/design/index" method="post">
+            <table class="search-tab">
+            </table>
+        </form>
+    </div>
+</div>
+<div class="result-wrap">
+    <form name="myform" id="myform" method="post">
+        <div class="result-title">
+            <div class="result-list">
+                <a href="~/Article/addArticle"><i class="icon-font"></i>新增文章</a>
+                <a id="batchDel" href="javascript:void(0)" onclick="manyArticles_del()"><i class="icon-font"></i>批量删除</a>
+                <a id="updateOrd" href="~/Article/sortByUpdateTime"><i class="icon-font"></i>更新排序</a>
+            </div>
+        </div>
+        <div class="result-content">
+            <table class="result-tab" width="100%" style="text-align:center">
+                <tr style="text-align:center">
+                    <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
+                    <th style="text-align:center">标题</th>
+                    <th style="text-align:center">作者</th>
+                    <th style="text-align:center">发布状态</th>
+                    <th style="text-align:center">更新时间</th>
+                    <th style="text-align:center">操作</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+
+                    var title = item.Title;
+                    if (title.Length > 16)  //最多只取16个字符放在表格中，免得多了，影响布局的美观！
+                    {
+                        title = title.Substring(0, 15) + "...";
+                    }
+                    <tr>
+                        <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
+                        <td>@title</td>
+                        <td>@item.NickName</td>
+                        <td style="width:180px">@(item.State==true?"已发布":"草稿")</td>
+                        <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
+                        <td>
+                            <a class="link-update" href="/Article/DetailArticle?articleid=@item.Id" target="_blank">预览</a>
+                            <a class="link-del" onclick="article_del(@item.Id,this)">删除</a>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+            <div class="list-page">
+                @Html.PagedListPager(Model, page => Url.Action("ArticleIndex", new { page }))
+            </div>
+        </div>
+    </form>
+</div>
+

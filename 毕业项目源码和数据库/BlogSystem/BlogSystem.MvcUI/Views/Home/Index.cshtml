@@ -1,0 +1,138 @@
+﻿@using BlogSystem.Dto
+@using PagedList.Mvc
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutFront.cshtml";
+    var usList = (List<UserInformation>)ViewBag.alluser;
+    var sign = 1;
+}
+<style>
+    .uimg {
+        display: block;
+        width: 45px;
+        height: 45px;
+        margin: 0;
+        border-radius: 2px;
+    }
+</style>
+@model PagedList.IPagedList<ArticleDto>
+@Html.Partial("_PartialHomePart");
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8">
+            <div class="fly-panel">
+                <div class="fly-panel-title fly-filter">
+                    <a>博客热度TOP5（按推荐数排行）</a>
+                    <a href="#signin" class="layui-hide-sm layui-show-xs-block fly-right" id="LAY_goSignin" style="color: #FF5722;">去签到</a>
+                </div>
+                <ul class="fly-list">
+                    @foreach (var item in Model.OrderByDescending(m => m.GoodCount).Take(5)) //访问前五条数据
+                    {
+                        var titlesub = item.Title;
+                        if (titlesub.Length > 15)
+                        {
+                            titlesub = titlesub.Substring(0, 15) + "...";
+                        }
+                        <li>
+                            <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
+                                <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
+                                @titlesub
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
+            <div class="fly-panel" style="margin-bottom: 0;">
+                <div class="fly-panel-title fly-filter">
+                    <a href="" class="layui-this">综合</a>
+                    <span class="fly-filter-right layui-hide-xs">
+                        <a href="" class="layui-this">按最新</a>
+                    </span>
+                </div>
+                <ul class="fly-list">
+                    @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
+                    {
+                        var titlesub = item.Title;
+                        if (titlesub.Length > 15)
+                        {
+                            titlesub = titlesub.Substring(0, 15) + "...";
+                        }
+                        <li>
+                            <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
+                                <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
+                                @titlesub
+                            </a>
+                        </li>
+                    }
+                    <ul>
+                        <div style="text-align: center">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                            每页 @Model.PageSize 篇文章，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
+                        </div>
+                    </ul>
+                </ul>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">统计信息</h3>
+                <ul class="fly-panel-main" style="color:dimgray">
+                    <li>
+                        文章  -   @Model.Count()
+                    </li>
+                    <li>
+                        随笔  -   @ViewBag.catecount
+                    </li>
+                    <li>
+                        博客  -   @ViewBag.ucount
+                    </li>
+                    <li>
+                        评论  -   @ViewBag.ccount
+                    </li>
+                </ul>
+            </div>
+
+            <div class="fly-panel fly-link">
+                <h3 class="fly-panel-title">推荐博客排行（按粉丝数）</h3>
+                @foreach (var item in usList)
+                {
+                    <dl class="fly-panel-main">
+                        <dd>
+                            <span>@sign</span>.<a href="/User/UserHome?userid=@item.Id">@item.NickName</a>
+                        <dd>
+                    </dl>
+                    sign++;
+                }
+            </div>
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    文章热议
+                </div>
+            </div>
+
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    这里可作为广告区域
+                </div>
+                <div class="fly-panel-main">
+                    @*<a href="http://layim.layui.com/?from=fly" target="_blank" class="fly-zanzhu" time-limit="2017.09.25-2099.01.01" style="background-color: #5FB878;">LayIM 3.0 - layui 旗舰之作</a>*@
+                </div>
+            </div>
+
+            <div class="fly-panel fly-link">
+                <h3 class="fly-panel-title">友情链接</h3>
+                @foreach (var item in ViewBag.links)
+                {
+                    <dl class="fly-panel-main">
+                        <dd>
+                            <a href="@item.Url" target="_blank">@item.Title</a>
+                        <dd>
+                    </dl>
+                }
+            </div>
+        </div>
+    </div>
+</div>

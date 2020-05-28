@@ -1,0 +1,95 @@
+﻿@using BlogSystem.Dto
+@using PagedList.Mvc
+@model PagedList.IPagedList<UserInformation>
+@{
+    ViewBag.Title = "UserIndex";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#btnSearch').click(function () {
+            if (!$('#email').val()) {
+                alert('请输入你要查询的内容')
+                return;
+            } else {
+                $.ajax({
+                    type: "get",
+                    url: "UserIndex",
+                    data: $("#form-search").serialize(),
+                    success: function () {
+
+                    }
+                })
+            }
+        })
+    })
+</script>
+<div class="result-wrap">
+    <form id="form-search">
+        <div class="result-title">
+            <div class="result-list">
+                <div class="layui-form-item">
+                    <input type="text" id="email" name="email" value="" placeholder="输入邮箱"/>
+                    <input type="text" id="nickname" name="nickname" value="" placeholder="输入昵称" />
+                </div>
+                <input type="button" id="btnSearch" name="name" value="查询" class="admin_input_style" />
+                <a id="batchDel" href="javascript:void(0)" onclick="manyUsers_del()"><i class="icon-font"></i>批量删除</a>
+            </div>
+        </div>
+    </form>
+        <div class="result-content">
+            <table class="result-tab" width="100%">
+                <tr>
+                    <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
+                    <th>头像</th>
+                    <th>邮箱</th>
+                    <th>昵称</th>
+                    <th>密码</th>
+                    <th>个人说明</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
+                        <td>
+                            <img src="~/FrontPage/images/@item.ImagePath" style="width:50px;height:50px;" />
+                        </td>
+                        <td>@item.Eamil</td>
+                        <td>@item.NickName</td>
+                        <td>@item.Password</td>
+                        <td>@item.PersonalDescription</td>
+                        <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
+                        <td>
+                            <a class="link-update" href="#" onclick="updateLayer('@item.Id')">修改</a>
+                            <a class="link-del" href="#" onclick="user_del('@item.Id',this)">删除</a>
+                        </td>
+                    </tr>
+                }
+
+            </table>
+            <div class="list-page">
+
+                每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
+                @Html.PagedListPager(Model, page => Url.Action("UserIndex", new { page }))
+            </div>
+        </div>
+</div>
+
+<script>
+    function updateLayer(id)
+    {
+        layer.open({
+            type: 2,
+            title: "修改用户密码",
+            maxmin: true,
+            shadeClose: true,
+            area:['510px', '460px'],
+            content: 'EditUserAdmin?id=' + id
+        });
+    }
+</script>
+

@@ -1,0 +1,185 @@
+﻿@using BlogSystem.Dto
+@{
+    ViewBag.Title = "CreateArticle";
+    Layout = "~/Views/Shared/_LayoutFront.cshtml";
+}
+@model List<BlogCategoryDto>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<div class="layui-container fly-marginTop">
+    <div class="fly-panel" pad20 style="padding-top: 5px;">
+        <!--<div class="fly-none">没有权限</div>-->
+        <div class="layui-form layui-form-pane">
+            <div class="layui-tab layui-tab-brief" lay-filter="user">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">发布博客</li>
+                    <li data-type="collection" lay-id="collection">编辑分类</li>
+                </ul>
+                <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+                    <div class="layui-tab-item layui-show">
+                        @* 用户发布文章区域 *@
+                        <form id="article-add" name="article-add" enctype="multipart/form-data">
+                            <div class="layui-row layui-col-space15 layui-form-item">
+                                <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
+                                <div class="layui-col-md9">
+                                    <label for="title" class="layui-form-label">标题</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="title" name="title" maxlength="80" required lay-verify="required" autocomplete="off" class="layui-input" placeholder="标题限制80个字符">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-input-block">
+                                    <textarea id="editor" name="content" type="text/plain" style="width:1024px;height:500px;"></textarea>
+                                </div>
+                            </div>
+
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>选择分类</legend>
+                            </fieldset>
+                            @foreach (var item in Model)
+                            {
+                                <input name="categoryIds" type="checkbox" value="@item.Id" style="display:inline"> <label for="checkbox1">@item.CategoryName</label>
+                            }
+                            <br />
+                            <br />
+
+                            <div class="layui-form-item">
+                                <button class="layui-btn" type="button" lay-filter="*" lay-submit id="btnAdd">立即发布</button>
+                                <button class="layui-btn" type="button" lay-filter="*" lay-submit id="btnDraft">保存草稿</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="layui-tab-item ">
+                        <table class="layui-table" lay-even="" lay-skin="nob">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="100">
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>@item.CategoryName</td>
+                                        <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
+                                        <td>
+                                            <a href="#" class="link-update" onclick="updateLayer('@item.Id')">编辑</a>
+                                        </td>
+                                        <td>
+                                            <a href="/Article/RemoveCategoryByUser?cateid=@item.Id" onclick="return confirm('你确定要删除这个分类吗？')">删除</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+
+                        </table>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>添加分类</legend>
+                        </fieldset>
+                        <label class="layui-form-label">名称</label>
+                        <form id="form-add-categoryname" name="form-add-categoryname" enctype="multipart/form-data">
+                            <div class="layui-input-block">
+                                <input type="hidden" id="uid" name="userid" value="@Session["Userid"]" />
+                                <input type="text" id="categoryname" name="categoryname" autocomplete="off" placeholder="请输入分类名称" class="layui-input" style="width:300px;">
+                            </div>
+                            <br />
+                            <br />
+                            <button class="layui-btn" type="submit" id="btnAddCategoryname">添加</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var ue = UE.getEditor('editor');
+</script>
+<script>
+    $("#btnAdd").click(function () {
+        if (!$('#title').val()) {
+            alert("请输入标题！");
+            return;
+        }
+        else {
+            $.ajax({
+                type: "post",
+                url: "CreateArticle",
+                data: $("#article-add").serialize(),
+                dataType: "json",
+                success: function (msg) {
+                    alert('保存成功');
+                }
+            });
+        }
+    });
+</script>
+<script>
+    $("#btnDraft").click(function () {
+        if (!$('#title').val()) {
+            alert("请输入标题！");
+            return;
+        }
+        else {
+            $.ajax({
+                type: "post",
+                url: "IsCreateArticle",
+                data: $("#article-add").serialize(),
+                dataType: "json",
+                success: function (msg) {
+                    alert('添加成功')
+                }
+            });
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#btnAddCategoryname").click(function () {
+            if (!$('#categoryname').val()) {
+                alert("请输入您要添加的类别！");
+                return;
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/Article/CreateBlogCategory",
+                    data: $("#form-add-categoryname").serialize(),
+                    success: function (msg) {
+                        if (msg.status) {
+                            layer.msg(msg.data, { icon: 1 });
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script>
+    SyntaxHighlighter.all();
+</script>
+<script type="text/javascript">
+    function updateLayer(id) {
+        layer.open({
+            type: 2,
+            title: "修改标签类别",
+            maxmin: false,
+            shadeClose: true,
+            area: ['550px', '400px'],
+            content: 'EditCategoryByuser?id=' + id
+        })
+    }
+</script>

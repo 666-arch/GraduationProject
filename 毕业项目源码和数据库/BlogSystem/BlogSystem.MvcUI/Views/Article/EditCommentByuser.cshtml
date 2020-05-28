@@ -1,0 +1,52 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnUpdate").click(function () {
+                if (!$('#content').val()) {
+                    alert('请输入你的评论信息');
+                    return;
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "EditCommentByuser",
+                        data: $("#form-comment-update").serialize(),
+                        success: function () {
+                            alert('修改成功');
+                            //让打开这个窗口的父窗口刷新,然后本子窗口关闭
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }
+                    })
+                }
+            })
+        })
+
+    </script>
+    <title>EditComment</title>
+</head>
+<body>
+    <div class="" style="align-items:center;padding:40px;">
+        <form id="form-comment-update" method="post">
+            <div class="form-group">
+                <label for="content">评论信息:</label>
+                <input type="hidden" id="cid" name="cid" value="@ViewBag.id" />
+                <input type="text" class="form-control" id="content" name="content" style="width:300px;" value="@ViewBag.conten "/>
+            </div>
+            <button type="button" class="btn btn-warning" style="margin-right:30px;" id="btnUpdate">保存修改</button>
+        </form>
+    </div>
+</body>
+</html>

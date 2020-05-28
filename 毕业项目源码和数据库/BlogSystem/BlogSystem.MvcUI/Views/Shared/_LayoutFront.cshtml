@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/FrontPage/res/layui/css/layui.css" rel="stylesheet" />
+    <link href="~/FrontPage/res/css/global.css" rel="stylesheet" />
+    <script src="~/Content/ueditor/ueditor.config.js"></script>
+    <script src="~/Content/ueditor/ueditor.all.min.js"></script>
+    <script src="~/Content/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script src="~/Content/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
+    <link href="~/Content/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div class="fly-header layui-bg-black">
+        <div class="layui-container">
+            @* 未登录显示登录、注册按钮 *@
+            @if (Session["Userid"] == null)
+            {
+                <ul class="layui-nav fly-nav-user">
+                    <!-- 未登入的状态 -->
+                    <li class="layui-nav-item">
+                        <a class="iconfont icon-touxiang layui-hide-xs" href="user/login.html"></a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/User/Login">登入</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/User/Register">注册</a>
+                    </li>
+                </ul>
+            }
+            else
+            {
+                <a class="fly-logo" href="/Home/Index" style="color:ghostwhite">
+                    学智博客
+                </a>
+                <ul class="layui-nav fly-nav-user">
+                    <!-- 登入后的状态 -->
+                    <li class="layui-nav-item">
+                        <a class="fly-nav-avatar" href="javascript:;">
+                            <cite class="layui-hide-xs">@Session["Nickname"]</cite>
+                            <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：@Session["Nickname"]"></i>
+                            <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
+                            <img src="~/FrontPage/images/@Session["defaultPhoto"]" style="width:36px;height:36px;margin-left:10px;border-radius: 100%;" />
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd><a href="/User/BasicSetting?userid=@Session["Userid"] "><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
+                            <dd><a href=""><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>
+                            <dd><a href="/User/UserHome?userid=@Session["Userid"]"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>
+
+                            <dd><a href="/User/DestructionLog" style="text-align: center;">退出</a></dd>
+                        </dl>
+                    </li>
+                </ul>
+            }
+        </div>
+    </div>
+    <div>
+        @RenderBody()
+    </div>
+
+    <div class="fly-footer">
+        <p><a href="" target="_blank"></a>博客首页 2020 &copy; <a href="" target="_blank">学智博客 出品</a></p>
+        <p>
+            <a href="" target="_blank">学智计划</a>
+            <a href="" target="_blank">微信公众号</a>
+        </p>
+    </div>
+    <script src="~/FrontPage/res/layui/layui.js"></script>
+    <script>
+        layui.use('element', function () {
+            var $ = layui.jquery
+                , element = layui.element; //依赖element模块
+            //触发事件
+            var active = {
+                tabAdd: function () {
+                    //新增一个Tab项
+                    element.tabAdd('demo', {
+                        title: '新选项' + (Math.random() * 1000 | 0)
+                        , content: '内容' + (Math.random() * 1000 | 0)
+                        , id: new Date().getTime()
+                    })
+                }
+                , tabDelete: function (othis) {
+                    //删除指定Tab项
+                    element.tabDelete('demo', '44');
+
+
+                    othis.addClass('layui-btn-disabled');
+                }
+                , tabChange: function () {
+                    //切换到指定Tab项
+                    element.tabChange('demo', '22');
+                }
+            };
+
+            $('.site-demo-active').on('click', function () {
+                var othis = $(this), type = othis.data('type');
+                active[type] ? active[type].call(this, othis) : '';
+            });
+
+            //Hash地址的定位
+            var layid = location.hash.replace(/^#test=/, '');
+            element.tabChange('test', layid);
+
+            element.on('tab(test)', function (elem) {
+                location.hash = 'test=' + $(this).attr('lay-id');
+            });
+
+        });
+
+        layui.use('upload', function () {
+            var $ = layui.jquery
+                , upload = layui.upload;
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#test1'
+                , url: 'Upload?userid=@Session["Userid"]'
+                , before: function (obj) {
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function (index, file, result) {
+                        $('#demo1').attr('src', result); //图片链接（base64）
+                    });
+                }
+                , done: function (res) {
+                    //如果上传失败
+                    if (res.code > 0) {
+                        return layer.msg('上传失败');
+                    }
+                    //上传成功
+                }
+            });
+        });
+    </script>
+    @Scripts.Render("~/bundles/jquery")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

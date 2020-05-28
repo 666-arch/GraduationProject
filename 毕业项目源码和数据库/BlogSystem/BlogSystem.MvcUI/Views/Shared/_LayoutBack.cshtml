@@ -1,0 +1,70 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link href="~/BackPage/css/common.css" rel="stylesheet" />
+    <link href="~/BackPage/css/main.css" rel="stylesheet" />
+    <script src="~/BackPage/js/modernizr.min.js"></script>
+    <script src="~/BackPage/js/jquery-3.2.1.js"></script>
+    <script src="~/BackPage/js/layer.js"></script>
+    <link href="~/BackPage/css/layer.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="topbar-wrap white">
+        <div class="topbar-inner clearfix">
+            <div class="topbar-logo-wrap clearfix">
+                <h1 class="topbar-logo none"><a href="~/Admin/Index" class="navbar-brand">后台管理</a></h1>
+                <ul class="navbar-list clearfix">
+                    <li><a class="on" href="">学智博客后台管理</a></li>
+                    <li><a href="/Home/Index" target="_blank">网站首页</a></li>
+                </ul>
+            </div>
+            <div class="top-info-wrap">
+                <ul class="top-info-list clearfix">
+                    <li><a href="#">@Session["account"]</a></li>
+                    <li><a href="/Admin/ModifyPasswd?adminId=@Session["adminId"]">修改密码</a></li>
+                    <li><a href="/Admin/Logout">退出</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container clearfix">
+        <div class="sidebar-wrap">
+            <div class="sidebar-title">
+                <h1>菜单</h1>
+            </div>
+            <div class="sidebar-content">
+                <ul class="sidebar-list">
+                    <li>
+                        <a href="#"><i class="icon-font">&#xe003;</i>常用操作</a>
+                        <ul class="sub-menu">
+                            <li><a href="/Admin/ArticleIndex"><i class="icon-font">&#xe008;</i>文章管理</a></li>
+                            <li><a href="/Admin/LinkIndex"><i class="icon-font">&#xe004;</i>链接管理</a></li>
+                            <li><a href="/Admin/UserIndex"><i class="icon-font">&#xe012;</i>用户管理</a></li>
+                            <li><a href="/Admin/Index"><i class="icon-font">&#xe013;</i>管理员管理</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--/sidebar-->
+        <div class="main-wrap">
+            @RenderBody()
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript">
+    function addLayer() {
+        layer.open({
+            type: 2,//设置层类型,2:iframe层
+            title: '新增用户',//信息标题
+            maxmin: true,//窗口是否显示最大化最小化
+            shadeClose: false,//是否通过点击关闭遮罩层
+            area: ['550px', '400px'],//iframe长宽
+            content: 'CreateAdmin'//可用传入任意类型,这里是一个URL
+        });
+    }
+</script>

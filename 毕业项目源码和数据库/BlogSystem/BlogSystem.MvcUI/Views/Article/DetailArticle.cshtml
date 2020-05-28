@@ -1,0 +1,274 @@
+﻿@using BlogSystem.Dto
+@{
+    ViewBag.Title = "DetailArticle";
+    Layout = "~/Views/Shared/_LayoutFront.cshtml";
+}
+@model List<CommentDto>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+@Html.Partial("_PartialHomePart");
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md8 content detail">
+            <div class="fly-panel detail-box">
+                <h1> @ViewBag.atitle </h1>
+                <div class="fly-detail-info">
+
+                    <span class="layui-badge layui-bg-green fly-detail-column">博文</span>
+
+                    <span class="fly-list-nums">
+                        <a href="#comment"><i class="iconfont" title="评论">&#xe60c;</i>评论 @Model.Count()</a>
+                        <i class="iconfont" title="推荐">&#xe63b;</i>@ViewBag.agoodc
+                    </span>
+                </div>
+                <div class="detail-about">
+                    <a class="fly-avatar" href="/User/UserHome">
+                        <img src="~/FrontPage/images/@ViewBag.uimg"  style="display: block;
+                                    width: 45px;
+                                    height: 45px;
+                                    margin: 0;
+                                    border-radius:50%;">
+                    </a>
+                    <div class="fly-detail-user">
+                        <a href="/User/UserHome?userid=@ViewBag.uid" class="fly-link">
+                            <cite>@ViewBag.auser</cite>
+                            <i class="iconfont icon-renzheng" title="认证信息：{{ rows.user.approve }}"></i>
+                            <i class="layui-badge fly-badge-vip">VIP3</i>
+                        </a>
+                        <span>@ViewBag.createtime</span>
+                    </div>
+                    <div class="detail-hits" id="LAY_jieAdmin" data-id="123">
+                        @if (Session["Userid"] != null && Guid.Parse(Session["Userid"].ToString()) == @ViewBag.uid)
+                        {
+                            <span class="layui-btn layui-btn-xs jie-admin" type="edit"><a href="/Article/EditArticle?articleid=@ViewBag.actid&cateids=@ViewBag.acateid">编辑博客</a></span>
+                        }
+                    </div>
+                </div>
+                <div class="detail-body photos">
+                    <div>
+                        @Html.Raw(ViewBag.acontent)
+                    </div>
+                    随笔分类
+                    <p>
+                        @foreach (var item in ViewBag.acatename)
+	                    {
+		                    @item @:&nbsp;&nbsp;
+	                    }
+                        
+                            @*@if (Session["Userid"] != null && Guid.Parse(Session["Userid"].ToString()) == @ViewBag.uid)
+                            {
+                                @:你还没有选择分类...
+                            }
+                            else
+                            {
+                                @:他还没有选择分类
+                            }*@
+                    </p>
+                </div>
+            </div>
+
+            <div class="fly-panel detail-box" id="flyReply">
+                <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+                    <legend>评论</legend>
+                </fieldset>
+                <ul class="jieda" id="jieda">
+                    <li>
+                        @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
+                        {
+
+                            <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size:16px;">
+                                @item.NickName
+                            </a>
+                            <br />
+                            <span>
+                                @item.Content
+                                @item.CreateTime
+                            </span>
+                            <br />
+                            if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
+                            {
+                                <a href="/Article/RemoveCommentByUser?commentid=@item.Id" class="cm-link" onclick="return confirm('你确定要删除你的评论吗？')">删除评论</a>
+                                @*<input type="button" onclick="AddTextareaValue('@item.Content','@item.Id')" class="cm-link" value="修改评论"/>*@
+                                <a href="#" class="link-update" onclick="updateLayer('@item.Id')">修改</a>
+                                <hr />
+                            }
+                        }
+                    </li>
+                </ul>
+
+                <div class="layui-form layui-form-pane">
+                    <form id="form-comment-add" name="form-comment-add" enctype="multipart/form-data">
+                        <div class="layui-form-item layui-form-text">
+                            <input type="hidden" id="coID" name="coID" />
+                            <input type="hidden" id="articleid" name="articleid" value="@ViewBag.actid " />
+                            <a name="comment"></a>
+                            <div class="layui-input-block">
+                                <textarea id="content" name="content" required lay-verify="required" placeholder="请输入内容(字符限制50)" class="layui-textarea fly-editor" style="height: 150px;" maxlength="25"></textarea>
+                            </div>
+                            <script>
+                                $("#btnAddcomment").click(function () {
+                                    if ($("#content").val()) {
+                                        alert('请输入评论!');
+                                        return;
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div class="layui-form-item">
+                            <input class="layui-btn" type="submit" lay-filter="*" lay-submit id="btnAddcomment" value="提交评论">
+                        </div>
+                    </form>
+                </div>
+                @if (ViewBag.astate == true&&Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
+                {
+                    <form>
+                        <input type="button" id="Recommend" name="Recommend" value="推荐" />
+                        <input type="submit" id="Opposition" name="Opposition" value="反对" />
+                    </form>
+                }
+
+                <a id="aa" href="#top" target="_self">返回顶部</a>
+                <script>
+                    $(function () {
+                        $("#aa").click(function () {
+                            $("html,body").animate({ scrollTop: 0 }, 1000);
+                        });
+                    })
+                </script>
+            </div>
+        </div>
+        <div class="layui-col-md4">
+            <dl class="fly-panel fly-list-one">
+                <dt class="fly-panel-title">本周热议</dt>
+                @*@foreach (var item in ViewBag.comms as List<CommentDto>)
+                {
+                    @item.Title
+                }*@
+            </dl>
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    本月热议文章
+                </div>
+                <div class="fly-panel-main">
+
+                </div>
+            </div>
+
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    这里可作为广告区域
+                </div>
+                <div class="fly-panel-main">
+                    <a href="http://layim.layui.com/?from=fly" target="_blank" class="fly-zanzhu" time-limit="2017.09.25-2099.01.01" style="background-color: #5FB878;">LayIM 3.0 - layui 旗舰之作</a>
+                </div>
+            </div>
+
+            <div class="fly-panel" style="padding: 20px 0; text-align: center;">
+                <img src="../../res/images/weixin.jpg" style="max-width: 100%;" alt="layui">
+                <p style="position: relative; color: #666;">微信扫码关注 layui 公众号</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $("#btnAddcomment").click(function () {
+        if (!$("#content").val()) {
+            alert('请输入评论');
+            return;
+        }
+        else
+        {
+            $.ajax({
+                type: "post",
+                url: "CreateComment",
+                data: $("#form-comment-add").serialize(),
+                success: function (msg) {
+                    if (msg.status=1) {
+                        msg.layer(msg.data);
+                        window.location.reload(); //刷新
+                    }
+                }
+            })
+        }
+    })
+</script>
+
+<script>
+    $("#Recommend").click(function () {
+        $.ajax({
+            type: "post",
+            url: "Recommend",
+            data: {
+                articleid: $("#articleid").val()
+            },
+            success: function () {
+                alert('推荐成功！');
+                window.location.reload();
+                $("#Recommend").attr("disabled",true);
+            }
+        })
+    })
+</script>
+
+<script>
+    $("#Opposition").click(function () {
+        $.ajax({
+            type: "post",
+            url: "Opposition",
+            data: {
+                articleid: $("#articleid").val()
+            },
+            success: function () {
+                alert('反对成功！');
+                window.location.reload();
+                $("#Opposition").attr("disabled", true);
+            }
+        })
+    })
+</script>
+
+<script>
+    function AddTextareaValue(value, cID) {
+        var content = value;    //获得当前评论的内容
+        document.getElementById("content").value = content;
+        document.getElementById("btnAddcomment").value = '修改评论';
+        document.getElementById("btnAddcomment").id = 'EditComment';  //动态改变id值
+        document.getElementById("coID").value = cID;
+    }
+</script>
+
+<script type="text/javascript">
+    function updateLayer(id)
+        {
+            layer.open({
+                type: 2,
+                title: '修改评论信息',
+                maxmin: false,
+                shadeClose: true,
+                area: ['550px', '400px'],
+                content: 'EditCommentByuser?id=' + id
+            });
+        }
+    
+
+    //$("#EditComment").click(function () {
+    //    if (!$("#content").val()) {
+    //        alert('请输入评论');
+    //        return;
+    //    }
+    //    else
+    //    {
+    //        $.ajax({
+    //            type: "post",
+    //            url: "EditCommentByUser",
+    //            data: $("#form-comment-add").serialize(),
+    //            success: function (msg) {
+    //                if (msg.status=1) {
+    //                    msg.layer(msg.data);
+    //                    window.location.reload(); //刷新
+    //                }
+    //            }
+    //        })
+    //    }
+    //})
+</script>

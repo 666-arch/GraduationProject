@@ -1,0 +1,243 @@
+﻿@using BlogSystem.Dto
+@{
+    ViewBag.Title = "UserHome";
+    Layout = "~/Views/Shared/_LayoutFront.cshtml";
+    var commlist = (List<CommentDto>)ViewBag.commlist;
+
+}
+@model List<ArticleDto>
+@{
+    int now = DateTime.Now.Day;
+
+    //teTime sta = ViewBag.createtime;
+}
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script>
+    $(function () {
+        $('#form1').submit(function () {
+            var postdata = $("#form1").serialize();
+            $.ajax({
+                type: "post",
+                url: "CreateAttention",
+                data: postdata,
+                success: function () {
+                    alert('关注成功');
+                    window.location.reload(); //刷新?
+                }
+            })
+        })
+    })
+</script>
+
+<script>
+    $(function () {
+        $('#form2').submit(function () {
+            var postdata = $("#form2").serialize();
+            $.ajax({
+                type: "post",
+                url: "Unfollow",
+                data: postdata,
+                success: function () {
+                    alert('取消成功');
+                    window.location.reload(); //刷新?
+                }
+            })
+        })
+    })
+</script>
+
+<div class="fly-home fly-panel" style="background-image: url();">
+    <img src="~/FrontPage/images/@ViewBag.img" alt="@ViewBag.nickname" style="width:120px;height:120px;border-radius: 100%;">
+    <i class="iconfont icon-renzheng" title="学智博客认证"></i>
+    <h1>
+        @ViewBag.nickname
+    </h1>
+
+    <p style="padding: 10px 0; color: #5FB878;">认证信息：用户</p>
+
+    <p class="fly-home-info">
+        <i class="iconfont icon-shijian"></i><span>@(ViewBag.createtimes.ToString("yyyy-MM-dd"))</span>
+    </p>
+    <p class="fly-home-sign">@ViewBag.perdesc</p>
+
+    <div class="fly-sns" data-user="">
+
+        @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString()))  //通过当前登录人和当前页面查询出的用户id对比,动态显示用户主页
+        {
+            <a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" data-type="addFriend" onclick="return confirm('完善个人信息可能会吸引到粉丝哦！')">求关注</a>
+        }
+        else
+        {
+            if (ViewBag.fCount == 0)
+            {
+                <form id="form1" onsubmit="return false;">
+                    <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
+                    <input type="hidden" id="focusid" name="focusid" value="@ViewBag.uid" />
+                    <input type="submit" id="btn-submit" value="关注ta" class="layui-btn layui-btn-primary fly-imActive" />
+                </form>
+            }
+            foreach (var item in ViewBag.fansCount)
+            {
+                if (item.UserId == Guid.Parse(Session["Userid"].ToString()) && item.FocusUserId == ViewBag.uid)
+                {
+                    <form id="form2" onsubmit="return false;">
+                        <input type="hidden" id="userids" name="userid" value="@Session["Userid"]" />
+                        <input type="hidden" id="focusids" name="focusid" value="@ViewBag.uid" />
+                    <input type="submit" id="btn-unfollow" value="取消关注" class="layui-btn layui-btn-primary fly-imActive" />
+                    </form>
+                }
+            }
+        }
+
+    </div>
+</div>
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space15">
+        <div class="layui-col-md6 fly-home-jie">
+            <div class="fly-panel">
+                <h3 class="fly-panel-title">@ViewBag.nickname 最近发表</h3>
+                <ul class="jie-row">
+                    @foreach (var item in Model.Where(m=>m.State==true).OrderByDescending(m => m.CreateTime))
+                    {
+                        
+                        var tit = item.Title;
+                        <li>
+                            <a href="/Article/DetailArticle?articleid=@item.Id" class="jie-title">
+                                @* 截取标题前15个字 *@
+                                @if (tit.Length > 15)
+                                {
+                                    @(item.Title.Substring(0, 15) + "...")
+                                }
+                                else
+                                {
+                                    @item.Title
+                                }
+                            </a>
+                            <i></i>
+                            <em class="layui-hide-xs">@(item.GoodCount)推荐/@(item.BadCount)反对</em>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="layui-col-md6 fly-home-da">
+            <div class="fly-panel">
+                <ul class="home-jieda">
+                    <li>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>我的公告</legend>
+                        </fieldset>
+                        昵称：@ViewBag.nickname <br />
+                        学龄：@(now - ViewBag.createtime) 天 <br />
+                        粉丝：@ViewBag.fansListCount 人   <br />
+                        关注：@ViewBag.focusListCount  人
+                    </li>
+
+                    <li>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>随笔档案</legend>
+                            @foreach (var item in Model.Where(m => m.State == true).GroupBy(m => m.CreateTime.ToString("yyyy-MM-dd")))  //草稿箱不在考虑范围内
+                            {
+                  
+                                <span style="color:lightcoral">
+                                     @item.Key.AsDateTime().ToString("yyyy-MM-dd") (@Model.Count())
+                                </span>
+                            }
+                        </fieldset>
+                    </li>
+
+                    <li>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>推荐排行</legend>
+                            @foreach (var item in Model.Where(m => m.State == true).OrderByDescending(m => m.GoodCount))
+                            {
+
+                                var tit = item.Title;
+                                <a href="/Article/DetailArticle?articleid=@item.Id" class="jie-title">
+                                    @if (tit.Length > 15)
+                                    {
+                                        @(item.Title.Substring(0, 15) + "...")
+                                    }
+                                    else
+                                    {
+                                        @item.Title
+                                    }
+                                </a>
+                                <i></i>
+                                <span class="layui-hide-xs" style="color:gray;font-size:10px;">@(item.GoodCount)推荐/@(item.BadCount)反对</span> <br />
+                            }
+                        </fieldset>
+                    </li>
+                    @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString())||ViewBag.uid!=null)
+                    {
+                        <li>
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>最新评论</legend>
+                                @foreach (var item in commlist)
+                                {
+                                    foreach (var items in Model)
+                                    {
+                                        if (item.ArticleId == items.Id)
+                                        {
+                                            //var tit = item.Title;
+                                            <i></i>
+                                            <span class="layui-hide-xs" style="color:gray;font-size:10px;">@item.Content</span>@item.CreateTime <br />
+                                            <a href="/Article/DetailArticle?articleid=@item.ArticleId" class="jie-title">
+                                                @items.Title
+                                            </a>
+                                            <a href="/User/UserHome?userid=@item.UserId">
+                                                @item.NickName
+                                            </a>
+                                            <br />
+                                        }
+                                    }
+                                }
+                            </fieldset>
+                        </li>
+                    }
+
+                    <li>
+                        @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString()))
+                        {
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>草稿箱（可编辑发布）</legend>
+                                @foreach (var item in Model.Where(m => m.State == false))
+                                {
+                                    var tit = item.Title;
+                                    <a href="/Article/DetailArticle?articleid=@item.Id" class="jie-title">
+                                        @if (tit.Length > 15)
+                                        {
+                                            @(item.Title.Substring(0, 15) + "...")
+                                        }
+                                        else
+                                        {
+                                            @item.Title
+                                        }
+                                    </a>
+                                    <i></i>
+                                    <span class="layui-hide-xs" style="color:gray;font-size:10px;">@(item.GoodCount)推荐/@(item.BadCount)反对</span> <br />
+                                }
+                            </fieldset>
+                        }
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@*<script>
+    function SearchLayer(atime,userid) {
+        layer.open({
+            type: 2,//设置层类型,2:iframe层
+            title: '查看文章',//信息标题
+            maxmin: true,//窗口是否显示最大化最小化
+            shadeClose: false,//是否通过点击关闭遮罩层
+            area: ['550px', '400px'],//iframe长宽
+            content: 'ArticleGpBytime?atime=&userid=',atime,userid//可用传入任意类型,这里是一个URL
+        });
+    }
+</script>*@
