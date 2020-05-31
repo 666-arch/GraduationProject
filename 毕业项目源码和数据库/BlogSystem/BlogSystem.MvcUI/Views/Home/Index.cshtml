@@ -5,7 +5,10 @@
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutFront.cshtml";
     var usList = (List<UserInformation>)ViewBag.alluser;
+    var coList = (List<CommentDto>)ViewBag.coList;
+    var articleTocate = (List<ArticleToBlogcateDto>)ViewBag.articleTocateList;
     var sign = 1;
+
 }
 <style>
     .uimg {
@@ -22,28 +25,28 @@
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
-            <div class="fly-panel">
-                <div class="fly-panel-title fly-filter">
-                    <a>博客热度TOP5（按推荐数排行）</a>
-                    <a href="#signin" class="layui-hide-sm layui-show-xs-block fly-right" id="LAY_goSignin" style="color: #FF5722;">去签到</a>
-                </div>
-                <ul class="fly-list">
-                    @foreach (var item in Model.OrderByDescending(m => m.GoodCount).Take(5)) //访问前五条数据
-                    {
-                        var titlesub = item.Title;
-                        if (titlesub.Length > 15)
+            @*<div class="fly-panel">
+                    <div class="fly-panel-title fly-filter">
+                        <a>博客热度TOP5（按推荐数排行）</a>
+                        <a href="#signin" class="layui-hide-sm layui-show-xs-block fly-right" id="LAY_goSignin" style="color: #FF5722;">去签到</a>
+                    </div>
+                    <ul class="fly-list">
+                        @foreach (var item in Model.OrderByDescending(m => m.GoodCount).Take(5)) //访问前五条数据
                         {
-                            titlesub = titlesub.Substring(0, 15) + "...";
+                            var titlesub = item.Title;
+                            if (titlesub.Length > 15)
+                            {
+                                titlesub = titlesub.Substring(0, 15) + "...";
+                            }
+                            <li>
+                                <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
+                                    <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
+                                    @titlesub
+                                </a>
+                            </li>
                         }
-                        <li>
-                            <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
-                                <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
-                                @titlesub
-                            </a>
-                        </li>
-                    }
-                </ul>
-            </div>
+                    </ul>
+                </div>*@
 
             <div class="fly-panel" style="margin-bottom: 0;">
                 <div class="fly-panel-title fly-filter">
@@ -107,19 +110,45 @@
                     sign++;
                 }
             </div>
-            <div class="fly-panel">
-                <div class="fly-panel-title">
-                    文章热议
-                </div>
+
+            <div class="fly-panel fly-link">
+                <h3 class="fly-panel-title">随笔分类</h3>
+                @foreach (var item in articleTocate
+                .GroupBy(m => m.CateName, m => m.BlogCategoryId)
+                .Select(m => new { CateName = m.Key, Count = m.Count() }))
+                {
+                    <dl class="fly-panel-main">
+                        <dd>
+                            <a href="#">@item.CateName (@item.Count)</a>
+                        <dd>
+                    </dl>
+
+                }
             </div>
 
-            <div class="fly-panel">
-                <div class="fly-panel-title">
-                    这里可作为广告区域
-                </div>
-                <div class="fly-panel-main">
-                    @*<a href="http://layim.layui.com/?from=fly" target="_blank" class="fly-zanzhu" time-limit="2017.09.25-2099.01.01" style="background-color: #5FB878;">LayIM 3.0 - layui 旗舰之作</a>*@
-                </div>
+            <div class="fly-panel fly-link">
+                <h3 class="fly-panel-title">文章热议</h3>
+                <ul class="fly-panel-main" style="color:dimgray">
+                    @*@foreach (var item in coList
+                            .GroupBy(m => new { m.ArticleId,m.Title })
+                            .Select(m => new
+                            {
+                                ArticleId = m.Key.ArticleId,Title=m.Key.Title,
+
+                            }))
+                        {
+                            <li>@item.Title</li>
+                        }*@
+                    @foreach (var item in coList
+                        .GroupBy(m => m.Title, m => m.ArticleId)
+                        .Select(m => (new { Title = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
+                        .OrderByDescending(m => m.Count))
+                    {
+                        <li>
+                            <a href="/Article/DetailArticle?articleid=@item.ArticleId[0]">@item.Title (@item.Count)</a>
+                        </li>
+                    }
+                </ul>
             </div>
 
             <div class="fly-panel fly-link">

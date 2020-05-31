@@ -83,7 +83,6 @@ namespace BlogSystem.DAL
             }
             return datas;
         }
-
         public IQueryable<T> GetAllByPageAsync(int PageSize = 10, int PageIndex = 0)
         {
             throw new NotImplementedException();

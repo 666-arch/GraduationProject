@@ -10,6 +10,7 @@ namespace BlogSystem.Dto
     {
         public Guid Id { get; set; }
         public Guid ArticleId { get; set; }
+        public int Count { get; set; }
         public string Title { get; set; } //文章标题
         public string Content { get; set; }
         public DateTime CreateTime { get; set; }

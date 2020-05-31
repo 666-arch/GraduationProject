@@ -52,9 +52,7 @@
     <h1>
         @ViewBag.nickname
     </h1>
-
     <p style="padding: 10px 0; color: #5FB878;">认证信息：用户</p>
-
     <p class="fly-home-info">
         <i class="iconfont icon-shijian"></i><span>@(ViewBag.createtimes.ToString("yyyy-MM-dd"))</span>
     </p>
@@ -175,7 +173,7 @@
                         <li>
                             <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                                 <legend>最新评论</legend>
-                                @foreach (var item in commlist)
+                                @foreach (var item in commlist.OrderByDescending(m=>m.CreateTime))
                                 {
                                     foreach (var items in Model)
                                     {
@@ -185,7 +183,7 @@
                                             <i></i>
                                             <span class="layui-hide-xs" style="color:gray;font-size:10px;">@item.Content</span>@item.CreateTime <br />
                                             <a href="/Article/DetailArticle?articleid=@item.ArticleId" class="jie-title">
-                                                @items.Title
+                                               @items.Title
                                             </a>
                                             <a href="/User/UserHome?userid=@item.UserId">
                                                 @item.NickName

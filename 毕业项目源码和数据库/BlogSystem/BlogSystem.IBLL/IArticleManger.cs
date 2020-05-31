@@ -61,5 +61,6 @@ namespace BlogSystem.IBLL
 
         Task<List<CommentDto>> GetAllCommentByuseranarticle(Guid userid);
 
+        Task<List<ArticleToBlogcateDto>> GetAllArticleTocate();     //文章类别中间表
     }
 }

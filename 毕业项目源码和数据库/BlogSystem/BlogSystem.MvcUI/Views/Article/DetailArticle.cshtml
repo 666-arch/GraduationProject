@@ -2,6 +2,8 @@
 @{
     ViewBag.Title = "DetailArticle";
     Layout = "~/Views/Shared/_LayoutFront.cshtml";
+    var articledata = (List<ArticleDto>)ViewBag.articledata;
+    var coList = (List<CommentDto>)ViewBag.coList;
 }
 @model List<CommentDto>
     <script src="~/Scripts/jquery-3.4.1.js"></script>
@@ -53,15 +55,6 @@
 	                    {
 		                    @item @:&nbsp;&nbsp;
 	                    }
-                        
-                            @*@if (Session["Userid"] != null && Guid.Parse(Session["Userid"].ToString()) == @ViewBag.uid)
-                            {
-                                @:你还没有选择分类...
-                            }
-                            else
-                            {
-                                @:他还没有选择分类
-                            }*@
                     </p>
                 </div>
             </div>
@@ -137,19 +130,51 @@
             </div>
         </div>
         <div class="layui-col-md4">
-            <dl class="fly-panel fly-list-one">
-                <dt class="fly-panel-title">本周热议</dt>
-                @*@foreach (var item in ViewBag.comms as List<CommentDto>)
+            <div class="fly-panel fly-link">
+                <h3 class="fly-panel-title">文章热议</h3>
+                <ul class="fly-panel-main" style="color:dimgray">
+                    @*@foreach (var item in coList
+                .GroupBy(m => new { m.ArticleId,m.Title })
+                .Select(m => new
                 {
-                    @item.Title
-                }*@
-            </dl>
+                    ArticleId = m.Key.ArticleId,Title=m.Key.Title,
+
+                }))
+            {
+                <li>@item.Title</li>
+            }*@
+                    @foreach (var item in coList
+                        .GroupBy(m => m.Title, m => m.ArticleId)
+                        .Select(m => (new { Title = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
+                        .OrderByDescending(m => m.Count))
+                    {
+                        <li>
+                            <a href="/Article/DetailArticle?articleid=@item.ArticleId[0]">@item.Title (@item.Count)</a>
+                        </li>
+                    }
+                </ul>
+            </div>
             <div class="fly-panel">
                 <div class="fly-panel-title">
-                    本月热议文章
+                    热点文章(TOP5)
                 </div>
                 <div class="fly-panel-main">
-
+                    <ul class="fly-list">
+                        @foreach (var item in articledata.OrderByDescending(m => m.GoodCount).Take(5)) //访问前五条数据
+                        {
+                            var titlesub = item.Title;
+                            if (titlesub.Length > 15)
+                            {
+                                titlesub = titlesub.Substring(0, 15) + "...";
+                            }
+                            <li>
+                                <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
+                                    <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
+                                    @titlesub
+                                </a>
+                            </li>
+                        }
+                    </ul>
                 </div>
             </div>
 

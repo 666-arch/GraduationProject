@@ -331,6 +331,7 @@ namespace BlogSystem.BLL
             using (ICommentService commentService = new CommentService())
             {
                 var data = await commentService.GetAllAsync()
+                    .Where(m=>m.IsRemoved==false&m.Article.IsRemoved==false)
                     .Include(m => m.Article)
                     .Include(m=>m.User)
                     .Select(m => new CommentDto()
@@ -341,6 +342,7 @@ namespace BlogSystem.BLL
                         CreateTime=m.CreateTime,
                         UserId=m.UserId,
                         Content=m.Content
+                     
                     }).ToListAsync();
                 return data;
                 //using (IArticleService articles = new ArticleService())
@@ -530,6 +532,23 @@ namespace BlogSystem.BLL
             //        }).ToListAsync();
             //    }
             //}
+        }
+
+        public async Task<List<ArticleToBlogcateDto>> GetAllArticleTocate()
+        {
+            using (IArticleToCategoryService articleToCategory = new ArticleToCategoryService())
+            {
+                return await articleToCategory.GetAllAsync()
+                    .Where(m=>m.IsRemoved==false)
+                    .Include(m => m.BlogCategory)
+                    .Select(m => new ArticleToBlogcateDto()
+                {
+                    CateName = m.BlogCategory.CategoryName,
+                    BlogCategoryId = m.BlogCategoryId,
+                    ArticleId = m.ArticleId
+             
+                }).ToListAsync();
+            }
         }
     }
 }

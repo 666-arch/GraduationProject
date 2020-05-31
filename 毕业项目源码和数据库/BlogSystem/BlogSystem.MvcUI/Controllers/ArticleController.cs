@@ -84,6 +84,13 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.uimg = articledetail.ImagePath;
             articleManger = new ArticleManger(); 
             ViewBag.comms= await articleManger.GetAllComment();
+
+            List<ArticleDto> articledata = await articleManger.GetAllArticle();
+            ViewBag.articledata = articledata;
+
+            List<CommentDto> coList = await articleManger.GetAllComment();  //文章热议
+            ViewBag.coList = coList;
+
             return View(await articleManger.GetAllCommentByArticleId(articleid));//获取最新评论信息
         }
 
@@ -103,7 +110,6 @@ namespace BlogSystem.MvcUI.Controllers
 
             Guid userid = Guid.Parse(Session["Userid"].ToString()); //获得Session
             ViewBag.article=await articleManger.GetAllArticlesByUserId(userid);
-
             return View(ViewBag.ategoryIds);
         }
 

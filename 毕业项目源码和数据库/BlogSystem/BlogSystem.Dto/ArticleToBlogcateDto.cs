@@ -11,5 +11,6 @@ namespace BlogSystem.Dto
         public Guid BlogCategoryId { get; set; }
         public Guid ArticleId { get; set; }
         public string CateName { get; set; }
+        public int Count { get; set; }
     }
 }

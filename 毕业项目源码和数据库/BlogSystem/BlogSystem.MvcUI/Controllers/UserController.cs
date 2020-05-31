@@ -50,7 +50,7 @@ namespace BlogSystem.MvcUI.Controllers
             return View();
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
+
         public ActionResult Login(string email, string password, LoginViewModel model)  //登录 ViewModel
         {
             model.LoginName = email;
@@ -91,7 +91,6 @@ namespace BlogSystem.MvcUI.Controllers
             }
         }
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(string email, string nickname, string password,string yanzhengma)
         {
             //Session["RegisterCode"]在生成验证码的时候设置其值

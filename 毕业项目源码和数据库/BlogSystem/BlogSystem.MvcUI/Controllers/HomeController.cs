@@ -26,17 +26,16 @@ namespace BlogSystem.MvcUI.Controllers
             List<UserInformation> usList=await userMnager.GetAllUserByAdmin();
             ViewBag.alluser = usList;   //所有博主
             ViewBag.ucount = usList.Count();    //统计博客数量
-
             List<CommentDto> coList =await articleManger.GetAllComment();
+            ViewBag.coList = coList;
             ViewBag.ccount = coList.Count();    //统计评论数量
-
             List<BlogCategoryDto> cateList =await articleManger.GetAllBlogcategory();
             ViewBag.catecount= cateList.Count();
 
+            ViewBag.articleTocateList = await articleManger.GetAllArticleTocate();
+
             IAdminManger adminManger = new AdminManger();
             ViewBag.links=await adminManger.GetAllLink();
-
-
             var data = await articleManger.GetAllArticle();
             return View(data.ToPagedList<ArticleDto>(page,pagesize));
         }
