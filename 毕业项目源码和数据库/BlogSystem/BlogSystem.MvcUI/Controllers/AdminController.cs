@@ -198,15 +198,18 @@ namespace BlogSystem.MvcUI.Controllers
         {
             int pagesize = 10;
             IUserMnager userMnager = new UserManger();
-            var userByadmin=await userMnager.GetAllUserByAdmin(email);
+            var userByadmin=await userMnager.GetAllUserByAdmin(email, nickname);
+            ViewBag.email = email;
+            ViewBag.nickname = nickname;
             return View(userByadmin.ToPagedList<UserInformation>(page,pagesize));
         }
 
-        public async Task<ActionResult> ArticleIndex(int page=1) 
+        public async Task<ActionResult> ArticleIndex(int page=1,string nickname="",bool state=true) 
         {
             int pagesize = 10;
             IArticleManger articleManger = new ArticleManger();
-            var articles=await articleManger.GetAllArticle();
+            var articles = await articleManger.GetAllArticlesByNickName(nickname, state);
+            ViewBag.nickname = nickname;
             return View(articles.ToPagedList<ArticleDto>(page,pagesize));
         }
         //[HttpPost]
@@ -235,5 +238,6 @@ namespace BlogSystem.MvcUI.Controllers
             await adminManger.EditUserByAdmin(id, password);
             return View();
         }
+
     }
 }

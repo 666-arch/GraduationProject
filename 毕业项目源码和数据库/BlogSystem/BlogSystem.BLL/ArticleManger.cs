@@ -236,11 +236,25 @@ namespace BlogSystem.BLL
             throw new NotImplementedException();
         }
 
-        public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName)
+        public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName,bool state)   //后台模糊查询（根据作者查询）
         {
-            throw new NotImplementedException();
+            using (IArticleService articleService = new ArticleService())
+            {
+                var data=await articleService.GetAllAsync()
+                    .Include(m => m.User)
+                    .Where(m=>m.State==state)
+                    .Where(m => string.IsNullOrEmpty(nickName) || m.User.NickName.Contains(nickName))
+                    .Select(m => new ArticleDto()
+                    {
+                        Id=m.Id,
+                        Title = m.Title,
+                        NickName = m.User.NickName,
+                        State = m.State,
+                        CreateTime = m.CreateTime,
+                    }).ToListAsync();
+                return data;
+            }
         }
-
         public async Task<List<ArticleDto>> GetAllArticlesByUserId(Guid userId)
         {
             using (IArticleService articleSvc = new ArticleService())
@@ -258,7 +272,6 @@ namespace BlogSystem.BLL
                         CreateTime = m.CreateTime,
                         State = m.State
                     }).ToListAsync();
-
                 //using (IArticleToCategoryService articleToCategorySvc = new ArticleToCategoryService())
                 //{
                 //    var cate = await articleToCategorySvc.GetAllAsync()

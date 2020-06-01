@@ -19,7 +19,7 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleDto>> GetAllArticlesByUserId(Guid userId);  //根据用户Id找文章
 
-        Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName); //根据昵称找文章
+        Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName,bool state); //根据昵称找文章
 
         Task<List<BlogCategoryDto>> GetAllArticlesByCategoryId(Guid userid);  //根据类别找Id
 

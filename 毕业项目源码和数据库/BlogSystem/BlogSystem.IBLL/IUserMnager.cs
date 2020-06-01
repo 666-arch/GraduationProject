@@ -33,7 +33,7 @@ namespace BlogSystem.IBLL
 
         Task Unfollow(Guid userid, Guid focusid);  //取消关注
 
-        Task<List<Dto.UserInformation>> GetAllUserByAdmin(string email);        //管理员查询用户
+        Task<List<Dto.UserInformation>> GetAllUserByAdmin(string email,string nickname);        //管理员查询用户
         Task<List<Dto.UserInformation>> GetAllUserByAdmin();        //管理员查询用户
 
         Task<List<Dto.UserInformation>> GetAllUserlike(string email,string nickname);   //模糊查询用户

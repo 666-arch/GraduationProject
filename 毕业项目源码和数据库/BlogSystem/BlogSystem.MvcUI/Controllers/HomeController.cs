@@ -31,9 +31,7 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.ccount = coList.Count();    //统计评论数量
             List<BlogCategoryDto> cateList =await articleManger.GetAllBlogcategory();
             ViewBag.catecount= cateList.Count();
-
             ViewBag.articleTocateList = await articleManger.GetAllArticleTocate();
-
             IAdminManger adminManger = new AdminManger();
             ViewBag.links=await adminManger.GetAllLink();
             var data = await articleManger.GetAllArticle();

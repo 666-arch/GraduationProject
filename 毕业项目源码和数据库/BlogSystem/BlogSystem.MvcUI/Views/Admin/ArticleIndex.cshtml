@@ -16,13 +16,27 @@
 </div>
 <div class="result-wrap">
     <form name="myform" id="myform" method="post">
+        <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="请输入作者"/>
+        <select id="state" name="state" onchange="searchBystate()">
+            <option value="">请选择</option>
+            <option value="true">已发布</option>
+            <option value="false">未发布</option>
+        </select>
+        <script>
+            function searchBystate() {
+                var state= $("#state").find("option:selected").val();
+                alert(state);
+            }
+        </script>
+        <input type="submit" name="name" value="搜索" />
         <div class="result-title">
             <div class="result-list">
-                <a href="~/Article/addArticle"><i class="icon-font"></i>新增文章</a>
+                @*<a href="~/Article/addArticle"><i class="icon-font"></i>新增文章</a>*@
                 <a id="batchDel" href="javascript:void(0)" onclick="manyArticles_del()"><i class="icon-font"></i>批量删除</a>
                 <a id="updateOrd" href="~/Article/sortByUpdateTime"><i class="icon-font"></i>更新排序</a>
             </div>
         </div>
+    </form>
         <div class="result-content">
             <table class="result-tab" width="100%" style="text-align:center">
                 <tr style="text-align:center">
@@ -53,12 +67,11 @@
                         </td>
                     </tr>
                 }
-
             </table>
             <div class="list-page">
+                每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
                 @Html.PagedListPager(Model, page => Url.Action("ArticleIndex", new { page }))
             </div>
         </div>
-    </form>
 </div>
 

@@ -251,12 +251,12 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<UserInformation>> GetAllUserByAdmin(string email)        //管理员查询所有用户
+        public async Task<List<UserInformation>> GetAllUserByAdmin(string email,string nickname)   
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
                var data= await userSvc.GetAllAsync()
-                    .Where(m=>m.Eamil.Contains(email))
+                    .Where(m => string.IsNullOrEmpty(email)&string.IsNullOrEmpty(nickname) || m.Eamil.Contains(email)&m.NickName.Contains(nickname))
                     .Select(m => new UserInformation()
                 {
                     Id=m.Id,
@@ -274,8 +274,9 @@ namespace BlogSystem.BLL
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
-                return  await userSvc.GetAllAsync()
-                     .OrderByDescending(m=>m.FansCount)
+                return await userSvc
+                     .GetAllAsync()
+                     .OrderByDescending(m => m.FansCount)
                      .Select(m => new UserInformation()
                      {
                          Id = m.Id,
@@ -286,7 +287,6 @@ namespace BlogSystem.BLL
                          PersonalDescription = m.PersonalDescription,
                          CreateTime = m.CreateTime
                      }).ToListAsync();
-
             }
         }
 

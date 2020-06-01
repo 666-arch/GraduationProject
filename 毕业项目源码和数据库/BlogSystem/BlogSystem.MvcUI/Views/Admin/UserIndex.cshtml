@@ -8,33 +8,34 @@
 <link href="~/Content/PagedList.css" rel="stylesheet" />
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script>
-    $(document).ready(function () {
-        $('#btnSearch').click(function () {
-            if (!$('#email').val()) {
-                alert('请输入你要查询的内容')
-                return;
-            } else {
-                $.ajax({
-                    type: "get",
-                    url: "UserIndex",
-                    data: $("#form-search").serialize(),
-                    success: function () {
+    //$(document).ready(function () {
+    //    $('#btnSearch').click(function () {
+    //        if (!$('#email').val()) {
+    //            alert('请输入你要查询的内容')
+    //            return;
+    //        } else {
+    //            $.ajax({
+    //                type: "get",
+    //                url: "UserIndex",
+    //                data: $("#form-search").serialize(),
+    //                async: true,
+    //                success: function () {
 
-                    }
-                })
-            }
-        })
-    })
+    //                }
+    //            })
+    //        }
+    //    })
+    //})
 </script>
 <div class="result-wrap">
-    <form id="form-search">
+    <form action="UserIndex" id="form-search">
         <div class="result-title">
             <div class="result-list">
                 <div class="layui-form-item">
-                    <input type="text" id="email" name="email" value="" placeholder="输入邮箱"/>
-                    <input type="text" id="nickname" name="nickname" value="" placeholder="输入昵称" />
+                    <input type="text" id="email" name="email" value="@ViewBag.email" placeholder="输入邮箱"/>
+                    <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="输入昵称" />
                 </div>
-                <input type="button" id="btnSearch" name="name" value="查询" class="admin_input_style" />
+                <input type="submit" id="btnSearch" name="name" value="查询" class="admin_input_style" />
                 <a id="batchDel" href="javascript:void(0)" onclick="manyUsers_del()"><i class="icon-font"></i>批量删除</a>
             </div>
         </div>
@@ -91,5 +92,6 @@
             content: 'EditUserAdmin?id=' + id
         });
     }
+
 </script>
 

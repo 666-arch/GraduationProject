@@ -25,29 +25,6 @@
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
-            @*<div class="fly-panel">
-                    <div class="fly-panel-title fly-filter">
-                        <a>博客热度TOP5（按推荐数排行）</a>
-                        <a href="#signin" class="layui-hide-sm layui-show-xs-block fly-right" id="LAY_goSignin" style="color: #FF5722;">去签到</a>
-                    </div>
-                    <ul class="fly-list">
-                        @foreach (var item in Model.OrderByDescending(m => m.GoodCount).Take(5)) //访问前五条数据
-                        {
-                            var titlesub = item.Title;
-                            if (titlesub.Length > 15)
-                            {
-                                titlesub = titlesub.Substring(0, 15) + "...";
-                            }
-                            <li>
-                                <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
-                                    <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
-                                    @titlesub
-                                </a>
-                            </li>
-                        }
-                    </ul>
-                </div>*@
-
             <div class="fly-panel" style="margin-bottom: 0;">
                 <div class="fly-panel-title fly-filter">
                     <a href="" class="layui-this">综合</a>

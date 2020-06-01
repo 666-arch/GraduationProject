@@ -7,9 +7,10 @@
 }
 @model List<ArticleDto>
 @{
-    int now = DateTime.Now.Day;
-
-    //teTime sta = ViewBag.createtime;
+    DateTime t = ViewBag.createtimes;
+    var now =Convert.ToDateTime(DateTime.Now);
+    var end = Convert.ToDateTime(t);
+    var timespan = (now - end).Days;
 }
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script>
@@ -128,7 +129,7 @@
                             <legend>我的公告</legend>
                         </fieldset>
                         昵称：@ViewBag.nickname <br />
-                        学龄：@(now - ViewBag.createtime) 天 <br />
+                        学龄：@timespan 天 <br />
                         粉丝：@ViewBag.fansListCount 人   <br />
                         关注：@ViewBag.focusListCount  人
                     </li>
