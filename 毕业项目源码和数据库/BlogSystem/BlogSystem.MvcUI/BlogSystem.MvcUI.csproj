@@ -820,6 +820,7 @@
     <Content Include="Views\User\Forgetpwd.cshtml" />
     <Content Include="Views\Admin\EditUserAdmin.cshtml" />
     <Content Include="Views\User\ArticleGpBytime.cshtml" />
+    <Content Include="Views\Home\ArticleByIndexCateId.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

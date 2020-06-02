@@ -218,6 +218,9 @@ namespace BlogSystem.MvcUI.Controllers
             //ViewBag.commlist = commList;
             List<CommentDto> commList = await articleManger.GetAllComment();
             ViewBag.commlist = commList;
+
+            ViewBag.articleByUid=await articleManger.GetAllArticleTocateByUserId(ViewBag.uid);
+
             return View(await articleManger.GetAllArticlesByUserId(userid));
         }
 

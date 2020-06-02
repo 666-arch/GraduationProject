@@ -13,11 +13,12 @@ using BlogSystem.MvcUI.Filters;
 
 namespace BlogSystem.MvcUI.Controllers
 {
-    [BlogAuth]
+    
     public class HomeController : Controller
     {
         // GET: Home
         //[MyAuthorize]
+        [BlogAuth]
         public async Task<ActionResult> Index(int page=1)
         {
             int pagesize = 15;
@@ -38,5 +39,11 @@ namespace BlogSystem.MvcUI.Controllers
             return View(data.ToPagedList<ArticleDto>(page,pagesize));
         }
 
+        public async Task<ActionResult> ArticleByIndexCateId(Guid blogcateid)
+        {
+            IArticleManger articleManger = new ArticleManger();
+            ViewBag.list=await articleManger.GetAllArticlesByCategoryId(blogcateid);
+            return View();
+        }
     }
 }

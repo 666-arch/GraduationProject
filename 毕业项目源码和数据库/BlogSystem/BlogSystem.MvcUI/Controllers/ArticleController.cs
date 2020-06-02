@@ -25,12 +25,14 @@ namespace BlogSystem.MvcUI.Controllers
             if (categoryIds==null)  //用户可以选择对文章不进行分类
             {
                 await articleManger.CreateArticle(title, content, userid, state); //调用为添加分类的博客新增
-                return RedirectToAction("Index", "Home");
+                //return RedirectToAction("UserHome", "User", new { userid = userid });
+                return Json(new { status = 1, data = "发布成功" });
             }
             else
             {
                 await articleManger.CreateArticle(title, content, categoryIds, userid, state);
-                return RedirectToAction("Index", "Home");
+                //return RedirectToAction("UserHome", "User", new { userid = userid });
+                return Json(new { status = 1, data = "发布成功" });
             }
         }
         [HttpPost]
@@ -40,13 +42,13 @@ namespace BlogSystem.MvcUI.Controllers
             IArticleManger articleManger = new ArticleManger();
             if (categoryIds == null)
             {
-                await articleManger.CreateArticle(title, content, userid, state); //调用为添加分类的博客新增
-                return RedirectToAction("User", "UserHome", new { userid = userid }); //跳转到用户首页
+                await articleManger.CreateArticle(title, content, userid, state); 
+                return Json(new { status = 1, data = "成功保存到草稿箱" });
             }
             else
             {
                 await articleManger.CreateArticle(title, content, categoryIds, userid, state);
-                return RedirectToAction("Index", "Home");
+                return Json(new { status = 1, data = "成功保存到草稿箱" }); 
             }
         }
 
@@ -84,7 +86,6 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.uimg = articledetail.ImagePath;
             articleManger = new ArticleManger(); 
             ViewBag.comms= await articleManger.GetAllComment();
-
             List<ArticleDto> articledata = await articleManger.GetAllArticle();
             ViewBag.articledata = articledata;
 
@@ -121,7 +122,6 @@ namespace BlogSystem.MvcUI.Controllers
             await articleManger.EditArticle(actid, title, content, categoryIds);
             return RedirectToAction("Index", "Home");
         }
-
         [HttpPost]
         public async Task<ActionResult> CreateComment(Guid articleid, string content)
         {

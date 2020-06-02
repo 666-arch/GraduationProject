@@ -3,7 +3,7 @@
     ViewBag.Title = "UserHome";
     Layout = "~/Views/Shared/_LayoutFront.cshtml";
     var commlist = (List<CommentDto>)ViewBag.commlist;
-
+    var articleTocate = (List<ArticleToBlogcateDto>)ViewBag.articleByUid;
 }
 @model List<ArticleDto>
 @{
@@ -139,9 +139,9 @@
                             <legend>随笔档案</legend>
                             @foreach (var item in Model.Where(m => m.State == true).GroupBy(m => m.CreateTime.ToString("yyyy-MM-dd")))  //草稿箱不在考虑范围内
                             {
-                  
+
                                 <span style="color:lightcoral">
-                                     @item.Key.AsDateTime().ToString("yyyy-MM-dd") (@Model.Count())
+                                    @item.Key.AsDateTime().ToString("yyyy-MM-dd") (@Model.Count())
                                 </span>
                             }
                         </fieldset>
@@ -169,59 +169,84 @@
                             }
                         </fieldset>
                     </li>
-                    @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString())||ViewBag.uid!=null)
-                    {
-                        <li>
-                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                                <legend>最新评论</legend>
-                                @foreach (var item in commlist.OrderByDescending(m=>m.CreateTime))
-                                {
-                                    foreach (var items in Model)
-                                    {
-                                        if (item.ArticleId == items.Id)
-                                        {
-                                            //var tit = item.Title;
-                                            <i></i>
-                                            <span class="layui-hide-xs" style="color:gray;font-size:10px;">@item.Content</span>@item.CreateTime <br />
-                                            <a href="/Article/DetailArticle?articleid=@item.ArticleId" class="jie-title">
-                                               @items.Title
-                                            </a>
-                                            <a href="/User/UserHome?userid=@item.UserId">
-                                                @item.NickName
-                                            </a>
-                                            <br />
-                                        }
-                                    }
-                                }
-                            </fieldset>
-                        </li>
-                    }
 
                     <li>
-                        @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString()))
-                        {
-                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
-                                <legend>草稿箱（可编辑发布）</legend>
-                                @foreach (var item in Model.Where(m => m.State == false))
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>我的分类</legend>
+                            @foreach (var item in articleTocate
+                            .GroupBy(m => m.CateName, m => m.ArticleId)
+                            .Select(m => new { CateName = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
+                            {
+                                foreach (var items in Model)
                                 {
-                                    var tit = item.Title;
-                                    <a href="/Article/DetailArticle?articleid=@item.Id" class="jie-title">
-                                        @if (tit.Length > 15)
-                                        {
-                                            @(item.Title.Substring(0, 15) + "...")
-                                        }
-                                        else
-                                        {
-                                            @item.Title
-                                        }
-                                    </a>
-                                    <i></i>
-                                    <span class="layui-hide-xs" style="color:gray;font-size:10px;">@(item.GoodCount)推荐/@(item.BadCount)反对</span> <br />
+
+                                    if (item.ArticleId[0] == items.Id)      //如果文章类别表的文章id与当前用户发布的文章id相等
+                                    {
+                                        <dl class="fly-panel-main">
+                                            <dd>
+                                                @* 通过随笔分类找到对应的文章? *@
+                                                <a href="#" onclick="FindArticleToCate('@item.ArticleId[0]')">@item.CateName (@item.Count)</a>
+                                            <dd>
+                                        </dl>
+                                    }
                                 }
-                            </fieldset>
-                        }
-                    </li>
-                </ul>
+                            }
+                        </fieldset>
+                            </li>
+
+                            @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString()) || ViewBag.uid != null)
+                            {
+                                <li>
+                                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                        <legend>最新评论</legend>
+                                        @foreach (var item in commlist.OrderByDescending(m => m.CreateTime))
+                                        {
+                                            foreach (var items in Model)
+                                            {
+                                                if (item.ArticleId == items.Id)
+                                                {
+                                                    //var tit = item.Title;
+                                                    <i></i>
+                                                    <span class="layui-hide-xs" style="color:gray;font-size:10px;">@item.Content</span>@item.CreateTime <br />
+                                                    <a href="/Article/DetailArticle?articleid=@item.ArticleId" class="jie-title">
+                                                        @items.Title
+                                                    </a>
+                                                    <a href="/User/UserHome?userid=@item.UserId">
+                                                        @item.NickName
+                                                    </a>
+                                                    <br />
+                                                }
+                                            }
+                                        }
+                                    </fieldset>
+                                </li>
+                            }
+
+                            <li>
+                                @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString()))
+                                {
+                                    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                        <legend>草稿箱（可编辑发布）</legend>
+                                        @foreach (var item in Model.Where(m => m.State == false))
+                                        {
+                                            var tit = item.Title;
+                                            <a href="/Article/DetailArticle?articleid=@item.Id" class="jie-title">
+                                                @if (tit.Length > 15)
+                                                {
+                                                    @(item.Title.Substring(0, 15) + "...")
+                                                }
+                                                else
+                                                {
+                                                    @item.Title
+                                                }
+                                            </a>
+                                            <i></i>
+                                            <span class="layui-hide-xs" style="color:gray;font-size:10px;">@(item.GoodCount)推荐/@(item.BadCount)反对</span> <br />
+                                        }
+                                    </fieldset>
+                                }
+                            </li>
+                        </ul>
             </div>
 
         </div>

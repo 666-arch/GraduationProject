@@ -1,0 +1,38 @@
+﻿@using BlogSystem.Dto
+@{
+    Layout = null;
+    var list = (List<ArticleToBlogcateDto>)ViewBag.list;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/FrontPage/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/FrontPage/layui/layui.js"></script>
+    <title>分类的文章列表</title>
+</head>
+<body>
+    <div>
+        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+            <legend>发布时间</legend>
+        </fieldset>
+        <ul class="layui-timeline">
+            <li class="layui-timeline-item">
+                <i class="layui-icon layui-timeline-axis"></i>
+                <div class="layui-timeline-content layui-text">
+                    @foreach (var item in list)
+                    {
+                        <h3 class="layui-timeline-title">@item.CreateTime.ToString("yyyy-MM-dd")</h3>
+                        <p>
+                            <a href="/Article/DetailArticle?articleid=@item.ArticleId">@item.Title</a>
+                            <br>
+                        </p>
+                    }
+                </div>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -92,11 +92,12 @@
                 <h3 class="fly-panel-title">随笔分类</h3>
                 @foreach (var item in articleTocate
                 .GroupBy(m => m.CateName, m => m.BlogCategoryId)
-                .Select(m => new { CateName = m.Key, Count = m.Count() }))
+                .Select(m => new { CateName = m.Key, BlogCategoryId=m.ToArray(),Count = m.Count() }))
                 {
                     <dl class="fly-panel-main">
                         <dd>
-                            <a href="#">@item.CateName (@item.Count)</a>
+                            @* 通过随笔分类找到对应的文章? *@
+                            <a href="#" onclick="FindArticleToCate('@item.BlogCategoryId[0]')" >@item.CateName (@item.Count)</a>  
                         <dd>
                     </dl>
 
@@ -142,3 +143,14 @@
         </div>
     </div>
 </div>
+<script>
+    function FindArticleToCate(blogcateid) {
+        layer.open({
+            type: 2,
+            title: '文章列表',
+            maxmin: false,
+            area: ['550px', '400px'],
+            content: 'ArticleByIndexCateId?blogcateid=' + blogcateid
+        });
+    }
+</script>

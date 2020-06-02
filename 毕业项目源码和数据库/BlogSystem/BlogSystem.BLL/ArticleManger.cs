@@ -213,9 +213,23 @@ namespace BlogSystem.BLL
                 }
             }
         }
-        public async Task<List<BlogCategoryDto>> GetAllArticlesByCategoryId(Guid userid)
+        public async Task<List<ArticleToBlogcateDto>> GetAllArticlesByCategoryId(Guid blogcateId)
         {
-
+            using (IArticleToCategoryService articleToCategory = new ArticleToCategoryService())
+            {
+                var data = await articleToCategory.GetAllAsync()
+                    .Include(m => m.Article)
+                    .Include(m => m.Article.User)
+                    .Where(m => m.BlogCategoryId == blogcateId)
+                    .Select(m => new ArticleToBlogcateDto()
+                    {
+                        ArticleId=m.ArticleId,
+                        Title = m.Article.Title,
+                        NickName = m.Article.User.NickName,
+                        CreateTime = m.Article.CreateTime
+                    }).ToListAsync();
+                return data;
+            }
             //using (IBlogCategoryService blogCategory = new BlogCategoryService())
             //{
             //    var data = await blogCategory.GetAllAsync().Where(m => m.UserId == userid).ToListAsync();
@@ -231,9 +245,7 @@ namespace BlogSystem.BLL
             //            }).ToListAsync();
             //        }
             //    }
-
             //}
-            throw new NotImplementedException();
         }
 
         public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName,bool state)   //后台模糊查询（根据作者查询）
@@ -553,6 +565,7 @@ namespace BlogSystem.BLL
             {
                 return await articleToCategory.GetAllAsync()
                     .Where(m=>m.IsRemoved==false)
+                    .Where(m=>m.Article.State==true)    //文章已发布
                     .Include(m => m.BlogCategory)
                     .Select(m => new ArticleToBlogcateDto()
                 {
@@ -561,6 +574,28 @@ namespace BlogSystem.BLL
                     ArticleId = m.ArticleId
              
                 }).ToListAsync();
+            }
+        }
+
+        public async Task<List<ArticleToBlogcateDto>> GetAllArticleTocateByUserId(Guid userid)  // 根据用户找到对应的类别下的文章并且统计数量
+        {
+            using (IArticleToCategoryService articleToCategory = new ArticleToCategoryService())
+            {
+            
+                 return await articleToCategory.GetAllAsync()
+                          .Where(m => m.IsRemoved == false)
+                          .Where(m => m.Article.State == true)  //文章已发布
+                          .Include(m => m.BlogCategory)
+                          .Include(m => m.Article)
+                          .Include(m => m.Article.User)
+                          .Where(m => m.Article.UserId == userid)
+                          .Select(m => new ArticleToBlogcateDto()
+                          {
+                              CateName = m.BlogCategory.CategoryName,
+                              BlogCategoryId = m.BlogCategoryId,
+                              ArticleId = m.ArticleId
+                          }).ToListAsync();
+         
             }
         }
     }
