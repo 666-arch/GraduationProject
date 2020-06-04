@@ -27,7 +27,7 @@ namespace BlogSystem.IBLL
 
         Task<ArticleDto> GetOneArticleById(Guid articleId);   //根据文章Id查询
 
-        Task<List<ArticleDto>> GetAllArticle(); //查询所有文章
+        Task<List<ArticleDto>> GetAllArticle(string search); //查询所有文章
 
         Task<int> RemoveCategory(Guid categoryId);  //删除某一类别
 

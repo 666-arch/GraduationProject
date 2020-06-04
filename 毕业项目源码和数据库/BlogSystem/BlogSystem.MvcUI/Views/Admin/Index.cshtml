@@ -4,18 +4,15 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutBack.cshtml";
+    //var admin = (List<AdminDto>) ViewBag.admin;
 }
-
-@*<div class="crumb-wrap">
-        <div class="crumb-list"><i class="icon-font"></i><a href="/Admin/Info">首页</a><span class="crumb-step">&gt;</span><span class="crumb-name">用户管理</span></div>
-    </div>*@
     <link href="~/Content/PagedList.css" rel="stylesheet" />
-<div class="result-wrap">
-    <form name="myform" id="myform" method="post">
+    <div class="result-wrap">
+    <form action="Index.cshtml" method="post">
         <div class="result-title">
             <div class="result-list">
-                <a onclick="addLayer()" href="#"><i class="icon-font"></i>添加管理员</a>
-                <a id="batchDel" href="javascript:void(0)" onclick="manyAdmin_del()"><i class="icon-font"></i>批量删除</a>
+                <a onclick="addLayer()" ><i class="icon-font"></i>添加管理员</a>
+                <a id="batchDel" onclick="manyAdmin_del()"><i class="icon-font"></i>批量删除</a>
             </div>
         </div>
         <div class="result-content">
@@ -30,13 +27,13 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="tc"><input name="id[]" value="" type="checkbox" class="singleChoose"></td>
+                        <td class="tc"><input name="id[]" type="checkbox" class="singleChoose"></td>
                         <td>@item.Account</td>
                         <td>@item.Password</td>
                         <td>@item.CreateTime</td>
                         <td>
-                            <a href="#" class="link-update" onclick="updateLayer('@item.Id')">修改</a>
-                            <a href="#" class="link-del" onclick="user_del('@item.Id',this)">删除</a>
+                            <a class="link-update" onclick="updateLayer('@item.Id')">修改</a>
+                            <a class="link-del" onclick="user_del('@item.Id',this)">删除</a>
                         </td>
                     </tr>
                 }
@@ -44,7 +41,7 @@
             <div class="list-page">
              
                 每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
-                @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
             </div>
         </div>
     </form>
@@ -101,12 +98,13 @@
             alert('请至少勾选一个进行删除！');
             return;
         }
-            layer.confirm('确定要删除选中的吗？', function (index) {
+        layer.confirm('确定要删除选中的吗？',
+            function(index) {
                 $.get("ManyRemoveAdmin", { idStr: idStr });
                 layer.msg('删除成功！', { icon: 1, time: 2000 });
-                window.location.reload();   //重新刷新
-            })
-       
+                window.location.reload(); //重新刷新
+            });
+
     }
 </script>
 

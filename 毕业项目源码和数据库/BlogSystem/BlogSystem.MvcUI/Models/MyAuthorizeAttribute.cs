@@ -19,6 +19,7 @@ namespace BlogSystem.MvcUI.Models
         /// <returns></returns>
         protected override bool AuthorizeCore(HttpContextBase httpContext)
         {
+            
             //前端请求api时会将token存放在名为"auth"的请求头中
             var authHeader = httpContext.Request.Headers["auth"];
             if (authHeader == null)

@@ -214,8 +214,6 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.fansListCount = fansListCount.Count(); //粉丝数
             List<FansDto> focusListCount =await userMag.GetAllFocusByUserid(userid);
             ViewBag.focusListCount = focusListCount.Count(); //关注数
-            //List<CommentDto>commList=await articleManger.GetAllCommentByuseranarticle(ViewBag.uid); //最新评论
-            //ViewBag.commlist = commList;
             List<CommentDto> commList = await articleManger.GetAllComment();
             ViewBag.commlist = commList;
 

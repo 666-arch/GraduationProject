@@ -15,7 +15,7 @@
 
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#btn-submit").click(function () {
+            $("#btn-submit").click(function() {
                 if (!$('#account').val()) {
                     alert('请输入账号');
                     return;
@@ -28,34 +28,40 @@
                         type: "post",
                         url: "Login",
                         data: $("#form-login").serialize(),
-                        headers: { "auth": window.token },
-                        dataType: "json",
                         success: function (data) {
-                            window.token = data.Token;
-                            alert(window.token);
-                            $.ajax({
-                                type: "post",
-                                url: "Index",
-                                data: $("#form-login").serialize(),
-                                headers: { "auth": window.token },//通过请求头来发送token，放弃了通过cookie的发送方式
-                                success: function () {
-                                    window.setTimeout("window.location.href='Index'", 1000);
-                                },
-                            })
+                            if (data.Success) {
+                                window.token = data.Token;
+                                $.ajax({
+                                    url: "/Admin/Index",
+                                    method: "post",
+                                    headers: { "auth": window.token },//通过请求头来发送token
+                                    data: {
+                                        andOperation: ["best buy", "first"],
+                                        from: "0",
+                                        to:"2000"
+                                    },
+                                    success: function (data) {
+                                        console.log(data);
+                                        //window.location.href = 'Index';
+                                    }
+                                });
+                            } else {
+                                alert("登录失败:" + data.Message);
+                            }
                         }
-                    })
+                    });
                 }
-            })
+            });
         })
     </script>
 
     <title>后台登录</title>
 </head>
 <body>
-    <div class="admin_login_wrap">
+    <div class="admin_login_wrap" >
         <h1>学智博客</h1>
         <div class="admin_input">
-            <form id="form-login">
+            <form id="form-login" method="post">
                 <ul class="admin_items">
                     <li>
                         <label for="account">用户名：</label>

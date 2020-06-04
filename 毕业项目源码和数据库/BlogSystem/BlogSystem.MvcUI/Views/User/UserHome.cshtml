@@ -47,7 +47,7 @@
     })
 </script>
 
-<div class="fly-home fly-panel" style="background-image: url();">
+<div class="fly-home fly-panel" >
     <img src="~/FrontPage/images/@ViewBag.img" alt="@ViewBag.nickname" style="width:120px;height:120px;border-radius: 100%;">
     <i class="iconfont icon-renzheng" title="学智博客认证"></i>
     <h1>
@@ -174,8 +174,12 @@
                         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                             <legend>我的分类</legend>
                             @foreach (var item in articleTocate
-                            .GroupBy(m => m.CateName, m => m.ArticleId)
-                            .Select(m => new { CateName = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
+                            .GroupBy(
+                                m => m.CateName,
+                                m=>m.ArticleId
+                                )
+
+                                    .Select(m => new { CateName = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
                             {
                                 foreach (var items in Model)
                                 {
@@ -193,7 +197,6 @@
                             }
                         </fieldset>
                             </li>
-
                             @if (ViewBag.uid == Guid.Parse(Session["userid"].ToString()) || ViewBag.uid != null)
                             {
                                 <li>

@@ -17,13 +17,16 @@ namespace BlogSystem.MvcUI.Controllers
     public class AdminController : Controller
     {
         // GET: Admin
-        //[MyAuthorize]
+
+        [MyAuthorize]
+        [HttpPost]
         public async Task<ActionResult> Index(int page=1)
         {
             int pagesize = 5;
             IAdminManger adminManger = new AdminManger();
             var adminList = await adminManger.GetAllAdminInfo();
-            return View(adminList.ToPagedList<AdminDto>(page,pagesize));
+            //ViewBag.admin = adminList.ToPagedList<AdminDto>(page, pagesize);
+            return View(adminList.ToPagedList<AdminDto>(page, pagesize));
         }
 
         public ActionResult Login()
@@ -57,6 +60,7 @@ namespace BlogSystem.MvcUI.Controllers
                 result.Message = "生成token失败";
             }
             return Json(result);
+
         }
         public ActionResult CreateAdmin()
         {
@@ -123,7 +127,7 @@ namespace BlogSystem.MvcUI.Controllers
             await adminManger.EditAdminById(id, account);
             return View();
         }
-
+        //[MyAuthorize]
         public async Task<ActionResult> LinkIndex(int page=1)
         {
             int pagesize = 10;

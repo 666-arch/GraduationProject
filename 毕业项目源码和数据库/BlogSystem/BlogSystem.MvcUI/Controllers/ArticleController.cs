@@ -86,7 +86,8 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.uimg = articledetail.ImagePath;
             articleManger = new ArticleManger(); 
             ViewBag.comms= await articleManger.GetAllComment();
-            List<ArticleDto> articledata = await articleManger.GetAllArticle();
+            string search = "";
+            List<ArticleDto> articledata = await articleManger.GetAllArticle(search);
             ViewBag.articledata = articledata;
 
             List<CommentDto> coList = await articleManger.GetAllComment();  //文章热议

@@ -297,12 +297,13 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<ArticleDto>> GetAllArticle() //查询所有文章显示在主页
+        public async Task<List<ArticleDto>> GetAllArticle(string search) //查询所有文章显示在主页(用户也可模糊查询)
         {
             using (IArticleService articleSvc = new ArticleService())
             {
                 return await articleSvc.GetAllAsync().Include(m => m.User)
                     .Where(m => m.State == true)
+                    .Where(m=>string.IsNullOrEmpty(search)||m.Title.Contains(search)||m.User.NickName.Contains(search))
                     .Select(m => new ArticleDto()
                     {
                         Id = m.Id,
@@ -582,17 +583,16 @@ namespace BlogSystem.BLL
             using (IArticleToCategoryService articleToCategory = new ArticleToCategoryService())
             {
             
-                 return await articleToCategory.GetAllAsync()
-                          .Where(m => m.IsRemoved == false)
-                          .Where(m => m.Article.State == true)  //文章已发布
+                    return await articleToCategory.GetAllAsync()
                           .Include(m => m.BlogCategory)
                           .Include(m => m.Article)
-                          .Include(m => m.Article.User)
+                          .Where(m => m.IsRemoved == false)
+                          .Where(m => m.Article.State == true)  //文章已发布
                           .Where(m => m.Article.UserId == userid)
                           .Select(m => new ArticleToBlogcateDto()
                           {
-                              CateName = m.BlogCategory.CategoryName,
                               BlogCategoryId = m.BlogCategoryId,
+                              CateName = m.BlogCategory.CategoryName,
                               ArticleId = m.ArticleId
                           }).ToListAsync();
          

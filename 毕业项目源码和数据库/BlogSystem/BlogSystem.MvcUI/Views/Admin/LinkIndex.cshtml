@@ -7,10 +7,10 @@
 }
     <link href="~/Content/PagedList.css" rel="stylesheet" />
 <div class="result-wrap">
-    <form name="myform" id="myform" method="post">
+    <form>
         <div class="result-title">
             <div class="result-list">
-                <a href="#" onclick="addLayers()"><i class="icon-font"></i>新增链接</a>
+                <a onclick="addLayers()"><i class="icon-font"></i>新增链接</a>
                 <a id=" batchDel" href="javascript:void(0)" onclick="manyLinks_del()"><i class="icon-font"></i>批量删除</a>
             </div>
         </div>
@@ -31,8 +31,8 @@
                         <td>@item.Url</td>
                         <td>@item.Describe</td>
                         <td>
-                            <a class="link-update" href="#" onclick="updateLayer('@item.Id')">修改</a>
-                            <a href="#" class="link-del" onclick="link_del('@item.Id',this)">删除</a>
+                            <a class="link-update" onclick="updateLayer('@item.Id')">修改</a>
+                            <a class="link-del" onclick="link_del('@item.Id',this)">删除</a>
                         </td>
                     </tr>
                 }

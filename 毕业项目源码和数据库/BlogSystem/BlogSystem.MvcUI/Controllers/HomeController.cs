@@ -19,7 +19,7 @@ namespace BlogSystem.MvcUI.Controllers
         // GET: Home
         //[MyAuthorize]
         [BlogAuth]
-        public async Task<ActionResult> Index(int page=1)
+        public async Task<ActionResult> Index(int page=1,string search = "")
         {
             int pagesize = 15;
             IArticleManger articleManger = new ArticleManger();
@@ -35,7 +35,7 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.articleTocateList = await articleManger.GetAllArticleTocate();
             IAdminManger adminManger = new AdminManger();
             ViewBag.links=await adminManger.GetAllLink();
-            var data = await articleManger.GetAllArticle();
+            var data = await articleManger.GetAllArticle(search);
             return View(data.ToPagedList<ArticleDto>(page,pagesize));
         }
 

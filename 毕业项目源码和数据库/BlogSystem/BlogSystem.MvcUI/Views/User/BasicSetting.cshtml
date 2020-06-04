@@ -7,49 +7,65 @@
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 @section scripts{
     <script>
-        $(function () {
-            $("#form-setuser").validate({
-                rules: {
-                    nickname: { required: true },
-                    email: { required: true },
-                }, messages:
-                {
-                    nickname: { required: "姓名不能为空！" },
-                    email: { required: "邮箱不能为空！", checkReg: "邮箱格式错误" },
+        $("#form-setuser").validate({
+            rules: {
+                nickname: { required: true },
+                email: {
+                    required: true,
+                    checkReg: true
+                },
+                psersonDesc: {
+                    required: true,
+                    rangelength: [1, 50]
                 }
-            });
-            $.validator.addMethod("checkReg", function (value, e) {
-                var regExp = "[A-Za-z0-9._％+-]+＠[A-Za-z0-9.-]+/.[A-Za-z]{2,4}";
-                return regExp.test(value);
-            })
+            },
+            messages:
+            {
+                nickname: { required: "姓名不能为空！" },
+                email: {
+                    required: "邮箱不能为空！",
+                    checkReg: "邮箱格式错误"
+                },
+                psersonDesc: {
+                    required: "请填写个人说明!",
+                    rangelength: "输入字符限制50个"
+
+                }
+            }
+        });
+        $.validator.addMethod('checkReg', function (value, e) {
+            var regExp = "[A-Za-z0-9._％+-]+@{@Html.Raw("@");}[A-Za-z0-9.-]+/.[A-Za-z]{2,4}";
+            return regExp.test(value);
         });
     </script>
-
 }
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $("#btn-update").click(function () {
-            if (!$('#email').val()) {
-                alert('请输入要修改的邮箱');
-                return;
-            }
-            if (!$('#nickname').val()) {
-                alert('请输入要修改的昵称');
-                return;
-            } else {
-                $.ajax({
-                    type: "post",
-                    url: "BasicSetting",
-                    data: $("#form-setuser").serialize(),
-                    success: function (data) {
-                        alert('修改成功');
-                        window.location.reload();
-                    }
-                })
-            }
-        })
-    })
+    //$(document).ready(function () {
+    //    $("#btn-update").click(function () {
+    //        if (!$('#email').val()) {
+    //            alert('请输入要修改的邮箱');
+    //            return;
+    //        }
+    //        if (!$('#nickname').val()) {
+    //            alert('请输入要修改的昵称');
+    //            return;
+    //        } if (!$('#psersonDesc').val()) {
+    //            alert('填写个人说明可以让更多人关注你哦!');
+    //            return;
+    //        } else {
+    //            $.ajax({
+    //                type: "post",
+    //                url: "BasicSetting",
+    //                data: $("#form-setuser").serialize(),
+    //                success: function (data) {
+    //                    alert('修改成功');
+    //                    window.location.reload();
+    //                }
+    //            });
+    //        }
+    //    });
+    //})
 </script>
 <script>
     $(document).ready(function () {
@@ -58,25 +74,26 @@
                 alert('请输入新密码');
                 return;
             }
-            if ($('#pwd').val()==$('#newPassword').val()) {
+            if ($('#pwd').val() === $('#newPassword').val()) {
                 alert('不能与旧密码一致');
                 return;
-            } if ($('#confirmPassword').val()!=$('#newPassword').val()) {
+            }
+            if ($('#confirmPassword').val() !== $('#newPassword').val()) {
                 alert('两次密码不一致');
                 return;
-            }else {
+            } else {
                 $.ajax({
-                type: "post",
-                url: "SetPassword",
-                data: $("#form-update-pwd").serialize(),
-                success: function (msg) {
-                    alert('修改成功')
-                    window.setTimeout(window.location.href = 'Login', 500);
-                }
-                })
+                    type: "post",
+                    url: "SetPassword",
+                    data: $("#form-update-pwd").serialize(),
+                    success: function (msg) {
+                        alert('修改成功');
+                        window.setTimeout(window.location.href = 'Login', 500);
+                    }
+                });
             }
-            
-        })
+
+        });
     })
 </script>
 <style>
@@ -88,8 +105,9 @@
         height: 128px;
         border-radius: 100%;
     }
-    .error {
-        color:red
+
+    label.error {
+        color: red
     }
 </style>
 <div class="layui-container fly-marginTop fly-user-main">
@@ -125,7 +143,6 @@
     <div class="site-tree-mobile layui-hide"><i class="layui-icon">&#xe602;</i></div>
     <div class="site-mobile-shade"></div>
 
-
     <div class="fly-panel fly-panel-user" pad20>
         <div class="layui-tab layui-tab-brief" lay-filter="user">
             <ul class="layui-tab-title" id="LAY_mine">
@@ -136,29 +153,30 @@
             </ul>
             <div class="layui-tab-content" style="padding: 20px 0;">
                 <div class="layui-form layui-form-pane layui-tab-item layui-show">
-                    <form method="post" id="form-setuser" enctype="multipart/form-data">
+                    <form action="BasicSetting" method="post" id="form-setuser">
                         <div class="layui-form-item">
                             <input type="hidden" name="userid" id="userid" value="@Session["Userid"]" />
                             @* 显示修改个人说明区域 *@
                             <label for="email" class="layui-form-label">邮箱</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="email" name="email" required lay-verify="email" autocomplete="off" value="@ViewBag.eamil" class="layui-input">
+                                <input type="text" id="email" name="email"  value="@ViewBag.eamil" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label for="nickname" class="layui-form-label">昵称</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="nickname" name="nickname" required lay-verify="required" autocomplete="off" value="@ViewBag.nickname" class="layui-input">
+                                <input type="text" id="nickname" placeholder="最多输入10个字符" maxlength="10" name="nickname"  value="@ViewBag.nickname" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">
                             <label for="psersonDesc" class="layui-form-label">个人说明</label>
                             <div class="layui-input-block">
-                                <textarea placeholder="@ViewBag.perdesc" id="psersonDesc" name="psersonDesc" autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
+                                <textarea placeholder="@ViewBag.perdesc (最多输入50个字符)" maxlength="50" id="psersonDesc" name="psersonDesc" autocomplete="off" class="layui-textarea" style="height: 80px;" ></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <button id="btn-update" class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
+                            <input type="submit" name="name" value="保存" />
+                            @*<button id="btn-update" class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>*@
                         </div>
                     </form>
                 </div>
@@ -175,35 +193,35 @@
                 </div>
                 @* 修改密码区域 *@
                 <div class="layui-form layui-form-pane layui-tab-item">
-                        <form id="form-update-pwd">
-                            <div class="layui-form-item">
-                                <label for="password" class="layui-form-label">当前密码</label>
-                                <div class="layui-input-inline">
-                                    <input type="text" id="pwd" name="pwd" required lay-verify="required" autocomplete="off" class="layui-input" value="@ViewBag.pwd" readonly>
-                                </div>
+                    <form id="form-update-pwd">
+                        <div class="layui-form-item">
+                            <label for="password" class="layui-form-label">当前密码</label>
+                            <div class="layui-input-inline">
+                                <input type="text" id="pwd" name="pwd" required lay-verify="required" autocomplete="off" class="layui-input" value="@ViewBag.pwd" readonly>
                             </div>
-                            <div class="layui-form-item">
-                                <label for="newPassword" class="layui-form-label">新密码</label>
-                                <div class="layui-input-inline">
-                                    <input type="password" id="newPassword" name="newPassword" required lay-verify="required" autocomplete="off" class="layui-input">
-                                </div>
-                                <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="newPassword" class="layui-form-label">新密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="newPassword" name="newPassword" required lay-verify="required" autocomplete="off" class="layui-input">
                             </div>
-                            <div class="layui-form-item">
-                                <label for="confirmPassword" class="layui-form-label">确认密码</label>
-                                <div class="layui-input-inline">
-                                    <input type="password" id="confirmPassword" name="confirmPassword" required lay-verify="required" autocomplete="off" class="layui-input">
-                                </div>
+                            <div class="layui-form-mid layui-word-aux">6到16个字符</div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label for="confirmPassword" class="layui-form-label">确认密码</label>
+                            <div class="layui-input-inline">
+                                <input type="password" id="confirmPassword" name="confirmPassword" required lay-verify="required" autocomplete="off" class="layui-input">
                             </div>
-                            <div class="layui-form-item">
-                                <button id="btn-UpdatePwd" class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
-                            </div>
-                        </form>
-                </div>
-
+                        </div>
+                        <div class="layui-form-item">
+                            <button id="btn-UpdatePwd" class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>
+                        </div>
+                    </form>
                 </div>
 
             </div>
+
+        </div>
     </div>
 </div>
 

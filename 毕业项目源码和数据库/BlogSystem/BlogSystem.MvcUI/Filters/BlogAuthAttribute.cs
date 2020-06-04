@@ -11,7 +11,7 @@ namespace BlogSystem.MvcUI.Filters
     {
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
-            if (!(filterContext.HttpContext.Session["Userid"] != null))
+            if (filterContext.HttpContext.Session["Userid"] == null)
             {
                 filterContext.Result = new RedirectToRouteResult(new RouteValueDictionary()
                 {
