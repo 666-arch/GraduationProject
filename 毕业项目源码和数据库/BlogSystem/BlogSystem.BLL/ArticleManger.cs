@@ -5,8 +5,10 @@ using BlogSystem.IDAL;
 using BlogSystem.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -371,28 +373,6 @@ namespace BlogSystem.BLL
                      
                     }).ToListAsync();
                 return data;
-                //using (IArticleService articles = new ArticleService())
-                //{
-                //    var data = await commentService.GetAllAsync()
-                //        .GroupBy(c => new CommentDto()
-                //        {
-                //            ArticleId = c.ArticleId,
-                //            Title = c.Article.Title
-                //        },
-                //        c => new ArticleDto()
-                //        {
-                //            Id = c.ArticleId
-                //        }
-                //        ).OrderByDescending(g => g.Count())
-                //        .Select(
-                //            g => new CommentDto()
-                //            {
-                //                Title = g.Key.Title,
-                //                Column = g.Count()
-                //            }
-                //        ).ToListAsync();
-                //    return data;
-                //}
             }
         }
 
@@ -594,8 +574,27 @@ namespace BlogSystem.BLL
                               BlogCategoryId = m.BlogCategoryId,
                               CateName = m.BlogCategory.CategoryName,
                               ArticleId = m.ArticleId
+
                           }).ToListAsync();
          
+            }
+        }
+
+        public async Task<List<UserInformation>> GetUserRandom()
+        {
+            using (IUserService user = new UserService())
+            {
+                var data= await user.GetAllAsync()
+                    .OrderBy(m=>Guid.NewGuid())
+                    .Take(5)
+                    .Select(m => new UserInformation()
+                    {
+                        NickName = m.NickName,
+                        Id=m.Id,
+                        FansCount=m.FansCount,
+                        ImagePath=m.ImagePath
+                    }).ToListAsync();
+                return data;
             }
         }
     }

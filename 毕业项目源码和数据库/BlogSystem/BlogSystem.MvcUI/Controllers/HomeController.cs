@@ -34,7 +34,8 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.catecount= cateList.Count();
             ViewBag.articleTocateList = await articleManger.GetAllArticleTocate();
             IAdminManger adminManger = new AdminManger();
-            ViewBag.links=await adminManger.GetAllLink();
+            string linkname = "";
+            ViewBag.links=await adminManger.GetAllLink(linkname);
             var data = await articleManger.GetAllArticle(search);
             return View(data.ToPagedList<ArticleDto>(page,pagesize));
         }

@@ -15,35 +15,35 @@
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script>
     $(function () {
-        $('#form1').submit(function () {
+        $('#form1').submit(function() {
             var postdata = $("#form1").serialize();
             $.ajax({
                 type: "post",
                 url: "CreateAttention",
                 data: postdata,
-                success: function () {
+                success: function() {
                     alert('关注成功');
                     window.location.reload(); //刷新?
                 }
-            })
-        })
+            });
+        });
     })
 </script>
 
 <script>
     $(function () {
-        $('#form2').submit(function () {
+        $('#form2').submit(function() {
             var postdata = $("#form2").serialize();
             $.ajax({
                 type: "post",
                 url: "Unfollow",
                 data: postdata,
-                success: function () {
+                success: function() {
                     alert('取消成功');
                     window.location.reload(); //刷新?
                 }
-            })
-        })
+            });
+        });
     })
 </script>
 

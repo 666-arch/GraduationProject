@@ -4,9 +4,44 @@
     Layout = "~/Views/Shared/_LayoutFront.cshtml";
     var articledata = (List<ArticleDto>)ViewBag.articledata;
     var coList = (List<CommentDto>)ViewBag.coList;
+    var userList = (List<UserInformation>)ViewBag.dataList;
+    var sign = 1;
+    string ajaxdata = "ajaxdata";
+    string imgdata = "imgdata";
 }
 @model List<CommentDto>
-    <script src="~/Scripts/jquery-3.4.1.js"></script>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<script>
+    function btns() {
+        $.ajax({
+            type: "POST",
+            url: "InitData",
+            data: "{}",
+            dataType: 'json',
+            success: function (result) {
+                var jlist = eval(result);   //转化json对象
+                for (var i = 0; i < jlist.length; i++) {
+                    console.log("/FrontPage/images/" + jlist[i].ImagePath);
+                    document.getElementById("ajaxdata1").innerHTML = jlist[0].NickName;
+                    document.getElementById("ajaxdata2").innerHTML = jlist[1].NickName;
+                    document.getElementById("ajaxdata3").innerHTML = jlist[2].NickName;
+                    document.getElementById("ajaxdata4").innerHTML = jlist[3].NickName;
+                    document.getElementById("ajaxdata5").innerHTML = jlist[4].NickName;
+                    var sr = "/FrontPage/images/";
+                    var obj = document.getElementById("imgdata1");
+                    obj.src = sr + jlist[0].ImagePath;
+                    console.log(obj);
+                    document.getElementById("imgdata2").src = sr + jlist[1].ImagePath;
+                    document.getElementById("imgdata3").src = sr + jlist[2].ImagePath;
+                    document.getElementById("imgdata4").src = sr + jlist[3].ImagePath;
+                    document.getElementById("imgdata5").src = sr + jlist[4].ImagePath;
+                    
+                }
+            }
+        });
+    }
+</script>
 @Html.Partial("_PartialHomePart");
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
@@ -24,7 +59,7 @@
                 </div>
                 <div class="detail-about">
                     <a class="fly-avatar" href="/User/UserHome">
-                        <img src="~/FrontPage/images/@ViewBag.uimg"  style="display: block;
+                        <img src="~/FrontPage/images/@ViewBag.uimg" style="display: block;
                                     width: 45px;
                                     height: 45px;
                                     margin: 0;
@@ -52,9 +87,9 @@
                     随笔分类
                     <p>
                         @foreach (var item in ViewBag.acatename)
-	                    {
-		                    @item @:&nbsp;&nbsp;
-	                    }
+                        {
+                            @item @:&nbsp;&nbsp;
+                        }
                     </p>
                 </div>
             </div>
@@ -77,13 +112,21 @@
                                 @item.CreateTime
                             </span>
                             <br />
-                            if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
+                            try
                             {
-                                <a href="/Article/RemoveCommentByUser?commentid=@item.Id" class="cm-link" onclick="return confirm('你确定要删除你的评论吗？')">删除评论</a>
-                                @*<input type="button" onclick="AddTextareaValue('@item.Content','@item.Id')" class="cm-link" value="修改评论"/>*@
-                                <a href="#" class="link-update" onclick="updateLayer('@item.Id')">修改</a>
-                                <hr />
+                                if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
+                                {
+                                    <a href="/Article/RemoveCommentByUser?commentid=@item.Id" class="cm-link" onclick="return confirm('你确定要删除你的评论吗？')">删除评论</a>
+                                    @*<input type="button" onclick="AddTextareaValue('@item.Content','@item.Id')" class="cm-link" value="修改评论"/>*@
+                                    <a href="#" class="link-update" onclick="updateLayer('@item.Id')">修改</a>
+                                    <hr />
+                                }
                             }
+                            catch (Exception e)
+                            {
+
+                            }
+
                         }
                     </li>
                 </ul>
@@ -111,14 +154,20 @@
                         </div>
                     </form>
                 </div>
-                @if (ViewBag.astate == true&&Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
+                @try //管理员预览文章避免用户session为空报错
                 {
-                    <form>
-                        <input type="button" id="Recommend" name="Recommend" value="推荐" />
-                        <input type="submit" id="Opposition" name="Opposition" value="反对" />
-                    </form>
+                    if (ViewBag.astate == true && Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
+                    {
+                        <form>
+                            <input type="button" id="Recommend" name="Recommend" value="推荐" />
+                            <input type="submit" id="Opposition" name="Opposition" value="反对" />
+                        </form>
+                    }
                 }
-
+                catch (Exception e)
+                {
+                    <p>管理员不可见</p>
+                }
                 <a id="aa" href="#top" target="_self">返回顶部</a>
                 <script>
                     $(function () {
@@ -130,19 +179,50 @@
             </div>
         </div>
         <div class="layui-col-md4">
+            <div class="fly-panel">
+                <div class="fly-panel-title">
+                    推荐关注
+                </div>
+                <div class="fly-panel-main" id="ajaxData">
+                    <input type="hidden" id="uid" value="@Session["Userid"]" />
+                    <input type="button" onclick="btns()" name="name" value="刷新用户" class="layui-input"/>
+                    <ul class="fly-list">
+                        @foreach (var user in userList.Where(m => m.Id != Guid.Parse(Session["Userid"].ToString())))
+                        {
+                            <li>
+                                <img src="/FrontPage/images/@user.ImagePath" id="@imgdata@sign" class="uimg" style="width: 50px; height: 50px;"/>
+                                <a href="~/User/UserHome?userid=@user.Id" id="@ajaxdata@sign" class="fly-avatar" >
+                                    @user.NickName
+                                </a>
+                                <form method="post">
+                                    <a onclick="Atten('@user.Id')" style="color: red; cursor: pointer" id="follow">+关注</a>
+                                    @*<input type="button" onclick="Atten('@user.Id')" value="+关注" />*@
+                                </form>
+                                <script>
+                                    function Atten(fid) {
+                                        $.ajax({
+                                            type: "post",
+                                            url: "/User/CreateAttention",
+                                            dataType: "json",
+                                            data: {
+                                                uid:$("#uid").val(),
+                                                fid:fid
+                                            },
+                                            success: function (msg) {
+                                                console.log(msg.data);
+                                            }
+                                        });
+                                    }
+                                </script>
+                            </li>
+                            sign++;
+                        }
+                    </ul>
+                </div>
+            </div>
             <div class="fly-panel fly-link">
                 <h3 class="fly-panel-title">文章热议</h3>
                 <ul class="fly-panel-main" style="color:dimgray">
-                    @*@foreach (var item in coList
-                .GroupBy(m => new { m.ArticleId,m.Title })
-                .Select(m => new
-                {
-                    ArticleId = m.Key.ArticleId,Title=m.Key.Title,
-
-                }))
-            {
-                <li>@item.Title</li>
-            }*@
                     @foreach (var item in coList
                         .GroupBy(m => m.Title, m => m.ArticleId)
                         .Select(m => (new { Title = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
@@ -178,14 +258,6 @@
                 </div>
             </div>
 
-            <div class="fly-panel">
-                <div class="fly-panel-title">
-                    这里可作为广告区域
-                </div>
-                <div class="fly-panel-main">
-                    <a href="http://layim.layui.com/?from=fly" target="_blank" class="fly-zanzhu" time-limit="2017.09.25-2099.01.01" style="background-color: #5FB878;">LayIM 3.0 - layui 旗舰之作</a>
-                </div>
-            </div>
 
             <div class="fly-panel" style="padding: 20px 0; text-align: center;">
                 <img src="../../res/images/weixin.jpg" style="max-width: 100%;" alt="layui">
@@ -200,22 +272,20 @@
         if (!$("#content").val()) {
             alert('请输入评论');
             return;
-        }
-        else
-        {
+        } else {
             $.ajax({
                 type: "post",
                 url: "CreateComment",
                 data: $("#form-comment-add").serialize(),
                 success: function (msg) {
-                    if (msg.status=1) {
+                    if (msg.status = 1) {
                         msg.layer(msg.data);
                         window.location.reload(); //刷新
                     }
                 }
-            })
+            });
         }
-    })
+    });
 </script>
 
 <script>
@@ -229,10 +299,10 @@
             success: function () {
                 alert('推荐成功！');
                 window.location.reload();
-                $("#Recommend").attr("disabled",true);
+                $("#Recommend").attr("disabled", true);
             }
-        })
-    })
+        });
+    });
 </script>
 
 <script>
@@ -263,18 +333,17 @@
 </script>
 
 <script type="text/javascript">
-    function updateLayer(id)
-        {
-            layer.open({
-                type: 2,
-                title: '修改评论信息',
-                maxmin: false,
-                shadeClose: true,
-                area: ['550px', '400px'],
-                content: 'EditCommentByuser?id=' + id
-            });
-        }
-    
+    function updateLayer(id) {
+        layer.open({
+            type: 2,
+            title: '修改评论信息',
+            maxmin: false,
+            shadeClose: true,
+            area: ['550px', '400px'],
+            content: 'EditCommentByuser?id=' + id
+        });
+    }
+
 
     //$("#EditComment").click(function () {
     //    if (!$("#content").val()) {

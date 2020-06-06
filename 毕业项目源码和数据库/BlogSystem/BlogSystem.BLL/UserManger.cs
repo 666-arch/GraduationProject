@@ -110,7 +110,7 @@ namespace BlogSystem.BLL
                 }
                 else
                 {
-                    throw new ArgumentException("邮箱地址不存在");
+                    return null;
                 }
             }
         }

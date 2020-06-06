@@ -7,8 +7,12 @@ using BlogSystem.IBLL;
 using BlogSystem.BLL;
 using System.Threading.Tasks;
 using BlogSystem.Dto;
+using BlogSystem.MvcUI.Filters;
+using System.Text;
+
 namespace BlogSystem.MvcUI.Controllers
 {
+    [BlogAuth]
     public class ArticleController : Controller
     {
         // GET: Article
@@ -92,6 +96,8 @@ namespace BlogSystem.MvcUI.Controllers
 
             List<CommentDto> coList = await articleManger.GetAllComment();  //文章热议
             ViewBag.coList = coList;
+            var ajaxdata = await articleManger.GetUserRandom();
+            ViewBag.dataList = ajaxdata;
 
             return View(await articleManger.GetAllCommentByArticleId(articleid));//获取最新评论信息
         }
@@ -222,6 +228,14 @@ namespace BlogSystem.MvcUI.Controllers
             {
                 return Content("<script>alert('该文章已被分类,请先移除对应的分类');history.go(-1);</script>");
             }
+        }
+
+        public async Task<JsonResult> InitData()
+        {
+            IArticleManger articleManger = new ArticleManger();
+            var ajaxdata = await articleManger.GetUserRandom();
+
+            return Json(ajaxdata);
         }
     }
 }

@@ -65,11 +65,11 @@ namespace BlogSystem.MvcUI.Controllers
                   Session["Logname"] = model.LoginName;
                   Session["Nickname"] = nickname;
                   Session["defaultPhoto"] = imagepath;
-                  return RedirectToAction("Index");
+                  return Json(new { status = true, data = "登录成功" });
             }
             else
             {
-                return Content("<script>alert('邮箱或密码错误');history.go(-1);</script>");
+                return Json(new { status=false, data = "邮箱或密码错误请重新输入" });
             }
         }
         public ActionResult Register()
@@ -87,7 +87,21 @@ namespace BlogSystem.MvcUI.Controllers
             }
             else
             {
-                return "您可以使用此邮箱";
+                return "";
+            }
+        }
+        [HttpPost]
+        public async Task<string> AjaxCheckForgetEamil(string email)    //ajax请求用户邮箱已被注册
+        {
+            IUserMnager userMnager = new UserManger();
+            var data = await userMnager.GetByEmail(email);
+            if (data == null)
+            {
+                return "该邮箱未被注册,无法进行更换密码的操作!";
+            }
+            else
+            {
+                return "";
             }
         }
         [HttpPost]
@@ -150,9 +164,10 @@ namespace BlogSystem.MvcUI.Controllers
         [HttpPost]
         public async Task<ActionResult> BasicSetting(Guid userid, string email, string nickname, string psersonDesc) //修改个人信息
         {
-            IUserMnager userMag = new UserManger();
+            IUserMnager userMag = new UserManger(); 
             await userMag.ChangeUserInformationById(userid, email, nickname, psersonDesc);
-            return View();
+
+            return Json(new { data = "修改成功!" });
         }
         [BlogAuth]
         [HttpPost]

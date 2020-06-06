@@ -26,7 +26,7 @@ namespace BlogSystem.IBLL
 
         Task RemoveLinkById(Guid id);       //删除链接
 
-        Task<List<LinkDto>> GetAllLink();       //查询所有链接
+        Task<List<LinkDto>> GetAllLink(string linkname);       //查询所有链接
 
         Task<LinkDto> GetAllLinkById(Guid id);  //查询单个链接
 

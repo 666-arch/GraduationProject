@@ -18,8 +18,8 @@ namespace BlogSystem.MvcUI.Controllers
     {
         // GET: Admin
 
-        [MyAuthorize]
-        [HttpPost]
+        //[MyAuthorize]
+        //[HttpPost]
         public async Task<ActionResult> Index(int page=1)
         {
             int pagesize = 5;
@@ -128,11 +128,12 @@ namespace BlogSystem.MvcUI.Controllers
             return View();
         }
         //[MyAuthorize]
-        public async Task<ActionResult> LinkIndex(int page=1)
+        public async Task<ActionResult> LinkIndex(int page=1,string linkname="")
         {
             int pagesize = 10;
+            ViewBag.linkname = linkname;
             IAdminManger adminManger = new AdminManger();
-            var links=await adminManger.GetAllLink();
+            var links=await adminManger.GetAllLink(linkname);
             return View(links.ToPagedList<LinkDto>(page, pagesize));
         }
         public ActionResult CreateLink()
@@ -216,14 +217,6 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.nickname = nickname;
             return View(articles.ToPagedList<ArticleDto>(page,pagesize));
         }
-        //[HttpPost]
-        //public async Task<ActionResult> UserIndex(int page = 1,string email="", string nickname="")
-        //{
-        //    int pagesize = 10;
-        //    IUserMnager userMnager = new UserManger();
-        //    var userByadmin=await userMnager.GetAllUserlike(email, nickname);
-        //    return View(userByadmin.ToPagedList<UserInformation>(page, pagesize));
-        //}
 
         public async Task<ActionResult> EditUserAdmin(Guid id)
         {

@@ -21,6 +21,7 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName,bool state); //根据昵称找文章
 
+
         Task<List<ArticleToBlogcateDto>> GetAllArticlesByCategoryId(Guid blogcateId);  //根据类别找Id
 
         Task<List<ArticleDto>> GetAllArticlesByState(bool state);   //根据发布状态查询（默认是false）
@@ -64,5 +65,7 @@ namespace BlogSystem.IBLL
         Task<List<ArticleToBlogcateDto>> GetAllArticleTocate();     //文章类别中间表
 
         Task<List<ArticleToBlogcateDto>> GetAllArticleTocateByUserId(Guid userid);
+
+        Task<List<UserInformation>>GetUserRandom();
     }
 }

@@ -29,25 +29,27 @@
                         url: "Login",
                         data: $("#form-login").serialize(),
                         success: function (data) {
-                            if (data.Success) {
-                                window.token = data.Token;
-                                $.ajax({
-                                    url: "/Admin/Index",
-                                    method: "post",
-                                    headers: { "auth": window.token },//通过请求头来发送token
-                                    data: {
-                                        andOperation: ["best buy", "first"],
-                                        from: "0",
-                                        to:"2000"
-                                    },
-                                    success: function (data) {
-                                        console.log(data);
-                                        //window.location.href = 'Index';
-                                    }
-                                });
-                            } else {
-                                alert("登录失败:" + data.Message);
-                            }
+                            window.location.href = 'Index';
+                            //if (data.Success) {
+                                
+                            //    window.token = data.Token;
+                            //    $.ajax({
+                            //        url: "/Admin/Index",
+                            //        method: "post",
+                            //        headers: { "auth": window.token },//通过请求头来发送token
+                            //        data: {
+                            //            andOperation: ["best buy", "first"],
+                            //            from: "0",
+                            //            to:"2000"
+                            //        },
+                            //        success: function (data) {
+                            //            console.log(data);
+                            //            window.location.href = 'Index';
+                            //        }
+                            //    });
+                            //} else {
+                            //    alert("登录失败:" + data.Message);
+                            //}
                         }
                     });
                 }

@@ -142,11 +142,13 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<LinkDto>> GetAllLink()
+        public async Task<List<LinkDto>> GetAllLink(string linkname)
         {
             using (ILinkService linkService = new LinkService())
             {
-                return await linkService.GetAllAsync().Select(m => new LinkDto()
+                return await linkService.GetAllAsync()
+                    .Where(m=>string.IsNullOrEmpty(linkname)||m.Title.Contains(linkname))
+                    .Select(m => new LinkDto()
                 {
                     Id = m.Id,
                     Title = m.Title,

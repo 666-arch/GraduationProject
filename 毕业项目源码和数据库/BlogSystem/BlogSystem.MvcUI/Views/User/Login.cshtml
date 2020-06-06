@@ -6,22 +6,36 @@
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#btn-submit").click(function() {
-            $.ajax({
-                type: "post",
-                url: "Login",
-                dataType: "json",
-                data: $("#form-log").serialize(),
-                success: function(msg) {
-                    if (msg.status) {
-                        layer.msg(msg.data, { icon: 2 });
-                        window.setTimeout("window.location.href='Index'", 800);
+        $("#btn-submit").click(function () {
+            if (!$('#email').val()) {
+                alert('请输入邮箱');
+                return;
+            }
+            if (!$('#password').val()) {
+                alert('请输入密码');
+                return;
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "Login",
+                    dataType: "json",
+                    data: $("#form-log").serialize(),
+                    success: function(msg) {
+                        if (!msg.status) {
+                            console.log(msg.data);
+                            alert(msg.data);
+                            return;
+                        } else {
+                            alert(msg.data);
+                            window.location.href = "Index";
+                        }
                     }
-                }
-            });
+                });
+            }
         });
     })
 </script>
+
 <div class="layui-container fly-marginTop">
     <div class="fly-panel fly-panel-user" pad20>
         <div class="layui-tab layui-tab-brief" lay-filter="user">
@@ -47,7 +61,8 @@
                             </div>
                             <br /><br />
                             <div class="layui-form-item">
-                                <button id="btn-submit" class="layui-btn" lay-filter="*" lay-submit>立即登录</button>
+                                @*<button id="btn-submit" class="layui-btn" lay-filter="*" lay-submit>立即登录</button>*@
+                                <input type="button"  class="layui-btn"  name="name" value="立即登录" id="btn-submit"/>
                                 <span style="padding-left:20px;">
                                     <a href="/User/Forgetpwd">忘记密码？</a>
                                 </span>

@@ -5,15 +5,18 @@
     ViewBag.Title = "LinkIndex";
     Layout = "~/Views/Shared/_LayoutBack.cshtml";
 }
-    <link href="~/Content/PagedList.css" rel="stylesheet" />
+<link href="~/Content/PagedList.css" rel="stylesheet" />
 <div class="result-wrap">
-    <form>
+    <form id="sea">
         <div class="result-title">
+            <input type="text" name="linkname" value="@ViewBag.linkname" placeholder="输入链接名"/>
+            <input type="submit" name="name" value="查询" class="layui-input"/>
             <div class="result-list">
-                <a onclick="addLayers()"><i class="icon-font"></i>新增链接</a>
+                <a onclick="addLayers()" style="cursor: pointer"><i class="icon-font"></i>新增链接</a>
                 <a id=" batchDel" href="javascript:void(0)" onclick="manyLinks_del()"><i class="icon-font"></i>批量删除</a>
             </div>
         </div>
+    </form>
         <div class="result-content">
             <table class="result-tab" width="100%">
                 <tr>
@@ -42,7 +45,6 @@
                 @Html.PagedListPager(Model, page => Url.Action("LinkIndex", new { page }))
             </div>
         </div>
-    </form>
 </div>
 <script>
     function addLayers() {
