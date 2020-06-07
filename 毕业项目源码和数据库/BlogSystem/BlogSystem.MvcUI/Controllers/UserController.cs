@@ -249,7 +249,7 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.img = user.ImagePath;
             IArticleManger articleManger = new ArticleManger();
             Guid userids = Guid.Parse(Session["Userid"].ToString());
-            List<FansDto> fansList = await userMag.GetAllFansByuserId(userids, userid);  //查看当前登录人是否存在关注记录
+            List<FansDto> fansList = await userMag.GetAllFansByuserId(userids, userid);  //查看当前用户是否存在关注记录
             ViewBag.fansCount = fansList;
             ViewBag.fCount = fansList.Count();  //判断关注的集合是否为空,如果为空说明登录的人没有关注记录
             List<FansDto> fansListCount = await userMag.GetAllFansByFocususerId(userid);
@@ -269,7 +269,7 @@ namespace BlogSystem.MvcUI.Controllers
         {
             IUserMnager userMnager = new UserManger();
             await userMnager.CreateFans(userid, focusid);
-            return Json(new { data = "关注成功" });
+            return Json(new {status=true, data = "关注成功" });
         }
 
         [HttpPost]

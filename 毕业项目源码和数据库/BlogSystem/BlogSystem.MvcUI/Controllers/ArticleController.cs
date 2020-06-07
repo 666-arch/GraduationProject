@@ -96,8 +96,14 @@ namespace BlogSystem.MvcUI.Controllers
 
             List<CommentDto> coList = await articleManger.GetAllComment();  //文章热议
             ViewBag.coList = coList;
+
             var ajaxdata = await articleManger.GetUserRandom();
             ViewBag.dataList = ajaxdata;
+
+            Guid userid = Guid.Parse(Session["Userid"].ToString());
+            IUserMnager userMag = new UserManger();
+            List<FansDto> focusListCount = await userMag.GetAllFocusByUserid(userid); //我关注的人
+            ViewBag.fsList = focusListCount;
 
             return View(await articleManger.GetAllCommentByArticleId(articleid));//获取最新评论信息
         }
@@ -234,7 +240,6 @@ namespace BlogSystem.MvcUI.Controllers
         {
             IArticleManger articleManger = new ArticleManger();
             var ajaxdata = await articleManger.GetUserRandom();
-
             return Json(ajaxdata);
         }
     }

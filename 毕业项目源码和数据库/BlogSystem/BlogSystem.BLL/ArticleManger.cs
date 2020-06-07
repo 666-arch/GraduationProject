@@ -273,9 +273,11 @@ namespace BlogSystem.BLL
         {
             using (IArticleService articleSvc = new ArticleService())
             {
-                return await articleSvc.GetAllAsync()
+                var data= await articleSvc.GetAllAsync()
                     .Include(m => m.User)
                     .Where(m => m.UserId == userId)
+                    .Where(m=>m.State==true)
+                    .Where(m=>m.IsRemoved==false)
                     .Select(m => new ArticleDto()
                     {
                         Id = m.Id,
@@ -286,6 +288,7 @@ namespace BlogSystem.BLL
                         CreateTime = m.CreateTime,
                         State = m.State
                     }).ToListAsync();
+                return data;
                 //using (IArticleToCategoryService articleToCategorySvc = new ArticleToCategoryService())
                 //{
                 //    var cate = await articleToCategorySvc.GetAllAsync()
@@ -579,7 +582,7 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<UserInformation>> GetUserRandom()
+        public async Task<List<UserInformation>> GetUserRandom()    //随机获取数据
         {
             using (IUserService user = new UserService())
             {

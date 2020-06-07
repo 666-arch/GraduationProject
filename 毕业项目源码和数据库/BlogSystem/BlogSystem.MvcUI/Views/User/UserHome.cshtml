@@ -137,16 +137,25 @@
                     <li>
                         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                             <legend>随笔档案</legend>
-                            @foreach (var item in Model.Where(m => m.State == true).GroupBy(m => m.CreateTime.ToString("yyyy-MM-dd")))  //草稿箱不在考虑范围内
+                            @*@foreach (var item in Model
+                                .Where(m => m.State == true)
+                                .GroupBy(m => m.CreateTime.ToString("yyyy-MM-dd")))  //草稿箱不在考虑范围内
                             {
-
                                 <span style="color:lightcoral">
                                     @item.Key.AsDateTime().ToString("yyyy-MM-dd") (@Model.Count())
                                 </span>
+                            }*@
+                            @foreach (var item in Model
+                                .GroupBy(m=>m.CreateTime.ToString("yyyy-MM-dd"))
+                                .Select(m=>new{CreateTime=m.Key,Count=m.Count()}))  //根据发布时间分组,排除草稿状态的文章以及已被删除的文章
+                            {
+                                <span style="color:lightcoral">
+                                    @item.CreateTime.AsDateTime().ToString("yyyy-MM-dd") (@item.Count)
+                                </span>
+                                <br/>
                             }
                         </fieldset>
                     </li>
-
                     <li>
                         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                             <legend>推荐排行</legend>

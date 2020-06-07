@@ -5,6 +5,7 @@
     var articledata = (List<ArticleDto>)ViewBag.articledata;
     var coList = (List<CommentDto>)ViewBag.coList;
     var userList = (List<UserInformation>)ViewBag.dataList;
+    var fsList = (List<FansDto>) ViewBag.fsList;
     var sign = 0;
     string ajaxdata = "ajaxdata";
     string imgdata = "imgdata";
@@ -187,18 +188,16 @@
                     <input type="hidden" id="uid" value="@Session["Userid"]" />
                     <input type="button" onclick="btns()" name="name" value="点击刷新用户" class="layui-input" title="刷新推荐"/>
                     <ul class="fly-list">
-                        @foreach (var user in userList.Where(m => m.Id != Guid.Parse(Session["Userid"].ToString())))
+                        @foreach (var user in userList)
                         {
-                            
+                            //var sys = "关注";
                             sign++;
                             <li>
                                 <img src="/FrontPage/images/@user.ImagePath" id="@imgdata@sign" class="uimg" style="width: 50px; height: 50px;"/>
                                 <a href="~/User/UserHome?userid=@user.Id" id="@ajaxdata@sign" class="fly-avatar" >
                                     @user.NickName
                                 </a>
-                                <form method="post">
-                                    <a onclick="Atten('@user.Id')" style="color: red; cursor: pointer" id="follow">+关注</a>
-                                </form>
+                                <a onclick="Atten('@user.Id')" style="color: red; cursor: pointer" id="follow">+关注</a>
                                 <script>
                                     function Atten(fid) {
                                         $.ajax({
@@ -206,11 +205,14 @@
                                             url: "/User/CreateAttention",
                                             dataType: "json",
                                             data: {
-                                                uid:$("#uid").val(),
-                                                fid:fid
+                                                userid:$("#uid").val(),
+                                                focusid:fid
                                             },
                                             success: function (msg) {
-                                                console.log(msg.data);
+                                                if (msg.status) {
+                                                    $("#follow").text('关注成功');
+                                                    console.log(msg.data);
+                                                }
                                             }
                                         });
                                     }
