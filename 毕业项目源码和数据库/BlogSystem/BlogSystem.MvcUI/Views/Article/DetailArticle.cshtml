@@ -5,7 +5,7 @@
     var articledata = (List<ArticleDto>)ViewBag.articledata;
     var coList = (List<CommentDto>)ViewBag.coList;
     var userList = (List<UserInformation>)ViewBag.dataList;
-    var sign = 1;
+    var sign = 0;
     string ajaxdata = "ajaxdata";
     string imgdata = "imgdata";
 }
@@ -185,10 +185,12 @@
                 </div>
                 <div class="fly-panel-main" id="ajaxData">
                     <input type="hidden" id="uid" value="@Session["Userid"]" />
-                    <input type="button" onclick="btns()" name="name" value="刷新用户" class="layui-input"/>
+                    <input type="button" onclick="btns()" name="name" value="点击刷新用户" class="layui-input" title="刷新推荐"/>
                     <ul class="fly-list">
                         @foreach (var user in userList.Where(m => m.Id != Guid.Parse(Session["Userid"].ToString())))
                         {
+                            
+                            sign++;
                             <li>
                                 <img src="/FrontPage/images/@user.ImagePath" id="@imgdata@sign" class="uimg" style="width: 50px; height: 50px;"/>
                                 <a href="~/User/UserHome?userid=@user.Id" id="@ajaxdata@sign" class="fly-avatar" >
@@ -196,7 +198,6 @@
                                 </a>
                                 <form method="post">
                                     <a onclick="Atten('@user.Id')" style="color: red; cursor: pointer" id="follow">+关注</a>
-                                    @*<input type="button" onclick="Atten('@user.Id')" value="+关注" />*@
                                 </form>
                                 <script>
                                     function Atten(fid) {
@@ -215,7 +216,6 @@
                                     }
                                 </script>
                             </li>
-                            sign++;
                         }
                     </ul>
                 </div>
@@ -260,8 +260,6 @@
 
 
             <div class="fly-panel" style="padding: 20px 0; text-align: center;">
-                <img src="../../res/images/weixin.jpg" style="max-width: 100%;" alt="layui">
-                <p style="position: relative; color: #666;">微信扫码关注 layui 公众号</p>
             </div>
         </div>
     </div>
@@ -343,26 +341,4 @@
             content: 'EditCommentByuser?id=' + id
         });
     }
-
-
-    //$("#EditComment").click(function () {
-    //    if (!$("#content").val()) {
-    //        alert('请输入评论');
-    //        return;
-    //    }
-    //    else
-    //    {
-    //        $.ajax({
-    //            type: "post",
-    //            url: "EditCommentByUser",
-    //            data: $("#form-comment-add").serialize(),
-    //            success: function (msg) {
-    //                if (msg.status=1) {
-    //                    msg.layer(msg.data);
-    //                    window.location.reload(); //刷新
-    //                }
-    //            }
-    //        })
-    //    }
-    //})
 </script>

@@ -545,15 +545,14 @@ namespace BlogSystem.BLL
             using (IArticleToCategoryService articleToCategory = new ArticleToCategoryService())
             {
                 return await articleToCategory.GetAllAsync()
-                    .Where(m=>m.IsRemoved==false)
-                    .Where(m=>m.Article.State==true)    //文章已发布
+                    .Where(m=>m.IsRemoved==false)   
+                    .Where(m=>m.Article.State==true)    //已发布的文章
                     .Include(m => m.BlogCategory)
                     .Select(m => new ArticleToBlogcateDto()
                 {
                     CateName = m.BlogCategory.CategoryName,
                     BlogCategoryId = m.BlogCategoryId,
                     ArticleId = m.ArticleId
-             
                 }).ToListAsync();
             }
         }

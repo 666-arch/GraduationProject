@@ -19,8 +19,12 @@
                     type: "post",
                     url: "Login",
                     dataType: "json",
-                    data: $("#form-log").serialize(),
-                    success: function(msg) {
+                    data: {
+                        email: $("#email").val(),
+                        password: $("#password").val(),
+                        remberme:$("#remberme").prop("checked")
+                    },
+                    success: function (msg) {
                         if (!msg.status) {
                             console.log(msg.data);
                             alert(msg.data);
@@ -35,7 +39,7 @@
         });
     })
 </script>
-
+@*$("#form-log").serialize()*@
 <div class="layui-container fly-marginTop">
     <div class="fly-panel fly-panel-user" pad20>
         <div class="layui-tab layui-tab-brief" lay-filter="user">
@@ -50,19 +54,22 @@
                             <div class="layui-form-item">
                                 <label for="email" class="layui-form-label">邮箱</label>
                                 <div class="layui-input-inline">
-                                    <input type="text" id="email" name="email" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    <input type="hidden" name="name" value="@ViewBag.uid" />
+                                    <input type="text" id="email" name="email" value="@ViewBag.name" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label for="password" class="layui-form-label">密码</label>
                                 <div class="layui-input-inline">
-                                    <input type="password" id="password" name="password" required lay-verify="required" autocomplete="off" class="layui-input">
+                                    <input type="password" id="password" name="password" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
-                            <br /><br />
+                            <input type="checkbox" id="remberme" checked="" style="display:inline" />记住账号
+                            <br />
+                            <br />
                             <div class="layui-form-item">
                                 @*<button id="btn-submit" class="layui-btn" lay-filter="*" lay-submit>立即登录</button>*@
-                                <input type="button"  class="layui-btn"  name="name" value="立即登录" id="btn-submit"/>
+                                <input type="button" class="layui-btn" name="name" value="立即登录" id="btn-submit" />
                                 <span style="padding-left:20px;">
                                     <a href="/User/Forgetpwd">忘记密码？</a>
                                 </span>

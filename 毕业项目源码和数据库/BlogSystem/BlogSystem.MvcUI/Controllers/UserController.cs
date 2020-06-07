@@ -47,11 +47,20 @@ namespace BlogSystem.MvcUI.Controllers
         }
         public ActionResult Login()
         {
+
+            HttpCookie cookie = Request.Cookies.Get("LoginName");
+            HttpCookie cookieuid = Request.Cookies.Get("Userid");
+            if (cookieuid!=null)
+            {
+                var name = cookie.Value;    //获取cookie值
+                var uid = cookieuid.Value;
+                ViewBag.name = name;
+                ViewBag.uid = uid;
+            }
             return View();
         }
         [HttpPost]
-
-        public ActionResult Login(string email, string password, LoginViewModel model)  //登录 ViewModel
+        public ActionResult Login(string email, string password,bool remberme, LoginViewModel model)  //登录 ViewModel
         {
             model.LoginName = email;
             model.LoginPwd = password;
@@ -61,11 +70,29 @@ namespace BlogSystem.MvcUI.Controllers
             string imagepath;
             if (userMag.Login(model.LoginName, model.LoginPwd, out userid, out nickname, out imagepath))
             {
-                  Session["Userid"] = userid;
-                  Session["Logname"] = model.LoginName;
-                  Session["Nickname"] = nickname;
-                  Session["defaultPhoto"] = imagepath;
-                  return Json(new { status = true, data = "登录成功" });
+                if (remberme)   //设置Cookie
+                {
+                    Response.Cookies.Add(
+                        new HttpCookie("LoginName")
+                    {
+                        Value = model.LoginName,
+                        Expires = DateTime.Now.AddDays(1)   
+                    });
+                    Response.Cookies.Add(
+                        new HttpCookie("Userid")
+                        {
+                            Value = userid.ToString(),
+                            Expires = DateTime.Now.AddDays(1)   
+                        });
+                }
+                else
+                {
+                    Session["Userid"] = userid;
+                    Session["Logname"] = model.LoginName;
+                }
+                Session["Nickname"] = nickname;
+                Session["defaultPhoto"] = imagepath;
+                return Json(new { status = true, data = "登录成功" });
             }
             else
             {
