@@ -10,6 +10,7 @@ using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -597,6 +598,50 @@ namespace BlogSystem.BLL
                         ImagePath=m.ImagePath
                     }).ToListAsync();
                 return data;
+            }
+        }
+
+        public async Task CreateArticleCollect(Guid userId, Guid articleId)  //用户添加收藏
+        {
+            using (IArticleCollectService artSvc = new ArticleCollectService())
+            {
+                await artSvc.CreateAsync(new ArticleCollect()
+                {
+                    UserId = userId,
+                    ArticleId = articleId
+                });
+            }
+        }
+
+        public async Task<ArticleCollectDto> GetArticleIsCollect(Guid userId, Guid articleId)
+        {
+            using (IArticleCollectService artSvc = new ArticleCollectService())
+            {
+                try
+                {
+                    var data = await artSvc.GetAllAsync()
+                        .Where(m => m.UserId == userId)
+                        .Where(m => m.ArticleId == articleId)
+                        .Select(m => new ArticleCollectDto()
+                        {
+                            ArticleId = m.ArticleId
+                        }).FirstAsync();
+                    return data;
+                }
+                catch (Exception e)
+                {
+                    return null;
+                }
+            }
+        }
+
+        public async Task CancelCollect(Guid userId, Guid articleId)
+        {
+            using (IArticleCollectService articleCollect = new ArticleCollectService())
+            {
+                var data = await articleCollect.GetAllAsync()
+                    .FirstOrDefaultAsync(m => m.UserId == userId && m.ArticleId == articleId);
+                await articleCollect.RemoveAsync(data,save:true);
             }
         }
     }

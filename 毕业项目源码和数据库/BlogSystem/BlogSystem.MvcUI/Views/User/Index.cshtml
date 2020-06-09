@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_LayoutFront.cshtml";
-
+    var artCollect = (List<ArticleCollectDto>) ViewBag.artCollect;
 }
 @model List<ArticleDto>
 
@@ -49,9 +49,10 @@
             <div class="layui-tab layui-tab-brief" lay-filter="user">
                 <ul class="layui-tab-title" id="LAY_mine">
                     <li data-type="mine-jie" lay-id="index" class="layui-this">我发布的文章（<span>@Model.Count()</span>）</li>
-                    <li data-type="collection" data-url="/collection/find/" lay-id="collection">我评论的文章（<span>@(ViewBag.articleByCommentUidCount==null?"0":ViewBag.articleByCommentUidCount)</span>）</li>
+                    <li data-type="collection" data-url="/collection/find/" lay-id="collection">我评论的文章（<span>@(ViewBag.articleByCommentUidCount == null ? "0" : ViewBag.articleByCommentUidCount)</span>）</li>
                     <li data-type="collection" data-url="/collection/find/" lay-id="Focus">我关注的用户（<span>@ViewBag.focusListCount</span>）</li>
                     <li data-type="collection" data-url="/collection/find/" lay-id="Fans">我的粉丝（<span>@ViewBag.fansListCount</span>）</li>
+                    <li data-type="collection" data-url="/collection/find/" lay-id="collect">我的收藏（<span>@ViewBag.artCollectCount </span>）</li>
                 </ul>
                 <div class="layui-tab-content" style="padding: 20px 0;">
                     <div class="layui-tab-item layui-show">
@@ -82,7 +83,7 @@
                             @if (ViewBag.articleByCommentUid == null)
                             {
                                 @*<li>还没有评论的文章</li>
-                                return;*@
+                    return;*@
                             }
                             else
                             {
@@ -95,7 +96,6 @@
                                     </li>
                                 }
                             }
-
                         </ul>
                         <div id="LAY_page1"></div>
                     </div>
@@ -104,7 +104,7 @@
                         <ul class="mine-view jie-row">
                             @foreach (var item in ViewBag.focusList)
                             {
-                                <li>
+                                <li style="float:left">
                                     <img src="~/FrontPage/images/@item.ImagePath" style="width:50px;height:50px;" />
                                     <span>昵称：</span>
                                     <a class="jie-title" href="/User/UserHome?userid=@item.FocusUserId" target="_blank">@item.NickName</a>
@@ -113,7 +113,7 @@
                         </ul>
                         <div id="LAY_page2"></div>
                     </div>
-                    
+
                     <div class="layui-tab-item">
                         <ul class="mine-view jie-row">
                             @foreach (var item in ViewBag.fansList)
@@ -122,6 +122,18 @@
                                     <img src="~/FrontPage/images/@item.ImagePath" style="width:50px;height:50px;" />
                                     <span>昵称：</span>
                                     <a class="jie-title" href="/User/UserHome?userid=@item.UserId" target="_blank">@item.NickName</a>
+                                </li>
+                            }
+                        </ul>
+                        <div id="LAY_page3"></div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <ul class="mine-view jie-row">
+                            @foreach (var collect in artCollect)
+                            {
+                                <li>
+                                    <a href="/Article/DetailArticle?articleid=@collect.ArticleId">@collect.Title</a>
+                                    <span class="layui-badge layui-bg-green fly-detail-column">已收藏</span>
                                 </li>
                             }
                         </ul>

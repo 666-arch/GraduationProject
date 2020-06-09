@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using BlogSystem.Models;
 using System.Data.Entity;
 using BlogSystem.DAL;
+using BlogSystem.IDAL;
 
 namespace BlogSystem.BLL
 {
@@ -327,6 +328,22 @@ namespace BlogSystem.BLL
                     data.Password = newPwd;
                     await userService.EditAsync(data);
                 }
+            }
+        }
+
+        public async Task<List<ArticleCollectDto>> GetAllArticleCollectByUser(Guid userid)  //查询我的收藏
+        {
+            using (IArticleCollectService artCollectService = new ArticleCollectService())
+            {
+                var data=await artCollectService.GetAllAsync()
+                    .Where(m => m.UserId == userid)
+                    .Include(m => m.Article)
+                    .Select(m => new ArticleCollectDto()
+                    {
+                        Title = m.Article.Title,
+                        ArticleId = m.ArticleId
+                    }).ToListAsync();
+                return data;
             }
         }
     }

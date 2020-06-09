@@ -105,6 +105,8 @@ namespace BlogSystem.MvcUI.Controllers
             List<FansDto> focusListCount = await userMag.GetAllFocusByUserid(userid); //我关注的人
             ViewBag.fsList = focusListCount;
 
+            ViewBag.artIsCollect= await articleManger.GetArticleIsCollect(userid, ViewBag.actid);
+            
             return View(await articleManger.GetAllCommentByArticleId(articleid));//获取最新评论信息
         }
 
@@ -236,11 +238,26 @@ namespace BlogSystem.MvcUI.Controllers
             }
         }
 
-        public async Task<JsonResult> InitData()
+        public async Task<JsonResult> InitData()    //Ajax随机获取用户数据
         {
             IArticleManger articleManger = new ArticleManger();
             var ajaxdata = await articleManger.GetUserRandom();
             return Json(ajaxdata);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> CreateCollectByUser(Guid userid,Guid articleid)
+        {
+            IArticleManger article=new ArticleManger();
+            await article.CreateArticleCollect(userid, articleid);
+            return Json(new {status=true});
+        }
+        [HttpPost]
+        public async Task<JsonResult> CancelCollectByUser(Guid userid, Guid articleid)
+        {
+            IArticleManger articleManger=new ArticleManger();
+            await articleManger.CancelCollect(userid, articleid);
+            return Json(new { status = true });
         }
     }
 }

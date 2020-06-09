@@ -12,12 +12,10 @@
         // 
         //如果您想要针对其他数据库和/或数据库提供程序，请在应用程序配置文件中修改“BlogContext”
         //连接字符串。
-        public BlogContext()
-            : base("name=BlogContext")
+        public BlogContext(): base("name=BlogContext")
         {
             Database.SetInitializer<BlogContext>(null);  //初始化数据库上下文
         }
-
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -34,5 +32,6 @@
         public DbSet<Fans> Fans { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Link> Links { get; set; }
+        public DbSet<ArticleCollect> ArticleCollects { get; set; }
     }
 }

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminDto.cs" />
+    <Compile Include="ArticleCollectDto.cs" />
     <Compile Include="ArticleDto.cs" />
     <Compile Include="ArticleToBlogcateDto.cs" />
     <Compile Include="BlogCategoryDto.cs" />

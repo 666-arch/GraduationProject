@@ -43,6 +43,23 @@
         });
     }
 </script>
+<style>
+    .collect {
+        display: inline-block;
+        padding: 3px 8px;
+        color: gray;
+        text-decoration: none;
+        font-weight: bold;
+        cursor: pointer;
+        margin-right: 10px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 10px;
+        -moz-box-shadow: 0 1px 3px rgba(0,0,0,.5);
+        -webkit-box-shadow: 0 1px 3px rgba(0,0,0,.5);
+        text-shadow: 0 -1px 1px rgba(0,0,0,.25);
+        vertical-align: middle;
+    }
+</style>
 @Html.Partial("_PartialHomePart");
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
@@ -61,10 +78,10 @@
                 <div class="detail-about">
                     <a class="fly-avatar" href="/User/UserHome">
                         <img src="~/FrontPage/images/@ViewBag.uimg" style="display: block;
-                                    width: 45px;
-                                    height: 45px;
-                                    margin: 0;
-                                    border-radius:50%;">
+                                       width: 45px;
+                                       height: 45px;
+                                       margin: 0;
+                                       border-radius:50%;">
                     </a>
                     <div class="fly-detail-user">
                         <a href="/User/UserHome?userid=@ViewBag.uid" class="fly-link">
@@ -155,7 +172,7 @@
                         </div>
                     </form>
                 </div>
-                @try //管理员预览文章避免用户session为空报错
+                @try //管理员预览文章避免用户session为空异常
                 {
                     if (ViewBag.astate == true && Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
                     {
@@ -260,8 +277,58 @@
                 </div>
             </div>
 
-
             <div class="fly-panel" style="padding: 20px 0; text-align: center;">
+
+                @if (Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
+                {
+                    if (ViewBag.artIsCollect != null)
+                    {
+                        <a onclick="Cancel()" style="cursor: pointer" class="collect">取消收藏</a>
+                    }
+                    else
+                    {
+                        <a onclick="Collect()" style="cursor: pointer" class="collect">好文收藏</a>
+                    }
+                }
+                <script type="text/javascript">
+                    function Collect() {
+                        $.ajax({
+                            type: "post",
+                            url: "CreateCollectByUser",
+                            dataType: "json",
+                            data: {
+                                userid: $("#uid").val(),
+                                articleid: $("#articleid").val()
+                            },
+                            success: function (msg) {
+                                if (msg.status) {
+                                    alert('收藏成功!');
+                                    window.location.reload();
+                                    console.log(msg.data);
+                                }
+                            }
+                        });
+                    }
+
+                    function Cancel() {
+                        $.ajax({
+                            type: "post",
+                            url: "CancelCollectByUser",
+                            dataType: "json",
+                            data: {
+                                userid: $("#uid").val(),
+                                articleid: $("#articleid").val()
+                            },
+                            success:function(msg) {
+                                if (msg.status) {
+                                    alert('已取消收藏!');
+                                    window.location.reload();
+                                    console.log(msg.data);
+                                }
+                            }
+                        });
+                    }
+                </script>
             </div>
         </div>
     </div>
@@ -313,12 +380,12 @@
             data: {
                 articleid: $("#articleid").val()
             },
-            success: function () {
+            success: function() {
                 alert('反对成功！');
                 window.location.reload();
                 $("#Opposition").attr("disabled", true);
             }
-        })
+        });
     })
 </script>
 

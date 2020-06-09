@@ -31,6 +31,8 @@ namespace BlogSystem.IBLL
 
         Task<List<FansDto>> GetAllFocusByUserid(Guid userid);  //查看我关注数
 
+        Task<List<ArticleCollectDto>> GetAllArticleCollectByUser(Guid userid);     //我的收藏
+
         Task Unfollow(Guid userid, Guid focusid);  //取消关注
 
         Task<List<Dto.UserInformation>> GetAllUserByAdmin(string email,string nickname);        //管理员查询用户

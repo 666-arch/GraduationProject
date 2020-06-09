@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Admin.cs" />
     <Compile Include="Article.cs" />
+    <Compile Include="ArticleCollect.cs" />
     <Compile Include="ArticleToCategory.cs" />
     <Compile Include="BaseEntity.cs" />
     <Compile Include="BlogCategory.cs" />
@@ -62,6 +63,10 @@
     <Compile Include="Migrations\202005130118302_createBlog.cs" />
     <Compile Include="Migrations\202005130118302_createBlog.Designer.cs">
       <DependentUpon>202005130118302_createBlog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006090624378_createArticleCollect.cs" />
+    <Compile Include="Migrations\202006090624378_createArticleCollect.Designer.cs">
+      <DependentUpon>202006090624378_createArticleCollect.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +79,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202005130118302_createBlog.resx">
       <DependentUpon>202005130118302_createBlog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006090624378_createArticleCollect.resx">
+      <DependentUpon>202006090624378_createArticleCollect.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

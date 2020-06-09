@@ -15,6 +15,12 @@ namespace BlogSystem.IBLL
 
         Task CreateCategory(string name, Guid UserId);  //添加文章类别
 
+        Task CreateArticleCollect(Guid userId,Guid articleId);  //用户添加收藏
+
+        Task<ArticleCollectDto> GetArticleIsCollect(Guid userId, Guid articleId);   //判断用户是否收藏了该文章
+
+        Task CancelCollect(Guid userId, Guid articleId);    //用户取消文章（删除）
+
         Task<List<BlogCategoryDto>> GetAllCategories(Guid userId);
 
         Task<List<ArticleDto>> GetAllArticlesByUserId(Guid userId);  //根据用户Id找文章
@@ -66,6 +72,8 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleToBlogcateDto>> GetAllArticleTocateByUserId(Guid userid);
 
-        Task<List<UserInformation>>GetUserRandom();
+        Task<List<UserInformation>>GetUserRandom(); //刷新随机获取用户信息
+
+        
     }
 }

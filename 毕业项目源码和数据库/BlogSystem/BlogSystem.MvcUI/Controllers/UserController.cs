@@ -43,6 +43,10 @@ namespace BlogSystem.MvcUI.Controllers
                 ViewBag.articleByCommentUid = articleByCommentUidList;  //保存评论的文章集合
                 ViewBag.articleByCommentUidCount = articleByCommentUidList.Count(); //保存评论文章数
             }
+
+            List<ArticleCollectDto> articleCollectList=await userMag.GetAllArticleCollectByUser(userid);    //我的收藏
+            ViewBag.artCollect = articleCollectList;
+            ViewBag.artCollectCount = articleCollectList.Count();
             return View(await articleManger.GetAllArticlesByUserId(userid));
         }
         public ActionResult Login()
