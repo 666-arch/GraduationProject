@@ -6,6 +6,26 @@
     Layout = "~/Views/Shared/_LayoutBack.cshtml";
 }
 <link href="~/Content/PagedList.css" rel="stylesheet" />
+<style>
+    .btn1 {
+        background-color: #009688;
+        background-image: linear-gradient(to right,#009688,#5FB878);
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        font-family: "微软雅黑";
+        -webkit-transition: all .3s;
+        color: #FFF;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+</style>
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script>
     //$(document).ready(function () {
@@ -32,10 +52,11 @@
         <div class="result-title">
             <div class="result-list">
                 <div class="layui-form-item">
-                    <input type="text" id="email" name="email" value="@ViewBag.email" placeholder="输入邮箱"/>
-                    <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="输入昵称" />
+                    <input type="text" id="email" name="email" value="@ViewBag.email" placeholder="输入邮箱" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
+                    <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="输入昵称" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
                 </div>
-                <input type="submit" id="btnSearch" name="name" value="查询" class="admin_input_style" />
+               
+                <input type="submit" id="btnSearch" name="name" value="查询" class="btn1" />
                 <a id="batchDel" href="javascript:void(0)" onclick="manyUsers_del()"><i class="icon-font"></i>批量删除</a>
             </div>
         </div>

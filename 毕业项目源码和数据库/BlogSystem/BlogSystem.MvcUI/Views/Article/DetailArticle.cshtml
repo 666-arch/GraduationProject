@@ -5,7 +5,8 @@
     var articledata = (List<ArticleDto>)ViewBag.articledata;
     var coList = (List<CommentDto>)ViewBag.coList;
     var userList = (List<UserInformation>)ViewBag.dataList;
-    var fsList = (List<FansDto>) ViewBag.fsList;
+    var fsList = (List<FansDto>)ViewBag.fsList;
+    var collectList = (List<ArticleCollectDto>) ViewBag.ArtCollectList;
     var sign = 0;
     string ajaxdata = "ajaxdata";
     string imgdata = "imgdata";
@@ -37,7 +38,7 @@
                     document.getElementById("imgdata3").src = sr + jlist[2].ImagePath;
                     document.getElementById("imgdata4").src = sr + jlist[3].ImagePath;
                     document.getElementById("imgdata5").src = sr + jlist[4].ImagePath;
-                    
+
                 }
             }
         });
@@ -120,16 +121,17 @@
                     <li>
                         @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
                         {
-
-                            <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size:16px;">
-                                @item.NickName
-                            </a>
-                            <br />
-                            <span>
-                                @item.Content
-                                @item.CreateTime
-                            </span>
-                            <br />
+                            <p  style="color: #999;">
+                                <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size:16px;">
+                                    @item.NickName
+                                </a>
+                                <br />
+                                <span>
+                                    @item.Content
+                                    @item.CreateTime
+                                </span>
+                                <br />
+                            </p>
                             try
                             {
                                 if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
@@ -203,44 +205,43 @@
                 </div>
                 <div class="fly-panel-main" id="ajaxData">
                     <input type="hidden" id="uid" value="@Session["Userid"]" />
-                    <input type="button" onclick="btns()" name="name" value="点击刷新用户" class="layui-input" title="刷新推荐"/>
+                    <input type="button" onclick="btns()" name="name" value="点击刷新用户" class="layui-input" title="刷新推荐" />
                     <ul class="fly-list">
                         @foreach (var user in userList)
                         {
-                            //var sys = "关注";
                             sign++;
                             <li>
-                                <img src="/FrontPage/images/@user.ImagePath" id="@imgdata@sign" class="uimg" style="width: 50px; height: 50px;"/>
-                                <a href="~/User/UserHome?userid=@user.Id" id="@ajaxdata@sign" class="fly-avatar" >
+                                <img src="/FrontPage/images/@user.ImagePath" id="@imgdata@sign" class="uimg" style="width: 50px; height: 50px;" />
+                                <a href="~/User/UserHome?userid=@user.Id" id="@ajaxdata@sign" class="fly-avatar">
                                     @user.NickName
                                 </a>
-                                <a onclick="Atten('@user.Id')" style="color: red; cursor: pointer" id="follow">+关注</a>
-                                <script>
-                                    function Atten(fid) {
-                                        $.ajax({
-                                            type: "post",
-                                            url: "/User/CreateAttention",
-                                            dataType: "json",
-                                            data: {
-                                                userid:$("#uid").val(),
-                                                focusid:fid
-                                            },
-                                            success: function (msg) {
-                                                if (msg.status) {
-                                                    $("#follow").text('关注成功');
-                                                    console.log(msg.data);
-                                                }
+                                @*<a onclick="Atten('@user.Id')" style="color: red; cursor: pointer" id="follow">+关注</a>*@
+                                @*<script>
+                                function Atten(fid) {
+                                    $.ajax({
+                                        type: "post",
+                                        url: "/User/CreateAttention",
+                                        dataType: "json",
+                                        data: {
+                                            userid:$("#uid").val(),
+                                            focusid:fid
+                                        },
+                                        success: function (msg) {
+                                            if (msg.status) {
+                                                $("#follow").text('关注成功');
+                                                console.log(msg.data);
                                             }
-                                        });
-                                    }
-                                </script>
+                                        }
+                                    });
+                                }
+                            </script>*@
                             </li>
                         }
                     </ul>
                 </div>
             </div>
             <div class="fly-panel fly-link">
-                <h3 class="fly-panel-title">文章热议</h3>
+                <h3 class="fly-panel-title">文章热议/评论</h3>
                 <ul class="fly-panel-main" style="color:dimgray">
                     @foreach (var item in coList
                         .GroupBy(m => m.Title, m => m.ArticleId)
@@ -253,6 +254,24 @@
                     }
                 </ul>
             </div>
+
+            <div class="fly-panel fly-link">
+                <h3 class="fly-panel-title">最多收藏/收藏数</h3>
+                <ul class="fly-panel-main" style="color:dimgray">
+                    @foreach (var item in collectList
+                        .GroupBy(m => m.Title,m=>m.ArticleId)
+                        .Select(m=>(new{Title=m.Key,ArticleId=m.ToArray(),Count=m.Count()}))
+                        .OrderByDescending(m=>m.Count))
+                    {
+                        <li>
+                            <a href="/Article/DetailArticle?articleid=@item.ArticleId[0]">
+                                @item.Title (@item.Count)
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+
             <div class="fly-panel">
                 <div class="fly-panel-title">
                     热点文章(TOP5)
@@ -275,6 +294,20 @@
                         }
                     </ul>
                 </div>
+            </div>
+
+            <div class="fly-panel fly-link">
+                <h3 class="fly-panel-title">相关博文</h3>
+                <ul class="fly-panel-main" style="color:dimgray">
+                    @foreach (var item in ViewBag.ArticleTitleLike)
+                    {
+                        <li>
+                            <a href="/Article/DetailArticle?articleid=@item.Id">
+                                @item.Title
+                            </a>
+                        </li>
+                    }
+                </ul>
             </div>
 
             <div class="fly-panel" style="padding: 20px 0; text-align: center;">
@@ -319,7 +352,7 @@
                                 userid: $("#uid").val(),
                                 articleid: $("#articleid").val()
                             },
-                            success:function(msg) {
+                            success: function (msg) {
                                 if (msg.status) {
                                     alert('已取消收藏!');
                                     window.location.reload();
@@ -345,8 +378,8 @@
                 url: "CreateComment",
                 data: $("#form-comment-add").serialize(),
                 success: function (msg) {
-                    if (msg.status = 1) {
-                        msg.layer(msg.data);
+                    if (msg.status === 1) {
+                        alert('评论成功');
                         window.location.reload(); //刷新
                     }
                 }
@@ -380,7 +413,7 @@
             data: {
                 articleid: $("#articleid").val()
             },
-            success: function() {
+            success: function () {
                 alert('反对成功！');
                 window.location.reload();
                 $("#Opposition").attr("disabled", true);

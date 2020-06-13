@@ -34,5 +34,7 @@ namespace BlogSystem.IBLL
 
         Task EditUserByAdmin(Guid userid, string newpassword);  //管理员修改用户密码
         Task<UserInformation> EditUserIdByAdmin(Guid userid);
+
+        Task<List<CommentDto>> GetAllCommentByAdmin(string nickname,string title);  //评论管理
     }
 }

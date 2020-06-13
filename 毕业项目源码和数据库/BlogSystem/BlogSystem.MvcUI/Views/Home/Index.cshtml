@@ -7,9 +7,10 @@
     var usList = (List<UserInformation>)ViewBag.alluser;
     var coList = (List<CommentDto>)ViewBag.coList;
     var articleTocate = (List<ArticleToBlogcateDto>)ViewBag.articleTocateList;
+    var catelist = (List<BlogCategoryDto>) ViewBag.catelist;
     var sign = 1;
-
 }
+
 <style>
     .uimg {
         display: block;
@@ -18,6 +19,13 @@
         margin: 0;
         border-radius: 2px;
     }
+    #test2 {
+        width: 760px;height: 160px;
+    }
+    
+    .element.style {
+        width: 760px;height: 160px;
+    }
 </style>
 @model PagedList.IPagedList<ArticleDto>
 @Html.Partial("_PartialHomePart");
@@ -25,6 +33,15 @@
 <div class="layui-container">
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
+            <div class="fly-panel" style="margin-bottom: 10px;">
+                <div class="layui-carousel" id="test1" >
+                    <div carousel-item="">
+                       <img src="/FrontPage/images/c1.jpg" style="max-width: 100%" /> 
+                       <img src="/FrontPage/images/c2.jpg" style="max-width: 100%"/> 
+                    </div>
+                </div>
+            </div>
+
             <div class="fly-panel" style="margin-bottom: 0;">
                 <div class="fly-panel-title fly-filter">
                     <a href="" class="layui-this">综合</a>
@@ -41,36 +58,49 @@
                             titlesub = titlesub.Substring(0, 15) + "...";
                         }
                         <li>
-                            <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
+                            <a  class="fly-avatar" >
                                 <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
-                                @titlesub
                             </a>
+                            <h2>
+                                <a href="#" class="layui-badge">文章</a>
+                                <a href="/Article/DetailArticle?articleid=@item.Id">@titlesub</a>
+                            </h2>
+                            <div class="fly-list-info">
+                                <a href="/User/UserHome?userid=@item.UserId" target="_blank">@item.NickName</a>
+                                <span>@item.CreateTime.ToString("yyyy-M-d dddd")</span>
+                            </div>
                         </li>
                     }
                     <ul>
                         <div style="text-align: center">
-                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new {page}))
                             每页 @Model.PageSize 篇文章，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
                         </div>
                     </ul>
                 </ul>
             </div>
         </div>
+
         <div class="layui-col-md4">
             <div class="fly-panel">
+                <div class="site-demo-laydate">
+                    <div class="layui-inline" id="test-n1"></div>
+                </div>
+            </div>
+            <div class="fly-panel">
                 <h3 class="fly-panel-title">统计信息</h3>
-                <ul class="fly-panel-main" style="color:dimgray">
+                <ul class="fly-panel-main" style="color: dimgray">
                     <li>
-                        文章  -   @Model.Count()
+                        文章 - @Model.Count()
                     </li>
                     <li>
-                        随笔  -   @ViewBag.catecount
+                        随笔 - @ViewBag.catecount
                     </li>
                     <li>
-                        博客  -   @ViewBag.ucount
+                        博客 - @ViewBag.ucount
                     </li>
                     <li>
-                        评论  -   @ViewBag.ccount
+                        评论 - @ViewBag.ccount
                     </li>
                 </ul>
             </div>
@@ -91,31 +121,31 @@
             <div class="fly-panel fly-link">
                 <h3 class="fly-panel-title">随笔分类</h3>
                 @foreach (var item in articleTocate
-                .GroupBy(m => m.CateName, m => m.BlogCategoryId)
-                .Select(m => new { CateName = m.Key, BlogCategoryId=m.ToArray(),Count = m.Count() }))
+                    .GroupBy(m => m.BlogCategoryId)
+                    .Take(5)
+                    .OrderByDescending(m=>m.Count())
+                   
+                    )
                 {
                     <dl class="fly-panel-main">
-                        <dd>
-                            @* 通过随笔分类找到对应的文章? *@
-                            <a href="#" onclick="FindArticleToCate('@item.BlogCategoryId[0]')" >@item.CateName (@item.Count)</a>  
-                        <dd>
+                         <dd>
+                        @foreach (var items in item)
+                        {
+                            if (items.BlogCategoryId == item.Key)
+                            {
+
+                                <a href="#" onclick="FindArticleToCate('@item.Key')">@items.CateName (@item.Count())</a>                                                                
+                                break;
+                            }
+                        }
+                         <dd>
                     </dl>
                 }
             </div>
 
             <div class="fly-panel fly-link">
                 <h3 class="fly-panel-title">文章热议</h3>
-                <ul class="fly-panel-main" style="color:dimgray">
-                    @*@foreach (var item in coList
-                            .GroupBy(m => new { m.ArticleId,m.Title })
-                            .Select(m => new
-                            {
-                                ArticleId = m.Key.ArticleId,Title=m.Key.Title,
-
-                            }))
-                        {
-                            <li>@item.Title</li>
-                        }*@
+                <ul class="fly-panel-main" style="color: dimgray">
                     @foreach (var item in coList
                         .GroupBy(m => m.Title, m => m.ArticleId)
                         .Select(m => (new { Title = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
@@ -142,6 +172,7 @@
         </div>
     </div>
 </div>
+
 <script>
     function FindArticleToCate(blogcateid) {
         layer.open({

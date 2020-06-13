@@ -1,6 +1,7 @@
 ﻿using BlogSystem.Dto;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 
 namespace BlogSystem.IBLL
@@ -39,5 +40,8 @@ namespace BlogSystem.IBLL
         Task<List<Dto.UserInformation>> GetAllUserByAdmin();        //管理员查询用户
 
         Task<List<Dto.UserInformation>> GetAllUserlike(string email,string nickname);   //模糊查询用户
+
+        Task<List<ArticleDto>> GetAllArticleByTime(DateTime times, Guid userid); //查询当天发布的文章
+
     }
 }

@@ -218,6 +218,16 @@ namespace BlogSystem.MvcUI.Controllers
             return View(articles.ToPagedList<ArticleDto>(page,pagesize));
         }
 
+        public async Task<ActionResult> CommentIndex(int page = 1,string nickname="",string title="")
+        {
+            int pageSize = 15;
+            IAdminManger adminManger = new AdminManger();
+            ViewBag.nickname = nickname;
+            ViewBag.titles = title;
+            var Comment = await adminManger.GetAllCommentByAdmin(nickname, title);
+            return View(Comment.ToPagedList<CommentDto>(page, pageSize));
+        }
+
         public async Task<ActionResult> EditUserAdmin(Guid id)
         {
             IAdminManger adminManger = new AdminManger();
@@ -235,6 +245,5 @@ namespace BlogSystem.MvcUI.Controllers
             await adminManger.EditUserByAdmin(id, password);
             return View();
         }
-
     }
 }

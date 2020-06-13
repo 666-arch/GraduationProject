@@ -40,11 +40,10 @@
                             </fieldset>
                             @foreach (var item in Model)
                             {
-                                <input name="categoryIds" type="checkbox" value="@item.Id" style="display:inline"> <label for="checkbox1">@item.CategoryName</label>
+                                <input name="categoryIds" type="checkbox" value="@item.Id" > <label for="checkbox1">@item.CategoryName</label>
                             }
                             <br />
                             <br />
-
                             <div class="layui-form-item">
                                 <button class="layui-btn" type="button" lay-filter="*" lay-submit id="btnAdd">立即发布</button>
                                 <button class="layui-btn" type="button" lay-filter="*" lay-submit id="btnDraft">保存草稿</button>

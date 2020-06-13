@@ -5,7 +5,25 @@
     ViewBag.Title = "ArticleIndex";
     Layout = "~/Views/Shared/_LayoutBack.cshtml";
 }
-    <link href="~/Content/PagedList.css" rel="stylesheet" />
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<style>
+    .btn1 {
+        background-color: #FF5722;
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        font-family: "微软雅黑";
+        -webkit-transition: all .3s;
+        color: #FFF;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+</style>
 <div class="search-wrap">
     <div class="search-content">
         <form action="/jscss/admin/design/index" method="post">
@@ -16,8 +34,8 @@
 </div>
 <div class="result-wrap">
     <form name="myform" id="myform" method="post">
-        <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="请输入作者"/>
-        <select id="state" name="state" onchange="searchBystate()">
+        <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="请输入作者" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
+        <select id="state" name="state" onchange="searchBystate()"  lay-filter="aihao">
             <option value="">请选择</option>
             <option value="true">已发布</option>
             <option value="false">未发布</option>
@@ -25,10 +43,10 @@
         <script>
             function searchBystate() {
                 var state= $("#state").find("option:selected").val();
-                alert(state);
+               // alert(state);
             }
         </script>
-        <input type="submit" name="name" value="搜索" />
+        <input type="submit" name="name" value="搜索" class="btn1" />
         <div class="result-title">
             <div class="result-list">
                 @*<a href="~/Article/addArticle"><i class="icon-font"></i>新增文章</a>*@

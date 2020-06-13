@@ -263,6 +263,8 @@ namespace BlogSystem.MvcUI.Controllers
             List<CommentDto> commList = await articleManger.GetAllComment();
             ViewBag.commlist = commList;
 
+            ViewBag.acatelist=await articleManger.GetAllBlogcategory();
+
             ViewBag.articleByUid=await articleManger.GetAllArticleTocateByUserId(ViewBag.uid);
 
             return View(await articleManger.GetAllArticlesByUserId(userid));
@@ -309,13 +311,18 @@ namespace BlogSystem.MvcUI.Controllers
             return View();   
         }
 
-        //public FileContentResult GetValidateCode(string codeClass)
-        //{
-        //    Validatecode vCode = new Validatecode();
-        //    string code = vCode.CreateValidateCode(5);
-        //    Session["code"] = code;
-        //    byte[] bytes = vCode.CreateValidateGraphic(code);
-        //    return File(bytes, @"image/jpeg");
-        //}
+        public async Task<ActionResult> ArticleByUserHomeCateId(Guid cateid)
+        {
+            IArticleManger articleManger = new ArticleManger();
+            ViewBag.list = await articleManger.GetAllArticlesByCategoryId(cateid);
+            return Json(new{data= ViewBag.list},JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> ArticleByUserHomeTime(DateTime times,Guid userid)
+        {
+            IUserMnager userMnager=new UserManger();
+            ViewBag.articleTimelist= await userMnager.GetAllArticleByTime(times, userid);
+            return Json(new {data = ViewBag.articleTimelist}, JsonRequestBehavior.AllowGet);
+        }
     }
 }

@@ -504,6 +504,7 @@
     <Content Include="FrontPage\images\c1.jpg" />
     <Content Include="FrontPage\images\c2.jpg" />
     <Content Include="FrontPage\images\default.png" />
+    <Content Include="FrontPage\images\logo.png" />
     <Content Include="FrontPage\layui\css\layui.css" />
     <Content Include="FrontPage\layui\css\layui.mobile.css" />
     <Content Include="FrontPage\layui\css\modules\code.css" />
@@ -821,6 +822,7 @@
     <Content Include="Views\Admin\EditUserAdmin.cshtml" />
     <Content Include="Views\User\ArticleGpBytime.cshtml" />
     <Content Include="Views\Home\ArticleByIndexCateId.cshtml" />
+    <Content Include="Views\Admin\CommentIndex.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

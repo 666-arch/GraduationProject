@@ -6,11 +6,30 @@
     Layout = "~/Views/Shared/_LayoutBack.cshtml";
 }
 <link href="~/Content/PagedList.css" rel="stylesheet" />
+<style>
+    .btn1 {
+        background-color: #20222A;
+        background-image: linear-gradient(to right,#20222A,#3E4251);
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        font-family: "微软雅黑";
+        -webkit-transition: all .3s;
+        color: #FFF;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+</style>
 <div class="result-wrap">
     <form id="sea">
         <div class="result-title">
-            <input type="text" name="linkname" value="@ViewBag.linkname" placeholder="输入链接名"/>
-            <input type="submit" name="name" value="查询" class="layui-input"/>
+            <input type="text" name="linkname" value="@ViewBag.linkname" placeholder="输入链接名" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
+            <input type="submit" name="name" value="查询" class="btn1"/>
             <div class="result-list">
                 <a onclick="addLayers()" style="cursor: pointer"><i class="icon-font"></i>新增链接</a>
                 <a id=" batchDel" href="javascript:void(0)" onclick="manyLinks_del()"><i class="icon-font"></i>批量删除</a>

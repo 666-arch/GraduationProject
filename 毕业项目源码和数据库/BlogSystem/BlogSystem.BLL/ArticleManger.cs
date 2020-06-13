@@ -81,6 +81,8 @@ namespace BlogSystem.BLL
                 article.Title = title;
                 article.Content = content;
                 article.State = true;  //保存修改发布状态改为true
+                article.CreateTime = DateTime.Now;     //将发布时间设置为当前时间
+
                 await articleSvc.EditAsync(article);
                 using (IArticleToCategoryService articleToCategorySvc = new ArticleToCategoryService())
                 {
@@ -90,13 +92,16 @@ namespace BlogSystem.BLL
                         await articleToCategorySvc.RemoveAsync(item, false);
                     }
                     await articleToCategorySvc.Saved();  //循环完后保存
-                    foreach (var item in categoryIds)
+                    if (categoryIds!=null)
                     {
-                        await articleToCategorySvc.CreateAsync(new ArticleToCategory()
+                        foreach (var item in categoryIds)
                         {
-                            ArticleId = articleId,
-                            BlogCategoryId = item
-                        }, false);
+                            await articleToCategorySvc.CreateAsync(new ArticleToCategory()
+                            {
+                                ArticleId = articleId,
+                                BlogCategoryId = item
+                            }, false);
+                        }
                     }
                     await articleToCategorySvc.Saved();  //循环完后保存
                 }
@@ -229,6 +234,7 @@ namespace BlogSystem.BLL
                         ArticleId=m.ArticleId,
                         Title = m.Article.Title,
                         NickName = m.Article.User.NickName,
+                        CateName = m.BlogCategory.CategoryName,
                         CreateTime = m.Article.CreateTime
                     }).ToListAsync();
                 return data;
@@ -277,7 +283,7 @@ namespace BlogSystem.BLL
                 var data= await articleSvc.GetAllAsync()
                     .Include(m => m.User)
                     .Where(m => m.UserId == userId)
-                    .Where(m=>m.State==true)
+                    
                     .Where(m=>m.IsRemoved==false)
                     .Select(m => new ArticleDto()
                     {
@@ -320,7 +326,8 @@ namespace BlogSystem.BLL
                         BadCount = m.BadCount,
                         ImagePath = m.User.ImagePath,
                         State = true,
-                        NickName=m.User.NickName
+                        NickName=m.User.NickName,
+                        UserId = m.UserId
                         
                     }).ToListAsync();
             }
@@ -549,15 +556,15 @@ namespace BlogSystem.BLL
             using (IArticleToCategoryService articleToCategory = new ArticleToCategoryService())
             {
                 return await articleToCategory.GetAllAsync()
-                    .Where(m=>m.IsRemoved==false)   
-                    .Where(m=>m.Article.State==true)    //已发布的文章
+                    .Where(m => m.IsRemoved == false)
+                    .Where(m => m.Article.State == true)    //已发布的文章
                     .Include(m => m.BlogCategory)
                     .Select(m => new ArticleToBlogcateDto()
-                {
-                    CateName = m.BlogCategory.CategoryName,
-                    BlogCategoryId = m.BlogCategoryId,
-                    ArticleId = m.ArticleId
-                }).ToListAsync();
+                    {
+                        CateName = m.BlogCategory.CategoryName,
+                        BlogCategoryId = m.BlogCategoryId,
+                        ArticleId = m.ArticleId
+                    }).ToListAsync();
             }
         }
 
@@ -577,7 +584,6 @@ namespace BlogSystem.BLL
                               BlogCategoryId = m.BlogCategoryId,
                               CateName = m.BlogCategory.CategoryName,
                               ArticleId = m.ArticleId
-
                           }).ToListAsync();
          
             }
@@ -642,6 +648,37 @@ namespace BlogSystem.BLL
                 var data = await articleCollect.GetAllAsync()
                     .FirstOrDefaultAsync(m => m.UserId == userId && m.ArticleId == articleId);
                 await articleCollect.RemoveAsync(data,save:true);
+            }
+        }
+
+        public async Task<List<ArticleDto>> GetArticleLikeByArticleTitle(string title)
+        {
+            using (IArticleService articleService = new ArticleService())
+            {
+                var data = await articleService.GetAllAsync()
+                    .Where(m => string.IsNullOrEmpty(title) || m.Title.Contains(title))
+                    .OrderBy(m=>Guid.NewGuid())
+                    .Take(5)
+                    .Select(m => new ArticleDto()
+                    {
+                        Title = m.Title,
+                        Id = m.Id
+                    }).ToListAsync();
+                return data;
+            }
+        }
+
+        public async Task<List<ArticleCollectDto>> GetAllArticleByCollect() //文章收藏排序
+        {
+            using (IArticleCollectService articleCollect = new ArticleCollectService())
+            {
+                return await articleCollect.GetAllAsync()
+                    .Include(m => m.Article)
+                    .Select(m => new ArticleCollectDto()
+                    {
+                        Title = m.Article.Title,
+                        ArticleId = m.ArticleId
+                    }).ToListAsync();
             }
         }
     }

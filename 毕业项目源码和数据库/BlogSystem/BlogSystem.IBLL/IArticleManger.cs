@@ -74,6 +74,8 @@ namespace BlogSystem.IBLL
 
         Task<List<UserInformation>>GetUserRandom(); //刷新随机获取用户信息
 
-        
+        Task<List<ArticleDto>> GetArticleLikeByArticleTitle(string title);  //根据标题模糊查询文章
+
+        Task<List<ArticleCollectDto>> GetAllArticleByCollect();    //文章收藏
     }
 }

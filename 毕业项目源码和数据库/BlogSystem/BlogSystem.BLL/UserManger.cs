@@ -346,5 +346,24 @@ namespace BlogSystem.BLL
                 return data;
             }
         }
+
+        public async Task<List<ArticleDto>> GetAllArticleByTime(DateTime times, Guid userid)     //查询当天发布的文章
+        {
+            using (IArticleService artSvc = new ArticleService())
+            {
+             
+                var data=await artSvc.GetAllAsync()
+                    .Where(m => m.CreateTime.Day == times.Day)
+                    .Where(m=>m.UserId==userid)
+                    .Select(m => new ArticleDto()
+                    {
+                        Title = m.Title,
+                        Id = m.Id,
+                        CreateTime = m.CreateTime
+                    }).ToListAsync();
+                //2020/6/4 19:29:56
+                return data;
+            }
+        }
     }
 }

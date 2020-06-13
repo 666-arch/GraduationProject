@@ -105,8 +105,15 @@ namespace BlogSystem.MvcUI.Controllers
             List<FansDto> focusListCount = await userMag.GetAllFocusByUserid(userid); //我关注的人
             ViewBag.fsList = focusListCount;
 
-            ViewBag.artIsCollect= await articleManger.GetArticleIsCollect(userid, ViewBag.actid);
-            
+            ViewBag.artIsCollect= await articleManger.GetArticleIsCollect(userid, ViewBag.actid);   //该文是否被收藏
+
+            string title = ViewBag.atitle;
+            title=title.Substring(0, 2);
+
+            ViewBag.ArticleTitleLike=await articleManger.GetArticleLikeByArticleTitle(title);
+
+            ViewBag.ArtCollectList=await articleManger.GetAllArticleByCollect();
+
             return View(await articleManger.GetAllCommentByArticleId(articleid));//获取最新评论信息
         }
 
@@ -259,5 +266,7 @@ namespace BlogSystem.MvcUI.Controllers
             await articleManger.CancelCollect(userid, articleid);
             return Json(new { status = true });
         }
+
+
     }
 }

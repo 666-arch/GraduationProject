@@ -34,9 +34,18 @@
             }
             else
             {
-                <a class="fly-logo" href="/Home/Index" style="color:ghostwhite">
-                    <i class="iconfont icon-jiaoliu"></i>学智博客
+                <a class="fly-logo" href="/">
+                    <img src="~/FrontPage/images/logo.png" style="width: 55px; height: 45px;"/>
                 </a>
+
+                <ul class="layui-nav fly-nav layui-hide-xs">
+                    <li class="layui-nav-item">
+                        <a href="/Home/Index"><i class="iconfont icon-ui"></i>学智博客</a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a href="/Home/Index"><i class="iconfont icon-jiaoliu"></i>关于我们</a>
+                    </li>
+                </ul>
                 <ul class="layui-nav fly-nav-user">
                     <!-- 登入后的状态 -->
                     <li class="layui-nav-item">
@@ -44,7 +53,7 @@
                             <cite class="layui-hide-xs">@Session["Nickname"]</cite>
                             <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：@Session["Nickname"]"></i>
                             <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
-                            <img src="~/FrontPage/images/@Session["defaultPhoto"]" style="width:36px;height:36px;margin-left:10px;border-radius: 100%;" />
+                            <img src="~/FrontPage/images/@Session["defaultPhoto"]" style="width: 36px; height: 36px; margin-left: 10px; border-radius: 100%;" />
                         </a>
                         <dl class="layui-nav-child">
                             <dd><a href="/User/BasicSetting?userid=@Session["Userid"] "><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
@@ -71,67 +80,99 @@
     </div>
     <script src="~/FrontPage/res/layui/layui.js"></script>
     <script>
-        layui.use('element', function () {
-            var $ = layui.jquery
-                , element = layui.element; //依赖element模块
-            //触发事件
-            var active = {
-                tabAdd: function () {
-                    //新增一个Tab项
-                    element.tabAdd('demo', {
-                        title: '新选项' + (Math.random() * 1000 | 0)
-                        , content: '内容' + (Math.random() * 1000 | 0)
-                        , id: new Date().getTime()
-                    })
-                }
-                , tabDelete: function (othis) {
-                    //删除指定Tab项
-                    element.tabDelete('demo', '44');
+    layui.use('element', function () {
+        var $ = layui.jquery
+            , element = layui.element; //依赖element模块
+        //触发事件
+        var active = {
+            tabAdd: function () {
+                //新增一个Tab项
+                element.tabAdd('demo',
+                    {
+                        title: '新选项' + (Math.random() * 1000 | 0),
+                        content: '内容' + (Math.random() * 1000 | 0),
+                        id: new Date().getTime()
+                    });
+            }
+            , tabDelete: function (othis) {
+                //删除指定Tab项
+                element.tabDelete('demo', '44');
 
 
-                    othis.addClass('layui-btn-disabled');
-                }
-                , tabChange: function () {
-                    //切换到指定Tab项
-                    element.tabChange('demo', '22');
-                }
-            };
+                othis.addClass('layui-btn-disabled');
+            }
+            , tabChange: function () {
+                //切换到指定Tab项
+                element.tabChange('demo', '22');
+            }
+        };
 
-            $('.site-demo-active').on('click', function () {
-                var othis = $(this), type = othis.data('type');
-                active[type] ? active[type].call(this, othis) : '';
-            });
-
-            //Hash地址的定位
-            var layid = location.hash.replace(/^#test=/, '');
-            element.tabChange('test', layid);
-
-            element.on('tab(test)', function (elem) {
-                location.hash = 'test=' + $(this).attr('lay-id');
-            });
-
+        $('.site-demo-active').on('click', function () {
+            var othis = $(this), type = othis.data('type');
+            active[type] ? active[type].call(this, othis) : '';
         });
 
-        layui.use('upload', function () {
-            var $ = layui.jquery
-                , upload = layui.upload;
-            //普通图片上传
-            var uploadInst = upload.render({
+        //Hash地址的定位
+        var layid = location.hash.replace(/^#test=/, '');
+        element.tabChange('test', layid);
+
+        element.on('tab(test)', function (elem) {
+            location.hash = 'test=' + $(this).attr('lay-id');
+        });
+
+    });
+
+    layui.use('upload', function () {
+        var $ = layui.jquery
+            , upload = layui.upload;
+        //普通图片上传
+        var uploadInst = upload.render({
+            elem: '#test1'
+            , url: 'Upload?userid=@Session["Userid"]'
+            , before: function (obj) {
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    $('#demo1').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                //如果上传失败
+                if (res.code > 0) {
+                    return layer.msg('上传失败');
+                }
+                //上传成功
+            }
+        });
+    });
+    </script>
+    <script>
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+            //直接嵌套显示
+            laydate.render({
+                elem: '#test-n1'
+                , position: 'static'
+            });
+        });
+    </script>
+    <script>
+        layui.use(['carousel', 'form'], function () {
+            var carousel = layui.carousel
+                , form = layui.form;
+
+            //常规轮播
+            carousel.render({
                 elem: '#test1'
-                , url: 'Upload?userid=@Session["Userid"]'
-                , before: function (obj) {
-                    //预读本地文件示例，不支持ie8
-                    obj.preview(function (index, file, result) {
-                        $('#demo1').attr('src', result); //图片链接（base64）
-                    });
-                }
-                , done: function (res) {
-                    //如果上传失败
-                    if (res.code > 0) {
-                        return layer.msg('上传失败');
-                    }
-                    //上传成功
-                }
+                , arrow: 'always'
+            });
+
+
+            //图片轮播
+            carousel.render({
+                elem: '#test1'
+                , width: '775px'
+                , height: '190px'
+                , interval: 8000
             });
         });
     </script>

@@ -216,5 +216,25 @@ namespace BlogSystem.BLL
                 return data;
             }
         }
+
+        public async Task<List<CommentDto>> GetAllCommentByAdmin(string nickname, string title)      //评论管理
+        {
+            using (ICommentService commentService = new CommentService())
+            {
+                return await commentService.GetAllAsync()
+                    .Include(m => m.User)
+                    .Include(m => m.Article)
+                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)||m.User.NickName.Contains(nickname)&m.Article.Title.Contains(title))
+                    .OrderByDescending(m=>m.CreateTime)
+                    .Select(m => new CommentDto()
+                {
+                    Content = m.Content,
+                    Title = m.Article.Title,
+                    ArticleId = m.ArticleId,
+                    NickName = m.User.NickName,
+                    CreateTime = m.CreateTime
+                }).ToListAsync();
+            }
+        }
     }
 }
