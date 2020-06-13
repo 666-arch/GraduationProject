@@ -92,7 +92,7 @@
         //参数1：询问,参数2：回调函数（参数自动补齐）
         layer.confirm('确定要删除吗？', function (index) {
             //请求后台
-            $.post("RemoveLink", { id: id })
+            $.post("RemoveLink", { id: id });
             //查找每个obj元素的父元素进行删除
             $(obj).parents("tr").remove();
             //提示

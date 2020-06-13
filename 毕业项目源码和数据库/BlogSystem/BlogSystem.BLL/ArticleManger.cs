@@ -18,7 +18,6 @@ namespace BlogSystem.BLL
 {
     public class ArticleManger : IArticleManger
     {
-
         public async Task CreateArticle(string title, string content, Guid[] categoryIds, Guid UserId, bool state)  //添加用户选择了分类的博客
         {
             using (var articleSvc = new ArticleService())
@@ -387,6 +386,29 @@ namespace BlogSystem.BLL
             }
         }
 
+        public async Task<int> CreateCommentReport(Guid userid, Guid commentid, string content)  //举报评论
+        {
+            using (ICommentReportService creSvc = new CommentReportService())
+            {
+                var data=await creSvc.GetAllAsync()
+                    .FirstOrDefaultAsync(m => m.UserId == userid & m.CommentId == commentid);
+                if (data==null) //如果没记录可以举报
+                {
+                    await creSvc.CreateAsync(new CommentReport()
+                    {
+                        UserId = userid,
+                        CommentId = commentid,
+                        Content = content   //举报原因
+                    });
+                    return 0;
+                }
+                else
+                {
+                    return 1;
+                }
+            }
+        }
+
         public async Task RecommendArticle(Guid articleId) //点赞相当于修改
         {
             using (IArticleService articleService = new ArticleService())
@@ -679,6 +701,22 @@ namespace BlogSystem.BLL
                         Title = m.Article.Title,
                         ArticleId = m.ArticleId
                     }).ToListAsync();
+            }
+        }
+
+        public async Task<CommentReportDto> GetAllReportsByUser(Guid userid, Guid commentid)        //判断是否存在举报记录
+        {
+            using (ICommentReportService comReSvc = new CommentReportService())
+            {
+                 var data = await comReSvc.GetAllAsync()
+                     .Where(m => m.UserId == userid & m.CommentId == commentid)
+                     .Select(m=>new CommentReportDto()
+                     {
+                         UserId = m.UserId,
+                         CommentId = m.CommentId
+                     })
+                     .FirstAsync();
+                 return data;
             }
         }
     }

@@ -54,6 +54,7 @@
     <Compile Include="ArticleToCategoryService.cs" />
     <Compile Include="BaseService.cs" />
     <Compile Include="BlogCategoryService.cs" />
+    <Compile Include="CommentReportService.cs" />
     <Compile Include="CommentService.cs" />
     <Compile Include="FansService.cs" />
     <Compile Include="LinkService.cs" />

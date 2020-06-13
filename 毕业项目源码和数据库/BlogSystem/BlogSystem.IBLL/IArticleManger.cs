@@ -58,6 +58,8 @@ namespace BlogSystem.IBLL
 
         Task<List<CommentDto>> GetAllComment(); //查询所有评论
 
+        Task<int> CreateCommentReport(Guid userid,Guid commentid,string content); //举报评论
+
         Task RecommendArticle(Guid articleId);  //给指定的文章点赞
 
         Task OppositionArticle(Guid articleId); //反对文章
@@ -77,5 +79,7 @@ namespace BlogSystem.IBLL
         Task<List<ArticleDto>> GetArticleLikeByArticleTitle(string title);  //根据标题模糊查询文章
 
         Task<List<ArticleCollectDto>> GetAllArticleByCollect();    //文章收藏
+
+        Task<CommentReportDto> GetAllReportsByUser(Guid userid,Guid commentid);
     }
 }

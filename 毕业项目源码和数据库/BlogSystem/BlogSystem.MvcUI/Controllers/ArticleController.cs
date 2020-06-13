@@ -267,6 +267,24 @@ namespace BlogSystem.MvcUI.Controllers
             return Json(new { status = true });
         }
 
-
+        public ActionResult ReportByComm(Guid id)
+        {
+            ViewBag.commentid = id;
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> ReportByComm(Guid userid, Guid commentid, string content)
+        {
+            IArticleManger article=new ArticleManger();
+            var data= await article.CreateCommentReport(userid, commentid, content);
+            if (data==0)
+            {
+                return Json(new { data = "举报成功,我们将会在24小时内处理" });
+            }
+            else
+            {
+                return Json(new { data = "请勿重复举报此评论" });
+            }
+        }
     }
 }

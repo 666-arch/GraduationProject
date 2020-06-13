@@ -13,7 +13,7 @@
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $("#btnUpdate").click(function () {
+            $("#btnUpdate").click(function() {
                 if (!$('#content').val()) {
                     alert('请输入你的评论信息');
                     return;
@@ -22,16 +22,16 @@
                         type: "post",
                         url: "EditCommentByuser",
                         data: $("#form-comment-update").serialize(),
-                        success: function () {
+                        success: function() {
                             alert('修改成功');
                             //让打开这个窗口的父窗口刷新,然后本子窗口关闭
                             window.parent.location.reload();
                             var index = parent.layer.getFrameIndex(window.name);
                             parent.layer.close(index);
                         }
-                    })
+                    });
                 }
-            })
+            });
         })
 
     </script>

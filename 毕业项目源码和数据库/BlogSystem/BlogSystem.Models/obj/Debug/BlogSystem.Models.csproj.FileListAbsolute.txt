@@ -27,4 +27,5 @@ F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.dll
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.pdb
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createArticleCollect.resources
-F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.csprojAssemblyReference.cache
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createCommentReport.resources
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createFieldHandleToCommentReport.resources

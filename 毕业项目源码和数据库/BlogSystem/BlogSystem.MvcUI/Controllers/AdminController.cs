@@ -218,14 +218,24 @@ namespace BlogSystem.MvcUI.Controllers
             return View(articles.ToPagedList<ArticleDto>(page,pagesize));
         }
 
-        public async Task<ActionResult> CommentIndex(int page = 1,string nickname="",string title="")
+        //public async Task<ActionResult> CommentIndex(int page = 1,string nickname="",string title="")
+        //{
+        //    int pageSize = 15;
+        //    IAdminManger adminManger = new AdminManger();
+        //    ViewBag.nickname = nickname;
+        //    ViewBag.titles = title;
+        //    var Comment = await adminManger.GetAllCommentByAdmin(nickname, title);
+        //    return View(Comment.ToPagedList<CommentDto>(page, pageSize));
+        //}
+
+        public async Task<ActionResult> CommentIndex(int page=1,string nickname= "",string title="")
         {
-            int pageSize = 15;
-            IAdminManger adminManger = new AdminManger();
+            int pageSize = 10;
             ViewBag.nickname = nickname;
             ViewBag.titles = title;
-            var Comment = await adminManger.GetAllCommentByAdmin(nickname, title);
-            return View(Comment.ToPagedList<CommentDto>(page, pageSize));
+            IAdminManger adminManger=new AdminManger();
+            var data= await adminManger.GetAllCommentReport(nickname, title);
+            return View(data.ToPagedList<CommentReportDto>(page,pageSize));
         }
 
         public async Task<ActionResult> EditUserAdmin(Guid id)
@@ -243,6 +253,14 @@ namespace BlogSystem.MvcUI.Controllers
         {
             IAdminManger adminManger = new AdminManger();
             await adminManger.EditUserByAdmin(id, password);
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> HandleReport(Guid id,bool Ishandle=true)    //处理评论举报
+        {
+
+            IAdminManger admin=new AdminManger();
+            await admin.EditHandleReport(id, Ishandle);
             return View();
         }
     }

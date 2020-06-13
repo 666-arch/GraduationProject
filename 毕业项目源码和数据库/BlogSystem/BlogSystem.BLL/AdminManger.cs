@@ -236,5 +236,42 @@ namespace BlogSystem.BLL
                 }).ToListAsync();
             }
         }
+
+        public async Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title)    //模糊查询
+        {
+            using (ICommentReportService creSvc = new CommentReportService())
+            {
+               var data= await creSvc.GetAllAsync()
+                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)||
+                              m.User.NickName.Contains(nickname)&m.Comment.Article.Title.Contains(title))
+                    .Include(m => m.Comment)
+                    .Include(m => m.User)
+                    .Include(m=>m.Comment.Article)
+                    .Select(m => new CommentReportDto()
+                    {
+                        Id=m.Id,
+                        Content = m.Content,    //举报原因
+                        NickName = m.User.NickName,     //举报人
+                        CommentContent = m.Comment.Content,      //被举报的评论
+                        CreateTime=m.CreateTime,
+                        Title=m.Comment.Article.Title,
+                        IsHandle=m.IsHandle     //是否已授理
+                    }).ToListAsync();
+               return data;
+            }
+        }
+
+        public async Task EditHandleReport(Guid id,bool Ishandle=true)  //处理举报信息
+        {
+            using (ICommentReportService comRepSvc = new CommentReportService())
+            {
+                var data=await comRepSvc.GetAllAsync().FirstOrDefaultAsync(m => m.Id == id);
+                if (data!=null)
+                {
+                    data.IsHandle = Ishandle;
+                    await comRepSvc.EditAsync(data);
+                }
+            }
+        }
     }
 }

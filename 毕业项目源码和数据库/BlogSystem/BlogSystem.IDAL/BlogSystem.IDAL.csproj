@@ -47,6 +47,7 @@
     <Compile Include="IArticleToCategoryService.cs" />
     <Compile Include="IBaseService.cs" />
     <Compile Include="IBlogCategoryService.cs" />
+    <Compile Include="ICommentReportService.cs" />
     <Compile Include="ICommentService.cs" />
     <Compile Include="IFansService.cs" />
     <Compile Include="ILinkService.cs" />

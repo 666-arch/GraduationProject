@@ -47,6 +47,7 @@
     <Compile Include="ArticleToBlogcateDto.cs" />
     <Compile Include="BlogCategoryDto.cs" />
     <Compile Include="CommentDto.cs" />
+    <Compile Include="CommentReportDto.cs" />
     <Compile Include="FansDto.cs" />
     <Compile Include="LinkDto.cs" />
     <Compile Include="UserInformation.cs" />

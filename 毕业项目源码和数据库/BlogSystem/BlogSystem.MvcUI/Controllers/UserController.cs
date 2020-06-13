@@ -47,6 +47,7 @@ namespace BlogSystem.MvcUI.Controllers
             List<ArticleCollectDto> articleCollectList=await userMag.GetAllArticleCollectByUser(userid);    //我的收藏
             ViewBag.artCollect = articleCollectList;
             ViewBag.artCollectCount = articleCollectList.Count();
+
             return View(await articleManger.GetAllArticlesByUserId(userid));
         }
         public ActionResult Login()
@@ -323,6 +324,21 @@ namespace BlogSystem.MvcUI.Controllers
             IUserMnager userMnager=new UserManger();
             ViewBag.articleTimelist= await userMnager.GetAllArticleByTime(times, userid);
             return Json(new {data = ViewBag.articleTimelist}, JsonRequestBehavior.AllowGet);
+        }
+
+        public async Task<ActionResult> ReportFeedback()     //处理举报后的反馈信息
+        {
+            Guid userid = Guid.Parse(Session["Userid"].ToString());
+            IUserMnager userMnager=new UserManger();
+            var datas= await userMnager.GetAllReportFeedBackInfo(userid);
+            if (datas.Any())
+            {
+                return Json(new {code=100, data = datas }, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new {code=200});
+            }
         }
     }
 }

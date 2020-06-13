@@ -365,5 +365,22 @@ namespace BlogSystem.BLL
                 return data;
             }
         }
+
+        public async Task<List<CommentReportDto>> GetAllReportFeedBackInfo(Guid userid)
+        {
+            using (ICommentReportService commentReportService = new CommentReportService())
+            {
+               var data= await commentReportService.GetAllAsync()
+                    .Include(m => m.User)
+                    .Where(m => m.UserId == userid&m.IsHandle==true)
+                    .Select(m => new CommentReportDto()
+                    {
+                        IsHandle = m.IsHandle,
+                        NickName = m.User.NickName, //被举报人
+                        Content = m.Content
+                    }).ToListAsync();
+               return data;
+            }
+        }
     }
 }

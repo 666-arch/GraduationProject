@@ -43,5 +43,6 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleDto>> GetAllArticleByTime(DateTime times, Guid userid); //查询当天发布的文章
 
+        Task<List<CommentReportDto>> GetAllReportFeedBackInfo(Guid userid);     //查询举报信息反馈
     }
 }

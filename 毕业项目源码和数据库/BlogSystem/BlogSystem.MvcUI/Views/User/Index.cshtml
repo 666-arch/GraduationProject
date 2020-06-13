@@ -143,3 +143,19 @@
             </div>
         </div>
     </div>
+<script>
+    window.onload=function() {
+        $.ajax({
+            type: "get",
+            url: "ReportFeedback",
+            dataType: "json",
+            success: function (msg) {
+                if (msg.code===100) {
+                    alert('您的举报信息反馈进度已更新');
+                } else {
+                    return;
+                }
+            }
+        });
+    }
+</script>

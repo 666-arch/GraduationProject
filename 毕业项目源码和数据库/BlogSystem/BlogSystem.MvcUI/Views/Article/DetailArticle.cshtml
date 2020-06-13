@@ -121,8 +121,8 @@
                     <li>
                         @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
                         {
-                            <p  style="color: #999;">
-                                <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size:16px;">
+                            <p style="color: #999;">
+                                <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
                                     @item.NickName
                                 </a>
                                 <br />
@@ -130,8 +130,26 @@
                                     @item.Content
                                     @item.CreateTime
                                 </span>
+                                @if (Guid.Parse(Session["Userid"].ToString()) != item.UserId)
+                                {
+                                    <a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a>
+                                }
                                 <br />
                             </p>
+                            <script type="text/javascript">
+                                function CommentReport(id) {
+                                    layer.open({
+                                        type: 2,
+                                        title: '请输入举报内容',
+                                        maxmin: false,
+                                        resize: false,
+                                        anim:1,
+                                        shadeClose: true,
+                                        area: ['500px', '350px'],
+                                        content: 'ReportByComm?id='+id
+                                    });
+                                }
+                            </script>
                             try
                             {
                                 if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
@@ -146,9 +164,9 @@
                             {
 
                             }
-
                         }
                     </li>
+                    
                 </ul>
 
                 <div class="layui-form layui-form-pane">

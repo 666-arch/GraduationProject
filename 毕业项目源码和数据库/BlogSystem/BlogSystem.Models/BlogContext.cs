@@ -33,5 +33,6 @@
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Link> Links { get; set; }
         public DbSet<ArticleCollect> ArticleCollects { get; set; }
+        public DbSet<CommentReport> CommentReports { get; set; }
     }
 }

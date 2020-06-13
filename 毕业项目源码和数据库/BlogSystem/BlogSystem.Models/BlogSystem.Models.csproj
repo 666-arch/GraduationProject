@@ -58,6 +58,7 @@
     <Compile Include="BlogCategory.cs" />
     <Compile Include="BlogContext.cs" />
     <Compile Include="Comment.cs" />
+    <Compile Include="CommentReport.cs" />
     <Compile Include="Fans.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="Migrations\202005130118302_createBlog.cs" />
@@ -67,6 +68,14 @@
     <Compile Include="Migrations\202006090624378_createArticleCollect.cs" />
     <Compile Include="Migrations\202006090624378_createArticleCollect.Designer.cs">
       <DependentUpon>202006090624378_createArticleCollect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006130618572_createCommentReport.cs" />
+    <Compile Include="Migrations\202006130618572_createCommentReport.Designer.cs">
+      <DependentUpon>202006130618572_createCommentReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006131138428_createFieldHandleToCommentReport.cs" />
+    <Compile Include="Migrations\202006131138428_createFieldHandleToCommentReport.Designer.cs">
+      <DependentUpon>202006131138428_createFieldHandleToCommentReport.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -82,6 +91,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006090624378_createArticleCollect.resx">
       <DependentUpon>202006090624378_createArticleCollect.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006130618572_createCommentReport.resx">
+      <DependentUpon>202006130618572_createCommentReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006131138428_createFieldHandleToCommentReport.resx">
+      <DependentUpon>202006131138428_createFieldHandleToCommentReport.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

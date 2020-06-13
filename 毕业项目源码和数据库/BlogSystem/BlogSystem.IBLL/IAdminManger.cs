@@ -36,5 +36,9 @@ namespace BlogSystem.IBLL
         Task<UserInformation> EditUserIdByAdmin(Guid userid);
 
         Task<List<CommentDto>> GetAllCommentByAdmin(string nickname,string title);  //评论管理
+
+        Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title);
+
+        Task EditHandleReport(Guid id, bool Ishandle = true); //处理举报信息
     }
 }
