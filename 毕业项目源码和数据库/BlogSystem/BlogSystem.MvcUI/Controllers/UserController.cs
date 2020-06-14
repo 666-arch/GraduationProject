@@ -331,14 +331,51 @@ namespace BlogSystem.MvcUI.Controllers
             Guid userid = Guid.Parse(Session["Userid"].ToString());
             IUserMnager userMnager=new UserManger();
             var datas= await userMnager.GetAllReportFeedBackInfo(userid);
-            if (datas.Any())
+            if (datas.Any())       //举报信息已核实，举报人登录后提供反馈机制
             {
                 return Json(new {code=100, data = datas }, JsonRequestBehavior.AllowGet);
             }
             else
             {
-                return Json(new {code=200});
+                return Json(new {code=200}, JsonRequestBehavior.AllowGet);
             }
+        }
+
+        public ActionResult UserMessage()
+        {
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> UserConfirmInfo()       //举报人确认反馈信息
+        {
+            Guid userid = Guid.Parse(Session["Userid"].ToString());
+            IUserMnager user =new UserManger();
+            await user.EditIsConfirmByUser(userid);
+            return Json(new {code = 100});
+        }
+
+        public async Task<ActionResult> UserBeReportInfo()      //处理被举报人信息
+        {
+            Guid userid = Guid.Parse(Session["Userid"].ToString());
+            IUserMnager userMnager=new UserManger();
+            var Bedata=await userMnager.Bereported(userid);
+            if (Bedata.Any())   //存在举报记录，被举报人登录后提供反馈机制
+            {
+
+                return Json(new{code=100,data= Bedata },JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return Json(new{code=200,data=""},JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpPost]
+        public async Task<ActionResult> BeUserReportConfirmInfo()   //被举报人确认反馈信息
+        {
+            Guid userid = Guid.Parse(Session["Userid"].ToString());
+            IUserMnager userMnager=new UserManger();
+            await userMnager.EditeIsConfirmByBeReportUser(userid);
+            return Json(new { code = 100 });
         }
     }
 }

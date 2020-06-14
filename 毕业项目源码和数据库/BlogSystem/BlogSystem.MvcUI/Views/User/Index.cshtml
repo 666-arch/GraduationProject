@@ -27,9 +27,9 @@
                 </a>
             </li>
             <li class="layui-nav-item">
-                <a href="">
+                <a href="/User/UserMessage">
                     <i class="layui-icon">&#xe611;</i>
-                    用户中心
+                    我的消息
                 </a>
             </li>
         </ul>
@@ -144,14 +144,15 @@
         </div>
     </div>
 <script>
+    //举报人举报成功后信息反馈机制
     window.onload=function() {
         $.ajax({
             type: "get",
             url: "ReportFeedback",
             dataType: "json",
             success: function (msg) {
-                if (msg.code===100) {
-                    alert('您的举报信息反馈进度已更新');
+                if (msg.code === 100) {
+                    alert('系统信息：您的举报信息反馈进度已更新，在我的消息中点击确认后将不再提示');
                 } else {
                     return;
                 }

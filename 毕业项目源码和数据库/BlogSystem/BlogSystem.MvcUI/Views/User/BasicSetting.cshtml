@@ -12,9 +12,9 @@
             if (!$('#nickname').val()) {
                 alert('请输入要修改的昵称');
                 return;
-            } 
+            }
             if (!$('#psersonDesc').val()) {
-                
+
                 alert('填写个人说明可以让更多人关注你哦!');
                 return;
             } else {
@@ -22,7 +22,7 @@
                     type: "post",
                     url: "BasicSetting",
                     data: $("#form-setuser").serialize(),
-                    dataType:"json",
+                    dataType: "json",
                     success: function (msg) {
                         alert(msg.data);
                         window.location.reload();
@@ -40,10 +40,10 @@
                 return;
             }
             var val = $('#newPassword').val().trim();
-           
+
             var regPwd = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$";
             var regNick = new RegExp(regPwd);
-            var result= regNick.test(val);
+            var result = regNick.test(val);
             if (!result) {
                 alert('密码限制6-12个字符');
                 return;
@@ -104,13 +104,13 @@
             </a>
         </li>
         <li class="layui-nav-item layui-this">
-            <a href="/User/BasicSetting?userid=@Session["Userid"] ">
+            <a href="/User/BasicSetting?userid=@Session["Userid"]" onclick="BeReportus()">
                 <i class="layui-icon">&#xe620;</i>
                 基本设置
             </a>
         </li>
         <li class="layui-nav-item">
-            <a href="message.html">
+            <a href="/User/UserMessage">
                 <i class="layui-icon">&#xe611;</i>
                 我的消息
             </a>
@@ -128,7 +128,7 @@
                 <li class="layui-this" lay-id="info">我的资料</li>
                 <li lay-id="avatar">头像</li>
                 <li lay-id="pass">密码</li>
-                <li lay-id="bind">业务暂定</li>
+                <li lay-id="bind">系统信息</li>
             </ul>
             <div class="layui-tab-content" style="padding: 20px 0;">
                 <div class="layui-form layui-form-pane layui-tab-item layui-show">
@@ -138,19 +138,19 @@
                             @* 显示修改个人说明区域 *@
                             <label for="email" class="layui-form-label">邮箱</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="email" name="email"  value="@ViewBag.eamil" class="layui-input" readonly="readonly">
+                                <input type="text" id="email" name="email" value="@ViewBag.eamil" class="layui-input" readonly="readonly">
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label for="nickname" class="layui-form-label">昵称</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="nickname" placeholder="最多输入10个字符" maxlength="10" name="nickname"  value="@ViewBag.nickname" class="layui-input">
+                                <input type="text" id="nickname" placeholder="最多输入10个字符" maxlength="10" name="nickname" value="@ViewBag.nickname" class="layui-input">
                             </div>
                         </div>
                         <div class="layui-form-item layui-form-text">
                             <label for="psersonDesc" class="layui-form-label">个人说明</label>
                             <div class="layui-input-block">
-                                <textarea placeholder="@ViewBag.perdesc (最多输入50个字符)" maxlength="50" id="psersonDesc" name="psersonDesc" autocomplete="off" class="layui-textarea" style="height: 80px;" ></textarea>
+                                <textarea placeholder="@ViewBag.perdesc (最多输入50个字符)" maxlength="50" id="psersonDesc" name="psersonDesc" autocomplete="off" class="layui-textarea" style="height: 80px;"></textarea>
                             </div>
                         </div>
                         <div class="layui-form-item">
@@ -175,13 +175,13 @@
                         <div class="layui-form-item">
                             <label for="password" class="layui-form-label">当前密码</label>
                             <div class="layui-input-inline">
-                                <input type="text" id="pwd" name="pwd"  autocomplete="off" class="layui-input" value="@ViewBag.pwd" readonly>
+                                <input type="text" id="pwd" name="pwd" autocomplete="off" class="layui-input" value="@ViewBag.pwd" readonly>
                             </div>
                         </div>
                         <div class="layui-form-item">
                             <label for="newPassword" class="layui-form-label">新密码</label>
                             <div class="layui-input-inline">
-                                <input type="password" id="newPassword" name="newPassword"  autocomplete="off" class="layui-input">
+                                <input type="password" id="newPassword" name="newPassword" autocomplete="off" class="layui-input">
                             </div>
                             <div class="layui-form-mid layui-word-aux">密码必须由6-12位数字加字母组成</div>
                         </div>
@@ -192,15 +192,78 @@
                             </div>
                         </div>
                         <div class="layui-form-item">
-                            <input type="button" id="btn-UpdatePwd" name="name" value="确认修改" class="layui-btn"/>
+                            <input type="button" id="btn-UpdatePwd" name="name" value="确认修改" class="layui-btn" />
                             @*<button id="btn-UpdatePwd" class="layui-btn" key="set-mine" lay-filter="*" lay-submit>确认修改</button>*@
                         </div>
                     </form>
                 </div>
 
+                <div class="layui-form layui-form-pane layui-tab-item" id="info">
+                    <input type="button" onclick="Usconfirm()" name="confirm" value="确认" class="layui-btn layui-btn-danger" />
+                    <div id="LAY_minemsg" style="margin-top: 10px;">
+                        <ul class="mine-msg">
+                            <li data-id="123">
+                                <blockquote class="layui-elem-quote">
+                                    系统消息：用户 @@<span id="tip"></span> 在文章 <span id="art"></span> <span id="isre"></span>的评论 <span id="con"></span> 举报已核实
+                                </blockquote>
+                                @*<p><a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>*@
+                                <p id="tishi" style="color: red"></p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
 
         </div>
     </div>
 </div>
+<script>
+    window.onload=function() {
+        $.ajax({
+            type: "get",
+            url: "UserBeReportInfo",
+            dataType: "json",
+            success:function(msg) {
+                if (msg.code===100) {
+                    console.log(msg.data);
+                    //alert(msg.data[0].Title);
+                    var arr = msg.data;
+                    var htmldata = "";      //举报人
+                    var artdata = "";       //文章
+                    var condata = "";       //评论
+                    var isrepor = "对您发布";
+                    arr.forEach(function(item) {
+                        var uid = "/User/UserHome?userid=" + item.UserId;
+                        var aid = "/Article/DetailArticle?articleid=" + item.ArticleId;
+                        htmldata += '<a target="_blank"  href=' + uid + '>' + item.NickName + '</a>';
+                        artdata += '<a target="_blank"  href=' + aid + '>' + item.Title + '</a>';   
+                        condata += '<span style="color:red">' + item.CommentContent + '</span>';
+                    });
+                    $("#tip").html(htmldata); //追加
+                    $("#art").html(artdata);
+                    $("#con").html(condata);
+                    $("#isre").html(isrepor);
+                    $("#tishi").text("请注意评论用语，被举报次数过多可能会遭到强制封号！");
+                }else {
+                    $("#info").text("暂无待确认的系统信息!");
+                }
+            }
+        });
+    }
+</script>
+<script>
+    function Usconfirm() {
+        $.ajax({
+            type: "post",
+            url: "BeUserReportConfirmInfo",
+            dataType: "json",
+            success:function(msg) {
+                if (msg.code===100) {
+                    layer.msg("确认成功", { icon: 1,time:2000 });
+                    window.location.reload();
+                }
+            }
+        });
+    }
+</script>
 

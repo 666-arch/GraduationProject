@@ -1,0 +1,156 @@
+﻿
+@{
+    ViewBag.Title = "UserMessage";
+    Layout = "~/Views/Shared/_LayoutFront.cshtml";
+}
+
+    <div class="layui-container fly-marginTop fly-user-main">
+        <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+            <li class="layui-nav-item">
+                <a href="/User/UserHome?userid=@Session["Userid"]">
+                    <i class="layui-icon">&#xe609;</i>
+                    我的主页
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/User/Index">
+                    <i class="layui-icon">&#xe612;</i>
+                    用户中心
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/User/BasicSetting?userid=@Session["Userid"] ">
+                    <i class="layui-icon">&#xe620;</i>
+                    基本设置
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/User/UserMessage">
+                    <i class="layui-icon">&#xe611;</i>
+                    我的消息
+                </a>
+            </li>
+        </ul>
+
+        <div class="site-tree-mobile layui-hide">
+            <i class="layui-icon">&#xe602;</i>
+        </div>
+        <div class="site-mobile-shade"></div>
+
+        <div class="site-tree-mobile layui-hide">
+            <i class="layui-icon">&#xe602;</i>
+        </div>
+        <div class="site-mobile-shade"></div>
+
+        <div class="fly-panel fly-panel-user" pad20>
+            <div id="info" class="layui-tab layui-tab-brief" lay-filter="user" id="LAY_msg" style="margin-top: 15px;" >
+                <input type="button" onclick="Usconfirm()" name="confirm" value="确认" class="layui-btn layui-btn-danger"/>
+                <div id="LAY_minemsg" style="margin-top: 10px;">
+                    <ul class="mine-msg">
+                        <li data-id="123">
+                            <blockquote class="layui-elem-quote">
+                                系统消息：您对用户 @@<span id="tip"></span> 在文章 <span id="art"></span> 发布的评论 <span id="con"></span> 举报已核实
+                            </blockquote>
+                            @*<p><a href="javascript:;" class="layui-btn layui-btn-small layui-btn-danger fly-delete">删除</a></p>*@
+                            <p id="tishi" style="color: red"></p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    window.onload = function() {
+        $.ajax({
+            type: "get",
+            url: "ReportFeedback",
+            dataType: "json",
+            success: function (msg) {
+                if (msg.code===100) {
+                    console.log(msg.data);
+                    var arr = msg.data;
+                    var htmldata = "";
+                    var artdata = "";
+                    var condata = "";
+                    arr.forEach(function(item) {
+                        var uid = "/User/UserHome?userid=" + item.ReportUserId;
+                        var aid = "/Article/DetailArticle?articleid=" + item.ArticleId;
+                        htmldata += '<a target="_blank"  href=' + uid + '>' + item.NickName + '</a>';
+                        artdata += '<a target="_blank"  href=' + aid + '>' + item.Title + '</a>';
+                        condata += '<span style="color:red">' + item.CommentContent + '</span>';
+                    });
+                    $("#tip").html(htmldata); //追加
+                    $("#art").html(artdata);
+                    $("#con").html(condata);
+                }else {
+                    $("#info").text("暂无待处理我的信息!");
+                }
+            }
+        });
+    }
+
+    function Usconfirm() {
+        $.ajax({
+            type: "post",
+            url: "UserConfirmInfo",
+            dataType: "json",
+            success:function(msg) {
+                if (msg.code===100) {
+                    layer.msg("确认成功", { icon: 1,time:2000 });
+                    window.location.reload();
+                }
+            }
+        });
+    }
+</script>
+
+<script>
+    
+    //window.onload = function() {
+    //    $.ajax({
+    //        type: "get",
+    //        url: "UserBeReportInfo",
+    //        dataType: "json",
+    //        success:function(msg) {
+    //            if (msg.code===100) {
+    //                console.log(msg.data);
+    //                var arr = msg.data;
+    //                var htmldata = "";      //举报人
+    //                var artdata = "";       //文章
+    //                var condata = "";       //评论
+    //                var isrepor = "对您发布";
+    //                arr.forEach(function(item) {
+    //                    var uid = "/User/UserHome?userid=" + item.UserId;
+    //                    var aid = "/Article/DetailArticle?articleid=" + item.ArticleId;
+    //                    htmldata += '<a target="_blank"  href=' + uid + '>' + item.NickName + '</a>';
+    //                    artdata += '<a target="_blank"  href=' + aid + '>' + item.Title + '</a>';   
+    //                    condata += '<span style="color:red">' + item.CommentContent + '</span>';
+    //                });
+    //                $("#tip").html(htmldata); //追加
+    //                $("#art").html(artdata);
+    //                $("#con").html(condata);
+    //                $("#isre").html(isrepor);
+    //                $("#tishi").text("请注意评论用语，被举报次数过多可能会遭到强制封号！");
+    //            }else {
+    //                $("#info").text("暂无待处理的系统信息!");
+    //            }
+    //        }
+    //    });
+    //}
+
+    //function Usconfirm() {
+    //    $.ajax({
+    //        type: "post",
+    //        url: "BeUserReportConfirmInfo",
+    //        dataType: "json",
+    //        success:function(msg) {
+    //            if (msg.code===100) {
+    //                layer.msg("确认成功", { icon: 1,time:2000 });
+    //                window.location.reload();
+    //            }
+    //        }
+    //    });
+    //}
+
+</script>

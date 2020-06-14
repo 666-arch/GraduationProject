@@ -372,14 +372,67 @@ namespace BlogSystem.BLL
             {
                var data= await commentReportService.GetAllAsync()
                     .Include(m => m.User)
-                    .Where(m => m.UserId == userid&m.IsHandle==true)
+                    .Include(m=>m.Comment.Article)
+                    .Where(m => m.UserId == userid&m.IsHandle==true&m.IsConfirm==false)        //true管理员已处理、用户未确认提供反馈信息
                     .Select(m => new CommentReportDto()
                     {
                         IsHandle = m.IsHandle,
-                        NickName = m.User.NickName, //被举报人
-                        Content = m.Content
+                        NickName = m.Comment.User.NickName, //被举报人
+                        Content = m.Content,
+                        Title = m.Comment.Article.Title,
+                        ReportUserId=m.Comment.UserId,
+                        ArticleId=m.Comment.ArticleId,
+                        CommentContent=m.Comment.Content,
+                        CreateTime = m.CreateTime
                     }).ToListAsync();
                return data;
+            }
+        }
+
+        public async Task EditIsConfirmByUser(Guid userId)          //用户确认反馈信息
+        {
+            using (ICommentReportService comSvc = new CommentReportService())
+            {
+                var data=await comSvc.GetAllAsync().FirstOrDefaultAsync(m => m.UserId == userId);
+                data.IsConfirm = true;
+                await comSvc.EditAsync(data);
+            }
+        }
+
+        public async Task<List<CommentReportDto>> Bereported(Guid beRepuserid)
+        {
+            using (ICommentReportService comSvc = new CommentReportService())
+            {
+                 var data=await comSvc.GetAllAsync()
+                    .Include(m => m.Comment)
+                    .Include(m => m.User)
+                    .Include(m=>m.Comment.Article)
+                    .Where(m => m.Comment.UserId == beRepuserid&m.IsBeReportUserConfirm==false)     //被举报人未确认提供反馈信息
+                    .Select(m => new CommentReportDto()
+                    {
+                        NickName = m.User.NickName,     //举报人
+                        CommentContent = m.Comment.Content,     //被举报的评论
+                        Title = m.Comment.Article.Title,     //所在文章
+                        UserId = m.UserId,  //举报人Id
+                        ArticleId = m.Comment.ArticleId     //被评论所在文章Id
+                    }).ToListAsync();
+                return data;
+            }
+        }
+
+        public async Task EditeIsConfirmByBeReportUser(Guid userId)
+        {
+            using (ICommentReportService comSvc = new CommentReportService())
+            {
+                var data=await comSvc
+                    .GetAllAsync()
+                    .Include(m=>m.Comment)
+                    .FirstAsync(m => m.Comment.UserId == userId);
+                if (data!=null)
+                {
+                    data.IsBeReportUserConfirm = true;
+                    await comSvc.EditAsync(data);
+                }
             }
         }
     }

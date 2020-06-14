@@ -15,7 +15,9 @@ namespace BlogSystem.Dto
         public string CommentContent { get; set; }  //被举报的评论
         public string NickName { get; set; }
         public DateTime CreateTime { get; set; }
-        public string Title { get; set; }   //所属文章
+        public string Title { get; set; }   //所属文章标题
+        public Guid ArticleId { get; set; }     //所属文章id
         public bool IsHandle { get; set; }
+        public Guid ReportUserId { get; set; }      //被举报人id
     }
 }

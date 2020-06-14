@@ -17,8 +17,10 @@ namespace BlogSystem.Models
         public User User { get; set; }
         [ForeignKey(nameof(Comment))]
         public Guid CommentId { get; set; }     //举报的评论
-        public Comment Comment { get; set; }
+        public Comment Comment { get; set; }    
         public string Content { get; set; }     //举报原因
-        public bool IsHandle { get; set; }      //是否已授理
+        public bool IsHandle { get; set; }      //后台是否已授理
+        public bool IsConfirm { get; set; }     //举报人是否已确认
+        public bool IsBeReportUserConfirm { get; set; }     //被举报人是否已确认
     }
 }

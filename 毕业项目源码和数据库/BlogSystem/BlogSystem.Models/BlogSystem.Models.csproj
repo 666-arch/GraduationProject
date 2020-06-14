@@ -77,6 +77,14 @@
     <Compile Include="Migrations\202006131138428_createFieldHandleToCommentReport.Designer.cs">
       <DependentUpon>202006131138428_createFieldHandleToCommentReport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202006140503593_createFieldIsConfirmToCommentReport.cs" />
+    <Compile Include="Migrations\202006140503593_createFieldIsConfirmToCommentReport.Designer.cs">
+      <DependentUpon>202006140503593_createFieldIsConfirmToCommentReport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202006141057107_IsBeReportUserConfirm.cs" />
+    <Compile Include="Migrations\202006141057107_IsBeReportUserConfirm.Designer.cs">
+      <DependentUpon>202006141057107_IsBeReportUserConfirm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="User.cs" />
@@ -97,6 +105,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006131138428_createFieldHandleToCommentReport.resx">
       <DependentUpon>202006131138428_createFieldHandleToCommentReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006140503593_createFieldIsConfirmToCommentReport.resx">
+      <DependentUpon>202006140503593_createFieldIsConfirmToCommentReport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202006141057107_IsBeReportUserConfirm.resx">
+      <DependentUpon>202006141057107_IsBeReportUserConfirm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

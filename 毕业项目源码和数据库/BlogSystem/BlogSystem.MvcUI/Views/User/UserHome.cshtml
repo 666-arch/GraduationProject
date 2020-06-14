@@ -363,3 +363,21 @@
         });
     }
 </script>*@
+
+<script>
+    //被举报人信息反馈机制
+    window.onload = function () {
+        $.ajax({
+            type: "get",
+            url: "UserBeReportInfo",
+            dataType: "json",
+            success: function (msg) {
+                if (msg.code === 100) {
+                    alert('系统信息：您的评论已被举报，详情可在系统信息列表中查看，点击确认后将不再提示');
+                } else {
+                    return;
+                }
+            }
+        });
+    }
+</script>
