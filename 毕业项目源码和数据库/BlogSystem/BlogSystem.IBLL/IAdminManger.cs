@@ -40,5 +40,9 @@ namespace BlogSystem.IBLL
         Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title, string ishandle);
 
         Task EditHandleReport(Guid id, bool Ishandle = true); //处理举报信息
+
+        Task RemoveCommentByAdmin(Guid commentid);  //管理员删除评论
+
+        Task RemoveCommentReportAdmin(Guid reportId);       //管理员删除评论举报记录
     }
 }

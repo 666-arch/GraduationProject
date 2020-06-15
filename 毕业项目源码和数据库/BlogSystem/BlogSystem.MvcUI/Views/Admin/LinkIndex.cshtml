@@ -101,13 +101,14 @@
     }
 
     //checkbox的全选与取消全选
-    $('.allChoose').on('change', function () {
-        if ($(this).is(':checked')) {
-            $('.singleChoose').prop('checked', 'checked');
-        } else {
-            $('.singleChoose').prop('checked', '');
-        }
-    })
+    $('.allChoose').on('change',
+        function() {
+            if ($(this).is(':checked')) {
+                $('.singleChoose').prop('checked', 'checked');
+            } else {
+                $('.singleChoose').prop('checked', '');
+            }
+        });
 
     function manyLinks_del() {
         var idStr = '';
@@ -121,7 +122,7 @@
             return;
         }
         layer.confirm('确认要删除选中的吗？', function (index) {
-            $.get("ManyRemoveLink", { idStr: idStr })
+            $.get("ManyRemoveLink", { idStr: idStr });
             layer.msg('已删除！', { icon: 1, time: 1000 });
             window.location.reload();
         });

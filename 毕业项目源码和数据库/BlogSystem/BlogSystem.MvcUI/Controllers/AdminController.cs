@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -259,12 +260,39 @@ namespace BlogSystem.MvcUI.Controllers
 
         public async Task<ActionResult> CommentManger(int page=1,string nickname = "",string title="")
         {
-            int pageSize = 10;
+            int pageSize = 20;
             ViewBag.nickname = nickname;
             ViewBag.titles = title;
             IAdminManger admin=new AdminManger();
             var data= await admin.GetAllCommentByAdmin(nickname, title);
             return View(data.ToPagedList<CommentDto>(page, pageSize));
+        }
+        [HttpPost]
+        public async Task<ActionResult> RemoveCommentByAdmin(Guid id)
+        {
+            IAdminManger adminManger=new AdminManger();
+            await adminManger.RemoveCommentByAdmin(id);
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> RemoveCommentReportAdmin(Guid id)       //删除评论举报记录
+        {
+            IAdminManger admin=new AdminManger();
+            await admin.RemoveCommentReportAdmin(id);
+            return View();
+        }
+
+        public async Task<ActionResult> ManyRemoveCommentManger(string idStr)   //批量删除评论Manger
+        {
+            IAdminManger adminManger = new AdminManger();
+            string str = idStr.Substring(0, idStr.LastIndexOf(','));
+            string[] ids = str.Split(',');
+            foreach (var item in ids)
+            {
+                Guid aid = Guid.Parse(item);
+                await adminManger.RemoveCommentByAdmin(aid);
+            }
+            return View();
         }
     }
 }

@@ -63,7 +63,7 @@
                     <td>@(item.IsHandle==false?"未处理":"已处理")</td>
                     <td>
                         <a class="link-update" onclick="HandleLayer('@item.Id')">授理</a>
-                        <a class="link-del" onclick="user_del('', this)">删除</a>
+                        <a class="link-del" onclick="Handle_del('@item.Id', this)">删除</a>
                     </td>
                 </tr>
             }
@@ -84,4 +84,18 @@
                 window.location.reload();   //刷新
             });
     }
+
+    function Handle_del(id, obj) {
+        //参数1：询问,参数2：回调函数（参数自动补齐）
+        layer.confirm('确定要删除吗？', function (index) {
+            //请求后台
+            $.post("RemoveCommentReportAdmin", { id: id });
+            //查找每个obj元素的父元素进行删除
+            $(obj).parents("tr").remove();
+            //提示
+            layer.msg('删除成功！', { icon: 1, time: 1000 });
+        });
+    }
+
+
 </script>

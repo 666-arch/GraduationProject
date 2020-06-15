@@ -228,6 +228,7 @@ namespace BlogSystem.BLL
                     .OrderByDescending(m=>m.CreateTime)
                     .Select(m => new CommentDto()
                 {
+                    Id=m.Id,
                     Content = m.Content,
                     Title = m.Article.Title,
                     ArticleId = m.ArticleId,
@@ -244,6 +245,7 @@ namespace BlogSystem.BLL
                var data= await creSvc.GetAllAsync()
                     .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)&string.IsNullOrEmpty(ishandle)||
                               m.User.NickName.Contains(nickname)&m.Comment.Article.Title.Contains(title)&m.IsHandle.ToString().Contains(ishandle))
+                    .Where(m=>m.IsRemoved==false)
                     .Include(m => m.Comment)
                     .Include(m => m.User)
                     .Include(m=>m.Comment.Article)
@@ -270,6 +272,26 @@ namespace BlogSystem.BLL
                 {
                     data.IsHandle = Ishandle;
                     await comRepSvc.EditAsync(data);
+                }
+            }
+        }
+        public async Task RemoveCommentByAdmin(Guid commentid)   //管理员删除评论
+        {
+            using (ICommentService commentService = new CommentService())
+            {
+                var data = await commentService.GetAllAsync().FirstOrDefaultAsync(m => m.Id == commentid);
+                await commentService.RemoveAsync(data);
+            }
+        }
+
+        public async Task RemoveCommentReportAdmin(Guid reportId)       //管理员删除举报记录
+        {
+            using (ICommentReportService comRepSvc=new CommentReportService())
+            {
+                var data=await comRepSvc.GetAllAsync().FirstOrDefaultAsync(m => m.Id == reportId);
+                if (data!=null)
+                {
+                    await comRepSvc.RemoveAsync(data);
                 }
             }
         }
