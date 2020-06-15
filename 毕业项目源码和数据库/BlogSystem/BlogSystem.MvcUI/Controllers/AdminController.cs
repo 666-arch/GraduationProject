@@ -8,6 +8,7 @@ using BlogSystem.IBLL;
 using BlogSystem.BLL;
 using BlogSystem.MvcUI.Models;
 using System.Web.Routing;
+using System.Web.WebPages;
 using PagedList;
 using BlogSystem.Dto;
 
@@ -209,32 +210,24 @@ namespace BlogSystem.MvcUI.Controllers
             return View(userByadmin.ToPagedList<UserInformation>(page,pagesize));
         }
 
-        public async Task<ActionResult> ArticleIndex(int page=1,string nickname="",bool state=true) 
+        public async Task<ActionResult> ArticleIndex(int page=1,string nickname="", string title = "", bool state=true) 
         {
             int pagesize = 10;
             IArticleManger articleManger = new ArticleManger();
-            var articles = await articleManger.GetAllArticlesByNickName(nickname, state);
+            var articles = await articleManger.GetAllArticlesByNickName(nickname, title, state);
             ViewBag.nickname = nickname;
+            ViewBag.titles = title;
             return View(articles.ToPagedList<ArticleDto>(page,pagesize));
         }
 
-        //public async Task<ActionResult> CommentIndex(int page = 1,string nickname="",string title="")
-        //{
-        //    int pageSize = 15;
-        //    IAdminManger adminManger = new AdminManger();
-        //    ViewBag.nickname = nickname;
-        //    ViewBag.titles = title;
-        //    var Comment = await adminManger.GetAllCommentByAdmin(nickname, title);
-        //    return View(Comment.ToPagedList<CommentDto>(page, pageSize));
-        //}
-
-        public async Task<ActionResult> CommentIndex(int page=1,string nickname= "",string title="")
+        public async Task<ActionResult> CommentIndex(int page=1,string nickname= "",string title="",string ishandle="")
         {
             int pageSize = 10;
             ViewBag.nickname = nickname;
             ViewBag.titles = title;
+            ViewBag.handle = ishandle;
             IAdminManger adminManger=new AdminManger();
-            var data= await adminManger.GetAllCommentReport(nickname, title);
+            var data= await adminManger.GetAllCommentReport(nickname, title,ishandle);
             return View(data.ToPagedList<CommentReportDto>(page,pageSize));
         }
 
@@ -262,6 +255,16 @@ namespace BlogSystem.MvcUI.Controllers
             IAdminManger admin=new AdminManger();
             await admin.EditHandleReport(id, Ishandle);
             return View();
+        }
+
+        public async Task<ActionResult> CommentManger(int page=1,string nickname = "",string title="")
+        {
+            int pageSize = 10;
+            ViewBag.nickname = nickname;
+            ViewBag.titles = title;
+            IAdminManger admin=new AdminManger();
+            var data= await admin.GetAllCommentByAdmin(nickname, title);
+            return View(data.ToPagedList<CommentDto>(page, pageSize));
         }
     }
 }

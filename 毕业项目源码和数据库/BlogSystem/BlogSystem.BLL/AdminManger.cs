@@ -237,13 +237,13 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title)    //模糊查询
+        public async Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title, string ishandle)    //模糊查询
         {
             using (ICommentReportService creSvc = new CommentReportService())
             {
                var data= await creSvc.GetAllAsync()
-                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)||
-                              m.User.NickName.Contains(nickname)&m.Comment.Article.Title.Contains(title))
+                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)&string.IsNullOrEmpty(ishandle)||
+                              m.User.NickName.Contains(nickname)&m.Comment.Article.Title.Contains(title)&m.IsHandle.ToString().Contains(ishandle))
                     .Include(m => m.Comment)
                     .Include(m => m.User)
                     .Include(m=>m.Comment.Article)

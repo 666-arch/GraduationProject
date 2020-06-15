@@ -34,24 +34,23 @@
 </div>
 <div class="result-wrap">
     <form name="myform" id="myform" method="post">
-        <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="请输入作者" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
-        <select id="state" name="state" onchange="searchBystate()"  lay-filter="aihao">
-            <option value="">请选择</option>
+        <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="请输入作者" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+        <input type="text" id="title" name="title" value="@ViewBag.titles" placeholder="请输入文章标题" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+        <select id="state" name="state" onchange="searchBystate()" lay-filter="aihao" style="height: 36px;">
+            <option value="">---请选择---</option>
             <option value="true">已发布</option>
             <option value="false">未发布</option>
         </select>
         <script>
             function searchBystate() {
-                var state= $("#state").find("option:selected").val();
-               // alert(state);
+                var state = $("#state").find("option:selected").val();
+                // alert(state);
             }
         </script>
         <input type="submit" name="name" value="搜索" class="btn1" />
         <div class="result-title">
             <div class="result-list">
-                @*<a href="~/Article/addArticle"><i class="icon-font"></i>新增文章</a>*@
-                <a id="batchDel" href="javascript:void(0)" onclick="manyArticles_del()"><i class="icon-font"></i>批量删除</a>
-                @*<a id="updateOrd" style="cursor: pointer"><i class="icon-font"></i>更新排序</a>*@
+                @*<a id="batchDel" href="javascript:void(0)" onclick="manyArticles_del()"><i class="icon-font"></i>批量删除</a>*@
             </div>
         </div>
     </form>
@@ -81,7 +80,6 @@
                         <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
                         <td>
                             <a class="link-update" href="/Article/DetailArticle?articleid=@item.Id" target="_blank">预览</a>
-                            <a class="link-del" onclick="article_del(@item.Id,this)" style="cursor: pointer;">移除</a>
                         </td>
                     </tr>
                 }

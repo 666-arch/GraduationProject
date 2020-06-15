@@ -256,14 +256,14 @@ namespace BlogSystem.BLL
             //}
         }
 
-        public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName,bool state)   //后台模糊查询（根据作者查询）
+        public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title, bool state)   //后台模糊查询（根据作者查询）
         {
             using (IArticleService articleService = new ArticleService())
             {
                 var data=await articleService.GetAllAsync()
                     .Include(m => m.User)
                     .Where(m=>m.State==state)
-                    .Where(m => string.IsNullOrEmpty(nickName) || m.User.NickName.Contains(nickName))
+                    .Where(m => string.IsNullOrEmpty(nickName)&string.IsNullOrEmpty(title) || m.User.NickName.Contains(nickName)&m.Title.Contains(title))
                     .Select(m => new ArticleDto()
                     {
                         Id=m.Id,

@@ -25,7 +25,7 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleDto>> GetAllArticlesByUserId(Guid userId);  //根据用户Id找文章
 
-        Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName,bool state); //根据昵称找文章
+        Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title,bool state); //根据昵称找文章
 
 
         Task<List<ArticleToBlogcateDto>> GetAllArticlesByCategoryId(Guid blogcateId);  //根据类别找Id

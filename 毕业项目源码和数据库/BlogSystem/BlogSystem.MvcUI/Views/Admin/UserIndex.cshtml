@@ -57,14 +57,14 @@
                 </div>
                
                 <input type="submit" id="btnSearch" name="name" value="查询" class="btn1" />
-                <a id="batchDel" href="javascript:void(0)" onclick="manyUsers_del()"><i class="icon-font"></i>批量删除</a>
+                @*<a id="batchDel" href="javascript:void(0)" onclick="manyUsers_del()"><i class="icon-font"></i>批量删除</a>*@
             </div>
         </div>
     </form>
         <div class="result-content">
             <table class="result-tab" width="100%">
                 <tr>
-                    <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
+                    @*<th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>*@
                     <th>头像</th>
                     <th>邮箱</th>
                     <th>昵称</th>
@@ -76,7 +76,7 @@
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
+                        @*<td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>*@
                         <td>
                             <img src="~/FrontPage/images/@item.ImagePath" style="width:50px;height:50px;" />
                         </td>
@@ -87,7 +87,7 @@
                         <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
                         <td>
                             <a class="link-update" href="#" onclick="updateLayer('@item.Id')">修改</a>
-                            <a class="link-del" href="#" onclick="user_del('@item.Id',this)">删除</a>
+                            @*<a class="link-del" href="#" onclick="user_del('@item.Id',this)">删除</a>*@
                         </td>
                     </tr>
                 }

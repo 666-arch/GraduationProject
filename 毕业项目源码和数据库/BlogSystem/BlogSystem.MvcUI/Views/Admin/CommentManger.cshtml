@@ -1,7 +1,7 @@
 ﻿@using BlogSystem.Models;
 @using BlogSystem.Dto
 @using PagedList.Mvc
-@model PagedList.IPagedList<CommentReportDto>
+@model PagedList.IPagedList<CommentDto>
 @{
     ViewBag.Title = "CommentIndex";
     Layout = "~/Views/Shared/_LayoutBack.cshtml";
@@ -30,11 +30,6 @@
     <form method="post">
         <input type="text" name="nickname" value="@ViewBag.nickname" placeholder="输入用户" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood">
         <input type="text" name="title" value="@ViewBag.titles" placeholder="输入文章" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood">
-        <select style="height: 36px;" id="ishandle" name="ishandle">
-            <option value="">---请选择---</option>
-            <option value="false">未处理</option>
-            <option value="true">已处理</option>
-        </select>
         <input type="submit" name="name" value="搜索" class="btn1" />
     </form>
     <br />
@@ -43,12 +38,10 @@
         <table class="result-tab" width="100%">
             <tr>
                 <th class="tc" width="5%"><input type="checkbox" class="allChoose" /></th>
-                <th>举报人</th>
-                <th>举报原因</th>
-                <th>举报评论</th>
-                <th>所属文章</th>
-                <th>举报时间</th>
-                <th>是否处理</th>
+                <th>评论人</th>
+                <th>评论内容</th>
+                <th>评论文章</th>
+                <th>评论时间</th>
                 <th>操作</th>
             </tr>
             @foreach (var item in Model)
@@ -57,12 +50,9 @@
                     <td class="tc"><input name="id[]" type="checkbox" class="singleChoose"></td>
                     <td>@item.NickName</td>
                     <td>@item.Content</td>
-                    <td>@item.CommentContent</td>
                     <td>@item.Title</td>
                     <td>@item.CreateTime</td>
-                    <td>@(item.IsHandle==false?"未处理":"已处理")</td>
                     <td>
-                        <a class="link-update" onclick="HandleLayer('@item.Id')">授理</a>
                         <a class="link-del" onclick="user_del('', this)">删除</a>
                     </td>
                 </tr>
@@ -71,17 +61,17 @@
         <div class="list-page">
 
             每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
-            @Html.PagedListPager(Model, page => Url.Action("CommentIndex", new {page}))
+            @Html.PagedListPager(Model, page => Url.Action("CommentManger", new { page }))
         </div>
     </div>
 </div>
 <script>
-    function HandleLayer(id) {
-        layer.confirm('是否核实此条举报?',
-            function(index) {
-                $.post("HandleReport", { id: id });
-                layer.msg('处理成功！', { icon: 1, time: 1000 });
-                window.location.reload();   //刷新
-            });
-    }
+    //function HandleLayer(id) {
+    //    layer.confirm('是否核实此条举报?',
+    //        function(index) {
+    //            $.post("HandleReport", { id: id });
+    //            layer.msg('处理成功！', { icon: 1, time: 1000 });
+    //            window.location.reload();   //刷新
+    //        });
+    //}
 </script>

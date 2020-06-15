@@ -31,4 +31,3 @@ F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createFieldHandleToCommentReport.resources
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createFieldIsConfirmToCommentReport.resources
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.IsBeReportUserConfirm.resources
-F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.csprojAssemblyReference.cache

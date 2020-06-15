@@ -37,7 +37,7 @@ namespace BlogSystem.IBLL
 
         Task<List<CommentDto>> GetAllCommentByAdmin(string nickname,string title);  //评论管理
 
-        Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title);
+        Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title, string ishandle);
 
         Task EditHandleReport(Guid id, bool Ishandle = true); //处理举报信息
     }
