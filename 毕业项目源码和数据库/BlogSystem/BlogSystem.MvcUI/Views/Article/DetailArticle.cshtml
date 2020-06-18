@@ -155,7 +155,6 @@
                                 if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
                                 {
                                     <a href="/Article/RemoveCommentByUser?commentid=@item.Id" class="cm-link" onclick="return confirm('你确定要删除你的评论吗？')">删除评论</a>
-                                    @*<input type="button" onclick="AddTextareaValue('@item.Content','@item.Id')" class="cm-link" value="修改评论"/>*@
                                     <a href="#" class="link-update" onclick="updateLayer('@item.Id')">修改</a>
                                     <hr />
                                 }
@@ -197,8 +196,13 @@
                     if (ViewBag.astate == true && Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
                     {
                         <form>
-                            <input type="button" id="Recommend" name="Recommend" value="推荐" />
-                            <input type="submit" id="Opposition" name="Opposition" value="反对" />
+                            @*<input type="button" id="Recommend" name="Recommend" value="推荐" />*@
+                            <div id="good">
+                                <a onclick="Recommend()" id="goods" style="cursor: pointer"><i class="layui-icon-praise">&#xe6c6;</i> 好文推荐 </a>
+                            </div>
+                            <div id="bad">
+                                <a onclick="Opposition()" id="bads" style="cursor: pointer"><i class="layui-icon-praise">&#xe6c6;</i> 反对 </a>
+                            </div>
                         </form>
                     }
                 }
@@ -213,6 +217,42 @@
                             $("html,body").animate({ scrollTop: 0 }, 1000);
                         });
                     })
+                </script>
+                <script>
+                    function Recommend() {
+                        $.ajax({
+                            type: "post",
+                            url: "Recommend",
+                            dataType: "json",
+                            data: {
+                                articleid: $("#articleid").val()
+                            },
+                            success:function(msg) {
+                                if (msg.code === 100) {
+                                    console.log(msg.data.GoodCount);
+                                    //$("#good").text(msg.GoodCount);
+                                    $("#good").text("点赞成功");
+                                }
+                            }
+                        });
+                    }
+                    function Opposition() {
+                        $.ajax({
+                            type: "post",
+                            url: "Opposition",
+                            dataType: "json",
+                            data: {
+                                articleid: $("#articleid").val()
+                            },
+                            success:function(msg) {
+                                if (msg.code === 100) {
+                                    console.log(msg.data.BadCount);
+                                    //$("#good").text(msg.BadCount);
+                                    $("#bad").text("反对成功");
+                                }
+                            }
+                        });
+                    }
                 </script>
             </div>
         </div>
@@ -407,37 +447,37 @@
 </script>
 
 <script>
-    $("#Recommend").click(function () {
-        $.ajax({
-            type: "post",
-            url: "Recommend",
-            data: {
-                articleid: $("#articleid").val()
-            },
-            success: function () {
-                alert('推荐成功！');
-                window.location.reload();
-                $("#Recommend").attr("disabled", true);
-            }
-        });
-    });
+    //$("#Recommend").click(function () {
+    //    $.ajax({
+    //        type: "post",
+    //        url: "Recommend",
+    //        data: {
+    //            articleid: $("#articleid").val()
+    //        },
+    //        success: function () {
+    //            alert('推荐成功！');
+    //            window.location.reload();
+    //            $("#Recommend").attr("disabled", true);
+    //        }
+    //    });
+    //});
 </script>
 
 <script>
-    $("#Opposition").click(function () {
-        $.ajax({
-            type: "post",
-            url: "Opposition",
-            data: {
-                articleid: $("#articleid").val()
-            },
-            success: function () {
-                alert('反对成功！');
-                window.location.reload();
-                $("#Opposition").attr("disabled", true);
-            }
-        });
-    })
+    //$("#Opposition").click(function () {
+    //    $.ajax({
+    //        type: "post",
+    //        url: "Opposition",
+    //        data: {
+    //            articleid: $("#articleid").val()
+    //        },
+    //        success: function () {
+    //            alert('反对成功！');
+    //            window.location.reload();
+    //            $("#Opposition").attr("disabled", true);
+    //        }
+    //    });
+    //})
 </script>
 
 <script>

@@ -158,7 +158,9 @@ namespace BlogSystem.MvcUI.Controllers
         {
             IArticleManger articleManger = new ArticleManger();
             await articleManger.RecommendArticle(articleid);
-            return RedirectToAction("DetailArticle", new { articleid = articleid });
+            //return RedirectToAction("DetailArticle", new { articleid = articleid });
+            ViewBag.da= await articleManger.GetOneArticleById(articleid);
+            return Json(new { code = 100,data= ViewBag.da },JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -166,7 +168,9 @@ namespace BlogSystem.MvcUI.Controllers
         {
             IArticleManger articleManger = new ArticleManger();
             await articleManger.OppositionArticle(articleid);
-            return RedirectToAction("DetailArticle", new { articleid = articleid });
+            //return RedirectToAction("DetailArticle", new { articleid = articleid });
+            ViewBag.da = await articleManger.GetOneArticleById(articleid);
+            return Json(new { code = 100, data = ViewBag.da }, JsonRequestBehavior.AllowGet);
         }
 
         public async Task<ActionResult> RemoveCommentByUser(Guid commentid)
