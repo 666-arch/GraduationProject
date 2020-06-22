@@ -16,5 +16,6 @@ namespace BlogSystem.Dto
         public DateTime CreateTime { get; set; }
         public Guid UserId { get; set; }
         public string NickName { get; set; }
+        public string ImagePath { get; set; }
     }
 }

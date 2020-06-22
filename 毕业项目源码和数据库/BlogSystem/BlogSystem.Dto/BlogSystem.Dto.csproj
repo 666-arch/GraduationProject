@@ -50,6 +50,7 @@
     <Compile Include="CommentReportDto.cs" />
     <Compile Include="FansDto.cs" />
     <Compile Include="LinkDto.cs" />
+    <Compile Include="ReplyCommentsDto.cs" />
     <Compile Include="UserInformation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

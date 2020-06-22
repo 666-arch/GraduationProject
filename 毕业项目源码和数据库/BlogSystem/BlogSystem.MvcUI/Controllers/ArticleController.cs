@@ -111,7 +111,6 @@ namespace BlogSystem.MvcUI.Controllers
             title=title.Substring(0, 2);
 
             ViewBag.ArticleTitleLike=await articleManger.GetArticleLikeByArticleTitle(title);
-
             ViewBag.ArtCollectList=await articleManger.GetAllArticleByCollect();
 
             return View(await articleManger.GetAllCommentByArticleId(articleid));//获取最新评论信息
@@ -290,5 +289,51 @@ namespace BlogSystem.MvcUI.Controllers
                 return Json(new { data = "请勿重复举报此评论" });
             }
         }
+
+        public ActionResult ReplyCommentsView(Guid commentid,Guid replyUsId,int type)
+        {
+            ViewBag.type = type;
+            ViewBag.commentid = commentid;
+            ViewBag.replyUsId = replyUsId;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> ReplyCommentsView(Guid commentid, Guid replyUsId, int type,string content,Guid userid)
+        {
+            Guid commentParentId = commentid;   //type=0：即针对评论的回复
+            Guid replyToTargetCommentId = commentid;
+            IArticleManger article=new ArticleManger();
+            await article.CreateReplyToComment(userid, replyUsId, content, type, commentParentId, replyToTargetCommentId);
+            return View();
+        }
+
+        public async Task<ActionResult> GetReplyComment(Guid commparentId)
+        {
+            IArticleManger articleManger=new ArticleManger();
+            ViewBag.datas= await articleManger.GetAllReplyCommentsInfo(commparentId);
+            return Json(new {code = 100,data= ViewBag.datas }, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult ReturnCommentsView(Guid commentParentId, Guid returnUsId, int? type, Guid targId)
+        {
+            type = 1;   //type=1：即针对回复的回复
+            ViewBag.type = type;
+            ViewBag.commentParentId = commentParentId;
+            ViewBag.returnUsId = returnUsId;
+            ViewBag.targId = targId;
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> ReturnCommentsView(Guid commentParentId, Guid returnUsId, int type, Guid targId, string content, Guid userid)
+        {
+             
+             Guid commentParentsId = targId;   
+             Guid replyToTargetCommentId = commentParentId;
+             IArticleManger article=new ArticleManger();
+             await article.CreateReplyToComment(userid, returnUsId,content,type, commentParentsId, replyToTargetCommentId);
+             return View();
+        }
+
     }
 }

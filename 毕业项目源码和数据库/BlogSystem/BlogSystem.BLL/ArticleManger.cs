@@ -359,7 +359,8 @@ namespace BlogSystem.BLL
                            Content = m.Content,
                            CreateTime = m.CreateTime,
                            NickName = m.User.NickName,
-                           UserId = m.UserId
+                           UserId = m.UserId,
+                           ImagePath=m.User.ImagePath
                        }).ToListAsync();
             }
         }
@@ -717,6 +718,45 @@ namespace BlogSystem.BLL
                      })
                      .FirstAsync();
                  return data;
+            }
+        }
+
+        public async Task CreateReplyToComment(Guid replierId, Guid targetToReplyId, string content, int replyType, Guid commentParentId, Guid replyToTargetCommentId)   //回复人、被回复人、回复内容、回复类型
+        {
+            using (IReplyCommentsService reply = new ReplyCommentsService())
+            {
+                await reply.CreateAsync(new ReplyComments()
+                {
+                    ReplierId = replierId,
+                    TargetToReplyId = targetToReplyId,
+                    ReplyContent = content,
+                    ReplyType = replyType,
+                    CommentParentId = commentParentId,
+                    ReplyToTargetCommentId = replyToTargetCommentId
+                });
+            }
+        }
+
+        public async Task<List<ReplyCommentsDto>> GetAllReplyCommentsInfo(Guid commentParentId)
+        {
+            using (IReplyCommentsService reply = new ReplyCommentsService())
+            {
+                var data= await reply.GetAllAsync()
+                    .Include(m => m.Comment.User)
+                    .Where(m => m.CommentParentId == commentParentId).Select(m => new ReplyCommentsDto()
+                    {
+                        NickName = m.ReplierUser.NickName,  //回复人
+                        ByReplyNickName = m.TargetToReplyUser.NickName,     //被回复人
+                        ReplyContent = m.ReplyContent,   //回复内容
+                        ImagePath = m.ReplierUser.ImagePath,    
+                        ReplierId=m.ReplierId,  //回复用户Id
+                        TargetToReplyId =m.TargetToReplyId, //回复目标用户Id
+                        ReplyToTargetCommentId =m.ReplyToTargetCommentId,    //回复目标评论Id
+                        Id=m.Id,
+                        CommentParentId=m.CommentParentId,
+                        CreateTime =m.CreateTime
+                    }).ToListAsync();
+                return data;
             }
         }
     }

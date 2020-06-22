@@ -81,5 +81,10 @@ namespace BlogSystem.IBLL
         Task<List<ArticleCollectDto>> GetAllArticleByCollect();    //文章收藏
 
         Task<CommentReportDto> GetAllReportsByUser(Guid userid,Guid commentid);
+
+
+        Task CreateReplyToComment(Guid replierId, Guid targetToReplyId, string content,int replyType, Guid commentParentId, Guid replyToTargetCommentId);    //新增评论回复
+
+        Task<List<ReplyCommentsDto>> GetAllReplyCommentsInfo(Guid commentParentId);
     }
 }

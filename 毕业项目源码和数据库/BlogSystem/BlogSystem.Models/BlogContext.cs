@@ -34,5 +34,6 @@
         public DbSet<Link> Links { get; set; }
         public DbSet<ArticleCollect> ArticleCollects { get; set; }
         public DbSet<CommentReport> CommentReports { get; set; }
+        public DbSet<ReplyComments> ReplyComments { get; set; }
     }
 }

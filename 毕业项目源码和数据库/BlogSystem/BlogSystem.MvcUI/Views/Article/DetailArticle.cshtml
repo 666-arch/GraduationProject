@@ -6,7 +6,7 @@
     var coList = (List<CommentDto>)ViewBag.coList;
     var userList = (List<UserInformation>)ViewBag.dataList;
     var fsList = (List<FansDto>)ViewBag.fsList;
-    var collectList = (List<ArticleCollectDto>) ViewBag.ArtCollectList;
+    var collectList = (List<ArticleCollectDto>)ViewBag.ArtCollectList;
     var sign = 0;
     string ajaxdata = "ajaxdata";
     string imgdata = "imgdata";
@@ -118,24 +118,56 @@
                     <legend>评论</legend>
                 </fieldset>
                 <ul class="jieda" id="jieda">
-                    <li>
-                        @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
-                        {
-                            <p style="color: #999;">
-                                <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
-                                    @item.NickName
+                    @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
+                    {
+                        <li>
+                            <div class="detail-about detail-about-reply">
+                                <a class="fly-avatar">
+                                    <img src="/FrontPage/images/@item.ImagePath" />
                                 </a>
-                                <br />
-                                <span>
-                                    @item.Content
-                                    @item.CreateTime
-                                </span>
+                                <div class="fly-detail-user">
+                                    <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
+                                        @item.NickName
+                                    </a>
+                                </div>
+                                <div class="detail-hits">
+                                    <span>@item.CreateTime</span>
+                                </div>
+                            </div>
+                            <div class="detail-body layui-text jieda-body photos">
+                                @item.Content
+                            </div>
+                            <div class="jieda-reply">
                                 @if (Guid.Parse(Session["Userid"].ToString()) != item.UserId)
                                 {
-                                    <a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a>
+                                    <span><a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a></span>
+                                    <span> <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> </span>//父评论Id
+                                    @*<input type="hidden" value="" id="replyUsId"/>*@ //被回复人Id
+                                    <input type="hidden" value="@item.Id" id="commentParentId" />//针对评论的回复查询
                                 }
-                                <br />
-                            </p>
+                            </div>
+                            @*<p style="color: #999;">
+                        <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
+                            @item.NickName
+                        </a>
+                        <br />
+                        <span>
+                            @item.Content
+                            @item.CreateTime
+                        </span>
+                        @if (Guid.Parse(Session["Userid"].ToString()) != item.UserId)
+                        {
+                            <a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a>
+                            <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> //父评论Id
+
+                            <input type="hidden" value="@item.Id" id="commentParentId" />//针对评论的回复查询
+                        }
+                        <ul>
+                            <li id="replyData">
+
+                            </li>
+                        </ul>
+                    </p>*@
                             <script type="text/javascript">
                                 function CommentReport(id) {
                                     layer.open({
@@ -143,14 +175,27 @@
                                         title: '请输入举报内容',
                                         maxmin: false,
                                         resize: false,
-                                        anim:1,
+                                        anim: 1,
                                         shadeClose: true,
                                         area: ['500px', '350px'],
-                                        content: 'ReportByComm?id='+id
+                                        content: 'ReportByComm?id=' + id
+                                    });
+                                }
+                                //针对评论回复
+                                function ReplyComment(commentid, replyUsId, type = 0) {
+                                    layer.open({
+                                        type: 2,
+                                        title: '请输入回复内容',
+                                        maxmin: false,
+                                        resize: false,
+                                        anim: 2,
+                                        shadeClose: true,
+                                        area: ['500px', '350px'],
+                                        content: 'ReplyCommentsView?commentid=' + commentid + '&replyUsId=' + replyUsId + '&type=' + type
                                     });
                                 }
                             </script>
-                            try
+                            @try
                             {
                                 if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
                                 {
@@ -163,11 +208,97 @@
                             {
 
                             }
-                        }
-                    </li>
-                    
-                </ul>
+                        </li>
+                        <li id="das">
+                            <div class="detail-about detail-about-reply">
+                                <a class="fly-avatar" id=reimg>
+                                    @*<img src="/FrontPage/images/@item.ImagePath" />*@
+                                </a>
+                                <div class="fly-detail-user" id="reusers">
+                                    @*<a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
 
+                                    </a>*@
+                                </div>
+                                <div class="detail-hits">
+                                    @*<span>@item.CreateTime</span>*@
+                                </div>
+                            </div>
+                            <div class="detail-body layui-text jieda-body photos" id="contents">
+                                @*@item.Content*@
+
+                            </div>
+                            <div class="jieda-reply" id="returns">
+                                @*<span><a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a></span>*@
+                                <span > @*<a style="color: red" onclick="ReplyComment()" href="#">回复</a>*@ </span>
+
+                                @*<input type="hidden" value="" id="replyUsId"/>被回复人Id*@ 
+                                @*<input type="hidden" value="@item.Id" id="commentParentId" />针对评论的回复查询*@
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <input type="hidden" id="uusid" value="@ViewBag.uid" />
+                <script>
+                    window.onload = function() {
+                        var commparentId = $("#commentParentId").val();
+                        var uusid = $("#uusid").val();
+                        
+                        $.ajax({
+                            type: "get",
+                            url: "GetReplyComment",
+                            dataType: "json",
+                            data: {
+                                commparentId: commparentId
+                            },
+                            success: function(msg) {
+                                if (msg.code === 100) {
+                                    console.log(msg.data);
+                                    var arr = msg.data;
+
+                                    var das = "";
+                                    var hrefs = "/User/UserHome?userid=";
+                                    arr.forEach(function (items) {
+
+                                        if (items.ReplierId===uusid) {
+                                            var tn = "楼主";
+                                        } else {
+                                            var tn = "";
+                                        }
+
+                                        das += '<div class="detail-about detail-about-reply">' +
+                                            '<a class="fly-avatar">' + '<img src="/FrontPage/images/'+items.ImagePath+'"/>' + '<a class="fly-avatar">' +
+                                            '<div class="fly-detail-user">' + '<a href='+ hrefs + items.ReplierId +' class="fly-link" style="font-size: 16px;">' +items.NickName+ '</a>' +tn+ '回复：' + '</div>' +
+
+                                            '</div>' +
+                                            '<div class="detail-body layui-text jieda-body photos">' +  '<a>' + '@@' + items.ByReplyNickName + '</a>' + '<p>' + items.ReplyContent + '</p>' + '</div>' +
+                                            '<div class="jieda-reply">' +
+                                            '<span>'+'<a style="color: gray" onclick="returnComm('+"'"+items.Id+"'"+ ','+"'"+items.ReplierId+"'"+ ','+"'"+items.CommentParentId+"'"+')">'+'回复'+'</a>' + '</span>' +
+                                            '</div>' +
+                                            '<input type="hidden" value="' + items.ReplierId + '"/>' +
+                                            '<input type="hidden" value="' + items.Id + '">';     ;
+
+                                    });
+                                    $("#das").html(das);
+                                }
+                            }
+                        });
+                    }
+                </script>
+                <script>
+                    //针对回复的回复
+                    function returnComm(commentParentId,returnUsId,targId) {
+                        layer.open({
+                            type: 2,
+                            title: '请输入回复内容',
+                            maxmin: false,
+                            resize: false,
+                            anim: 2,
+                            shadeClose: true,
+                            area: ['500px', '350px'],
+                            content: 'ReturnCommentsView?commentParentId=' + commentParentId + '&returnUsId=' + returnUsId + '&targId='+targId
+                        });
+                    }
+                </script>
                 <div class="layui-form layui-form-pane">
                     <form id="form-comment-add" name="form-comment-add" enctype="multipart/form-data">
                         <div class="layui-form-item layui-form-text">
@@ -227,7 +358,7 @@
                             data: {
                                 articleid: $("#articleid").val()
                             },
-                            success:function(msg) {
+                            success: function (msg) {
                                 if (msg.code === 100) {
                                     console.log(msg.data.GoodCount);
                                     //$("#good").text(msg.GoodCount);
@@ -244,7 +375,7 @@
                             data: {
                                 articleid: $("#articleid").val()
                             },
-                            success:function(msg) {
+                            success: function (msg) {
                                 if (msg.code === 100) {
                                     console.log(msg.data.BadCount);
                                     //$("#good").text(msg.BadCount);
@@ -275,24 +406,24 @@
                                 </a>
                                 @*<a onclick="Atten('@user.Id')" style="color: red; cursor: pointer" id="follow">+关注</a>*@
                                 @*<script>
-                                function Atten(fid) {
-                                    $.ajax({
-                                        type: "post",
-                                        url: "/User/CreateAttention",
-                                        dataType: "json",
-                                        data: {
-                                            userid:$("#uid").val(),
-                                            focusid:fid
-                                        },
-                                        success: function (msg) {
-                                            if (msg.status) {
-                                                $("#follow").text('关注成功');
-                                                console.log(msg.data);
-                                            }
+                                        function Atten(fid) {
+                                            $.ajax({
+                                                type: "post",
+                                                url: "/User/CreateAttention",
+                                                dataType: "json",
+                                                data: {
+                                                    userid:$("#uid").val(),
+                                                    focusid:fid
+                                                },
+                                                success: function (msg) {
+                                                    if (msg.status) {
+                                                        $("#follow").text('关注成功');
+                                                        console.log(msg.data);
+                                                    }
+                                                }
+                                            });
                                         }
-                                    });
-                                }
-                            </script>*@
+                                    </script>*@
                             </li>
                         }
                     </ul>
@@ -317,9 +448,9 @@
                 <h3 class="fly-panel-title">最多收藏/收藏数</h3>
                 <ul class="fly-panel-main" style="color:dimgray">
                     @foreach (var item in collectList
-                        .GroupBy(m => m.Title,m=>m.ArticleId)
-                        .Select(m=>(new{Title=m.Key,ArticleId=m.ToArray(),Count=m.Count()}))
-                        .OrderByDescending(m=>m.Count))
+                        .GroupBy(m => m.Title, m => m.ArticleId)
+                        .Select(m => (new { Title = m.Key, ArticleId = m.ToArray(), Count = m.Count() }))
+                        .OrderByDescending(m => m.Count))
                     {
                         <li>
                             <a href="/Article/DetailArticle?articleid=@item.ArticleId[0]">
@@ -344,10 +475,21 @@
                                 titlesub = titlesub.Substring(0, 15) + "...";
                             }
                             <li>
-                                <a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
+                                <a class="fly-avatar">
                                     <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
-                                    @titlesub
                                 </a>
+                                <h3>
+                                    <a href="#" class="layui-badge">文章</a>
+                                    <a href="/Article/DetailArticle?articleid=@item.Id" target="_blank">@titlesub</a>
+                                </h3>
+                                <div class="fly-list-info">
+                                    <a href="/User/UserHome?userid=@item.UserId" target="_blank">@item.NickName</a>
+                                    <span>@item.CreateTime.ToString("yyyy-M-d dddd")</span>
+                                </div>
+                                @*<a href="/Article/DetailArticle?articleid=@item.Id" class="fly-avatar">
+                                        <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
+                                        @titlesub
+                                    </a>*@
                             </li>
                         }
                     </ul>
@@ -444,40 +586,6 @@
             });
         }
     });
-</script>
-
-<script>
-    //$("#Recommend").click(function () {
-    //    $.ajax({
-    //        type: "post",
-    //        url: "Recommend",
-    //        data: {
-    //            articleid: $("#articleid").val()
-    //        },
-    //        success: function () {
-    //            alert('推荐成功！');
-    //            window.location.reload();
-    //            $("#Recommend").attr("disabled", true);
-    //        }
-    //    });
-    //});
-</script>
-
-<script>
-    //$("#Opposition").click(function () {
-    //    $.ajax({
-    //        type: "post",
-    //        url: "Opposition",
-    //        data: {
-    //            articleid: $("#articleid").val()
-    //        },
-    //        success: function () {
-    //            alert('反对成功！');
-    //            window.location.reload();
-    //            $("#Opposition").attr("disabled", true);
-    //        }
-    //    });
-    //})
 </script>
 
 <script>
