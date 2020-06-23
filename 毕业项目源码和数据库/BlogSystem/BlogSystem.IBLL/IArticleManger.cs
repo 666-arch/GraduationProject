@@ -85,6 +85,10 @@ namespace BlogSystem.IBLL
 
         Task CreateReplyToComment(Guid replierId, Guid targetToReplyId, string content,int replyType, Guid commentParentId, Guid replyToTargetCommentId);    //新增评论回复
 
-        Task<List<ReplyCommentsDto>> GetAllReplyCommentsInfo(Guid commentParentId);
+        Task<List<ReplyCommentsDto>> GetAllReplyCommentsInfo(Guid commentParentId);     //查询父评论下的所有回复
+
+        Task RemoveReturnComment(Guid id);
+
+
     }
 }

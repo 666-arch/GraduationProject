@@ -335,5 +335,11 @@ namespace BlogSystem.MvcUI.Controllers
              return View();
         }
 
+        public async Task<ActionResult> DeleteReturnComment(Guid id)
+        {
+            IArticleManger article=new ArticleManger();
+            await article.RemoveReturnComment(id);
+            return Json(new {code = 100});
+        }
     }
 }

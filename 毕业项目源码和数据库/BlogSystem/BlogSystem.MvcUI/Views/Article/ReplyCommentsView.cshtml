@@ -20,9 +20,8 @@
                 dataType:"json",
                 data: $("#form-reply").serialize(),
                 success:function(msg) {
-                    if (msg.code===100) {
-                        
-                    }
+                    alert('回复成功！');
+                    window.location.reload();
                 }
             });
         }

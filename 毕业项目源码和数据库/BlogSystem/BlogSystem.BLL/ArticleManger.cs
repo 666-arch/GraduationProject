@@ -743,7 +743,7 @@ namespace BlogSystem.BLL
             {
                 var data= await reply.GetAllAsync()
                     .Include(m => m.Comment.User)
-                    .Where(m => m.CommentParentId == commentParentId).Select(m => new ReplyCommentsDto()
+                    .Where(m =>m.Comment.Article.UserId==commentParentId).Select(m => new ReplyCommentsDto()
                     {
                         NickName = m.ReplierUser.NickName,  //回复人
                         ByReplyNickName = m.TargetToReplyUser.NickName,     //被回复人
@@ -757,6 +757,15 @@ namespace BlogSystem.BLL
                         CreateTime =m.CreateTime
                     }).ToListAsync();
                 return data;
+            }
+        }
+
+        public async Task RemoveReturnComment(Guid id)  
+        {
+            using (IReplyCommentsService replyComments = new ReplyCommentsService())
+            {
+                var data=await replyComments.GetAllAsync().Where(m => m.Id == id).FirstAsync();
+                await replyComments.RemoveAsync(data);
             }
         }
     }
