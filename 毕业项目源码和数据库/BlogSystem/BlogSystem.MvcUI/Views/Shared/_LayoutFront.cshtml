@@ -40,7 +40,7 @@
 
                 <ul class="layui-nav fly-nav layui-hide-xs">
                     <li class="layui-nav-item">
-                        <a href="/Home/Index"><i class="iconfont icon-ui"></i>学智博客</a>
+                        <a href="/Home/Index1"><i class="iconfont icon-ui"></i>学智博客</a>
                     </li>
                     <li class="layui-nav-item">
                         <a href="/Home/Index"><i class="iconfont icon-jiaoliu"></i>关于我们</a>
@@ -57,7 +57,7 @@
                         </a>
                         <dl class="layui-nav-child">
                             <dd><a href="/User/BasicSetting?userid=@Session["Userid"] "><i class="layui-icon">&#xe620;</i>基本设置</a></dd>
-                            <dd><a href=""><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>
+                            <dd><a href="/User/UserMessage"><i class="iconfont icon-tongzhi" style="top: 4px;"></i>我的消息</a></dd>
                             <dd><a href="/User/UserHome?userid=@Session["Userid"]"><i class="layui-icon" style="margin-left: 2px; font-size: 22px;">&#xe68e;</i>我的主页</a></dd>
 
                             <dd><a href="/User/DestructionLog" style="text-align: center;">退出</a></dd>
@@ -79,7 +79,7 @@
         </p>
     </div>
     <script src="~/FrontPage/res/layui/layui.js"></script>
-    <script>
+<script>
     layui.use('element', function () {
         var $ = layui.jquery
             , element = layui.element; //依赖element模块
@@ -144,7 +144,8 @@
             }
         });
     });
-    </script>
+</script>
+
     <script>
         layui.use('laydate', function () {
             var laydate = layui.laydate;

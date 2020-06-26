@@ -208,6 +208,7 @@ namespace BlogSystem.MvcUI.Controllers
             string emails = Session["Logname"].ToString();
             IUserMnager userMag = new UserManger();
             await userMag.ChangePassword(emails, newPassword, pwd);
+            Session.Abandon();  //修改密码重新登录之前清除Session
             return RedirectToAction("Login");
         }
 
@@ -218,8 +219,10 @@ namespace BlogSystem.MvcUI.Controllers
         }
         [BlogAuth]
         [HttpPost]
-        public async Task<ActionResult> Upload(Guid userid, string imagepath,HttpPostedFileBase imgFile) //上传图片
+        public async Task<ActionResult> Upload(string imagepath) //上传图片
         {
+            Guid userid = Guid.Parse(Session["Userid"].ToString());
+            HttpPostedFileBase imgFile = Request.Files["file"];
             //处理图片
             if (imgFile != null)
             {
@@ -234,13 +237,14 @@ namespace BlogSystem.MvcUI.Controllers
                     IUserMnager userMnager = new UserManger();
                     await userMnager.ChangeUserImagePathById(userid, imagepath);
                 }
-                return RedirectToAction("UserHome",new { userid = userid });
+                return Json(new {data= fileName });
             }
             else
             {
                 return View();
             }
         }
+
         [BlogAuth]
         public async Task<ActionResult> UserHome(Guid userid)  //显示个人主页信息
         {
@@ -361,7 +365,6 @@ namespace BlogSystem.MvcUI.Controllers
             var Bedata=await userMnager.Bereported(userid);
             if (Bedata.Any())   //存在举报记录，被举报人登录后提供反馈机制
             {
-
                 return Json(new{code=100,data= Bedata },JsonRequestBehavior.AllowGet);
             }
             else

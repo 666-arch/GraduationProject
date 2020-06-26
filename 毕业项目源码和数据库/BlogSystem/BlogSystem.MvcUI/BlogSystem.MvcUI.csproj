@@ -828,6 +828,7 @@
     <Content Include="Views\Admin\CommentManger.cshtml" />
     <Content Include="Views\Article\ReplyCommentsView.cshtml" />
     <Content Include="Views\Article\ReturnCommentsView.cshtml" />
+    <Content Include="Views\Home\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

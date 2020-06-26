@@ -161,13 +161,42 @@
                 <div class="layui-form layui-form-pane layui-tab-item">
                     @* 上传图片区域 *@
                     <div class="layui-upload">
-                        <p>建议尺寸168*168，支持jpg、png、gif，最大不能超过50KB</p>
-                        <input type="file" class="layui-btn" name="imgFile" id="test1">
-                        <div class="layui-upload-list">
-                            <img src="~/FrontPage/images/@Session["defaultPhoto"]" class="layui-upload-img" id="demo1">
-                            <p id="demoText"></p>
+                            <p>建议尺寸168*168，支持jpg、png、gif，最大不能超过50KB</p>
+                            <input type="file" id="file" class="layui-btn" name="file" onchange="uploadImg()">
+                            <div class="layui-upload-list">
+                                <img src="~/FrontPage/images/@Session["defaultPhoto"]" class="layui-upload-img" id="demo1" >
+                                <p id="demoText"></p>
+                            </div>
                         </div>
-                    </div>
+                    <script>
+                        function uploadImg() {
+                            var formData = new FormData();
+                            formData.append("file", $("#file")[0].files[0]);
+                            $.ajax({
+                                url: "Upload",
+                                type: 'post',
+                                data:formData,
+                                // 告诉jQuery不要去处理发送的数据
+                                processData: false,
+                                // 告诉equerry不要去设置Content-Type请求头
+                                contentType: false,
+                                beforeSend: function () {//发送之前
+                                    console.log("正在进行，请稍候");
+                                },
+                                success: function (data) {
+                                    if (data != "") {
+                                        alert('上传成功,可重新登录查看');
+                                    } else {
+                                        alert("上传失败");
+                                    }
+                                },
+                                error: function (responseStr) {
+                                    alert("服务器繁忙请稍后...");
+                                }
+                            });
+                        }
+                    </script>
+
                 </div>
                 @* 修改密码区域 *@
                 <div class="layui-form layui-form-pane layui-tab-item">

@@ -66,7 +66,7 @@ namespace BlogSystem.MvcUI.Controllers
 
         [ValidateInput(false)]
         public async Task<ActionResult> DetailArticle(Guid articleid)  //根据文章id查询文章
-        {
+        { 
             IArticleManger articleManger = new ArticleManger();
             var articledetail = await articleManger.GetOneArticleById(articleid);
             ViewBag.atitle = articledetail.Title;
