@@ -42,15 +42,15 @@ namespace BlogSystem.DAL
         public async Task RemoveAsync(Guid id,bool save=true)  //根据id删除
         {
             _db.Configuration.ValidateOnSaveEnabled = false;
-            var t = new T()  //new一个实体对象 T
+            var t = new T()  //new一个实体对象 T  此时状态为游离态
             {
                 Id = id
             };
-            _db.Entry(t).State = EntityState.Unchanged; 
+            _db.Entry(t).State = EntityState.Unchanged; //此时状态为持久态
             t.IsRemoved = true; //伪删除(改状态)
             if (save)
             {
-                await _db.SaveChangesAsync();
+                await _db.SaveChangesAsync();   //save以后又是游离态
                 _db.Configuration.ValidateOnSaveEnabled = true;
             }
         }

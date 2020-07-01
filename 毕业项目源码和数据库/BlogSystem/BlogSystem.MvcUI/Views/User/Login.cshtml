@@ -3,16 +3,27 @@
     ViewBag.Title = "Login";
     Layout = "~/Views/Shared/_LayoutFront.cshtml";
 }
+
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#btn-submit").click(function () {
             if (!$('#email').val()) {
-                alert('请输入邮箱');
+                swal({
+                    position: 'top-end', //定位 左上角
+                    title: "请输入邮箱",
+                    icon: "warning",
+                    showCancelButton: true
+                });
                 return;
             }
             if (!$('#password').val()) {
-                alert('请输入密码');
+                swal({
+                    position: 'top-end', //定位 左上角
+                    title: "请输入密码",
+                    icon: "warning",
+                    showCancelButton: true
+                });
                 return;
             } else {
                 $.ajax({
@@ -27,11 +38,19 @@
                     success: function (msg) {
                         if (!msg.status) {
                             console.log(msg.data);
-                            alert(msg.data);
+                            swal({
+                                title: "账号或密码错误",
+                                icon: "error",
+                                showConfirmButton: false
+                            });
                             return;
                         } else {
-                            alert(msg.data);
-                            window.location.href = "Index";
+                            swal({
+                                title: "登录成功",
+                                icon: "success",
+                                showConfirmButton: false
+                            });
+                            window.setTimeout("window.location.href='Index'",1000);
                         }
                     }
                 });

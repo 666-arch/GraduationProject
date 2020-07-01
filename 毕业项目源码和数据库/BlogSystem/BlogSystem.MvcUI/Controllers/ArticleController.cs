@@ -305,7 +305,7 @@ namespace BlogSystem.MvcUI.Controllers
             Guid replyToTargetCommentId = commentid;
             IArticleManger article=new ArticleManger();
             await article.CreateReplyToComment(userid, replyUsId, content, type, commentParentId, replyToTargetCommentId);
-            return View();
+            return Json(new {code = 100});
         }
 
         public async Task<ActionResult> GetReplyComment(Guid commparentId)

@@ -143,32 +143,31 @@
                                     <span><a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a></span>
                                     <span> <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> </span>//父评论Id
                                     @*<input type="hidden" value="" id="replyUsId"/>*@//被回复人Id
-
                                 }
                                 <input type="hidden" value="@item.Id" id="commentParentId" />@*针对评论的回复查询*@
                             </div>
                             @*<p style="color: #999;">
-                        <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
-                            @item.NickName
-                        </a>
-                        <br />
-                        <span>
-                            @item.Content
-                            @item.CreateTime
-                        </span>
-                        @if (Guid.Parse(Session["Userid"].ToString()) != item.UserId)
-                        {
-                            <a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a>
-                            <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> //父评论Id
+                                    <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
+                                        @item.NickName
+                                    </a>
+                                    <br />
+                                    <span>
+                                        @item.Content
+                                        @item.CreateTime
+                                    </span>
+                                    @if (Guid.Parse(Session["Userid"].ToString()) != item.UserId)
+                                    {
+                                        <a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a>
+                                        <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> //父评论Id
 
-                            <input type="hidden" value="@item.Id" id="commentParentId" />//针对评论的回复查询
-                        }
-                        <ul>
-                            <li id="replyData">
+                                        <input type="hidden" value="@item.Id" id="commentParentId" />//针对评论的回复查询
+                                    }
+                                    <ul>
+                                        <li id="replyData">
 
-                            </li>
-                        </ul>
-                    </p>*@
+                                        </li>
+                                    </ul>
+                                </p>*@
                             <script type="text/javascript">
                                 function CommentReport(id) {
                                     layer.open({
@@ -218,7 +217,7 @@
                                 <div class="fly-detail-user" id="reusers">
                                     @*<a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
 
-                            </a>*@
+                                        </a>*@
                                 </div>
                                 <div class="detail-hits">
                                     @*<span>@item.CreateTime</span>*@
@@ -242,8 +241,6 @@
                 <input type="hidden" id="seionusid" value="@Guid.Parse(Session["Userid"].ToString())" />
                 <script>
                     window.onload = function () {
-
-
                         var commparentId = $("#commentParentId").val();
                         var uusid = $("#uusid").val();
                         var seionusid = $("#seionusid").val();
@@ -258,17 +255,15 @@
                                 if (msg.code === 100) {
                                     console.log(msg.data);
                                     var arr = msg.data;
-
                                     var das = "";
                                     var hrefs = "/User/UserHome?userid=";
                                     arr.forEach(function (items) {
-
                                         if (items.ReplierId === uusid) {
                                             var tn = "楼主";
                                         } else {
                                             var tn = "";
                                         }
-                                        if (items.ReplierId===seionusid) {
+                                        if (items.ReplierId === seionusid) {
                                             var sc = "删除";
                                         } else {
                                             var sc = "";
@@ -282,11 +277,10 @@
                                             '<div class="detail-body layui-text jieda-body photos">' + '<a>' + '@@' + items.ByReplyNickName + '</a>' + '<p>' + items.ReplyContent + '</p>' + '</div>' +
                                             '<div class="jieda-reply">' +
                                             '<span>' + '<a style="color: gray" onclick="returnComm(' + "'" + items.Id + "'" + ',' + "'" + items.ReplierId + "'" + ',' + "'" + items.CommentParentId + "'" + ')">' + '回复' + '</a>' + '</span>' +
-                                            '<span>'+'<a style="color: gray" onclick="deleteReturnComn('+"'"+ items.Id+"'"+')">'+sc+'</a>'+'</span>'+
+                                            '<span>' + '<a style="color: gray" onclick="deleteReturnComn(' + "'" + items.Id + "'" + ')">' + sc + '</a>' + '</span>' +
                                             '</div>' +
                                             '<input type="hidden" value="' + items.ReplierId + '"/>' +
                                             '<input type="hidden" value="' + items.Id + '">';;
-
                                     });
                                     $("#das").html(das);
                                 }
@@ -315,15 +309,14 @@
                             url: "DeleteReturnComment",
                             data: { id: id },
                             success: function (msg) {
-                                if (msg.code===100) {
-                                    alert('删除回复成功');
-                                    window.onload.reload();
+                                if (msg.code === 100) {
+                                    alert('您已删除回复');
+                                    window.location.reload();
                                 }
                             }
                         });
                     }
                 </script>
-                
 
                 <div class="layui-form layui-form-pane">
                     <form id="form-comment-add" name="form-comment-add" enctype="multipart/form-data">
@@ -353,7 +346,7 @@
                     if (ViewBag.astate == true && Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
                     {
                         <form>
-                            <div id="good">
+                            <div id="good" style="float: right">
                                 <a onclick="Recommend()" id="goods" style="cursor: pointer"> 好文推荐 </a>
                             </div>
                             <div id="bad">
@@ -367,6 +360,7 @@
                     <p>管理员不可见</p>
                 }
                 <a id="aa" href="#top" target="_self" style="color: blue">返回顶部</a>
+
                 <script>
                     $(function () {
                         $("#aa").click(function () {

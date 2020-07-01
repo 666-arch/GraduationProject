@@ -91,7 +91,7 @@
                         <form id="form-add-categoryname" name="form-add-categoryname" enctype="multipart/form-data">
                             <div class="layui-input-block">
                                 <input type="hidden" id="uid" name="userid" value="@Session["Userid"]" />
-                                <input type="text" id="categoryname" name="categoryname" autocomplete="off" placeholder="请输入分类名称" class="layui-input" style="width:300px;">
+                                <input type="text" maxlength="10" id="categoryname" name="categoryname" autocomplete="off" placeholder="请输入分类名称" class="layui-input" style="width:300px;">
                             </div>
                             <br />
                             <br />
@@ -185,6 +185,6 @@
             shadeClose: true,
             area: ['550px', '400px'],
             content: 'EditCategoryByuser?id=' + id
-        })
+        });
     }
 </script>

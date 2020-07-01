@@ -476,6 +476,7 @@
     <Content Include="Content\ueditor\ueditor.parse.js" />
     <Content Include="Content\ueditor\ueditor.parse.min.js" />
     <Content Include="favicon.ico" />
+    <Content Include="FrontPage\echarts.js" />
     <Content Include="FrontPage\html\case\case.html" />
     <Content Include="FrontPage\html\catalog.html" />
     <Content Include="FrontPage\html\common\column.html" />
@@ -737,6 +738,7 @@
     <Content Include="FrontPage\res\mods\index.js" />
     <Content Include="FrontPage\res\mods\jie.js" />
     <Content Include="FrontPage\res\mods\user.js" />
+    <Content Include="FrontPage\Sweet.js" />
     <Content Include="FrontPage\verify.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -829,6 +831,7 @@
     <Content Include="Views\Article\ReplyCommentsView.cshtml" />
     <Content Include="Views\Article\ReturnCommentsView.cshtml" />
     <Content Include="Views\Home\Error.cshtml" />
+    <Content Include="Views\Admin\Statistical.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

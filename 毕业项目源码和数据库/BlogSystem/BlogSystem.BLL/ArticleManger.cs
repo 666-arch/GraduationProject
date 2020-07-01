@@ -151,16 +151,19 @@ namespace BlogSystem.BLL
                 var acid = data.Id;
                 using (IArticleToCategoryService articleToCategoryService = new ArticleToCategoryService())
                 {
-                    var article=await articleToCategoryService.GetAllAsync().Include(m => m.Article).Where(m => m.ArticleId == acid).ToListAsync();
-                    if (article.Count==0)   //说明该文章未被分类可以进行删除操作
-                    {
-                        await articleSvc.RemoveAsync(data);
-                        return 1;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
+                    //var article=await articleToCategoryService.GetAllAsync().Include(m => m.Article).Where(m => m.ArticleId == acid).ToListAsync();
+                    //if (article.Count==0)   //说明该文章未被分类可以进行删除操作
+                    //{
+                    //    await articleSvc.RemoveAsync(data);
+                    //    return 1;
+                    //}
+                    //else
+                    //{
+                    //    return 0;
+                    //}
+
+                    await articleSvc.RemoveAsync(data);
+                    return 1;
                 }
             }
         }
@@ -171,18 +174,20 @@ namespace BlogSystem.BLL
                 var data =await blogCategoryService.GetAllAsync().FirstOrDefaultAsync(m => m.Id == categoryId);
                 using (IArticleToCategoryService articleToCategorySvc = new ArticleToCategoryService())
                 {
-                    var cate = await articleToCategorySvc.GetAllAsync()
-                        .Include(m => m.BlogCategory)
-                        .Where(m => m.BlogCategoryId == data.Id).ToListAsync();
-                    if (cate.Count==0)  //如果文章类别没有相关的类别就执行删除,否则提示用户先删除文章对应的类别
-                    {
-                        await blogCategoryService.RemoveAsync(data);
-                        return 1;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
+                    //var cate = await articleToCategorySvc.GetAllAsync()
+                    //    .Include(m => m.BlogCategory)
+                    //    .Where(m => m.BlogCategoryId == data.Id).ToListAsync();
+                    //if (cate.Count==0)  //如果文章类别没有相关的类别就执行删除,否则提示用户先删除文章对应的类别
+                    //{
+                    //    await blogCategoryService.RemoveAsync(data);
+                    //    return 1;
+                    //}
+                    //else
+                    //{
+                    //    return 0;
+                    //}
+                    await blogCategoryService.RemoveAsync(data);
+                    return 1;
                 }
             }
         }
@@ -212,7 +217,9 @@ namespace BlogSystem.BLL
                 {
                     var cate = await articleToCategorySvc.GetAllAsync()
                         .Include(m => m.BlogCategory)
-                        .Where(m => m.ArticleId == data.Id).ToListAsync();
+                        .Where(m => m.ArticleId == data.Id)
+                        .Where(m=>m.BlogCategory.IsRemoved==false)
+                        .ToListAsync();
 
                     data.CategoryIds = cate.Select(m => m.BlogCategoryId).ToArray();    //转化为数组Id
                     data.CategoryNames = cate.Select(m => m.BlogCategory.CategoryName).ToArray();
@@ -256,6 +263,12 @@ namespace BlogSystem.BLL
             //}
         }
 
+
+        public async Task<List<ArticleDto>> GetAllTestData()
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title, bool state)   //后台模糊查询（根据作者查询）
         {
             using (IArticleService articleService = new ArticleService())
@@ -264,6 +277,7 @@ namespace BlogSystem.BLL
                     .Include(m => m.User)
                     .Where(m=>m.State==state)
                     .Where(m => string.IsNullOrEmpty(nickName)&string.IsNullOrEmpty(title) || m.User.NickName.Contains(nickName)&m.Title.Contains(title))
+                    .OrderByDescending(m=>m.CreateTime)
                     .Select(m => new ArticleDto()
                     {
                         Id=m.Id,
@@ -736,14 +750,15 @@ namespace BlogSystem.BLL
                 });
             }
         }
-
         public async Task<List<ReplyCommentsDto>> GetAllReplyCommentsInfo(Guid commentParentId)
         {
             using (IReplyCommentsService reply = new ReplyCommentsService())
             {
                 var data= await reply.GetAllAsync()
                     .Include(m => m.Comment.User)
-                    .Where(m =>m.Comment.Article.UserId==commentParentId).Select(m => new ReplyCommentsDto()
+                    .Where(m =>m.Comment.Article.UserId==commentParentId)
+                    .OrderByDescending(m=>m.CreateTime)
+                    .Select(m => new ReplyCommentsDto()
                     {
                         NickName = m.ReplierUser.NickName,  //回复人
                         ByReplyNickName = m.TargetToReplyUser.NickName,     //被回复人

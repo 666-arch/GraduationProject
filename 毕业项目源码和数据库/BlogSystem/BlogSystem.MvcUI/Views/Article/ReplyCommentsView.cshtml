@@ -14,16 +14,24 @@
     <title>ReplyCommentsView</title>
     <script>
         function addReplyComment() {
-            $.ajax({
-                type: "post",
-                url: "ReplyCommentsView",
-                dataType:"json",
-                data: $("#form-reply").serialize(),
-                success:function(msg) {
-                    alert('回复成功！');
-                    window.location.reload();
-                }
-            });
+            if (!$("#content").val()) {
+                alert('请输入回复内容');
+                return;
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "ReplyCommentsView",
+                    dataType:"json",
+                    data: $("#form-reply").serialize(),
+                    success:function(msg) {
+                        if (msg.code===100) {
+                            $(".succs").text("回复成功");
+                            $("#rebtn").hide();
+                        }
+                    }
+                });
+            }
+            
         }
     </script>
 </head>
@@ -38,12 +46,11 @@
             <input type="hidden" id="commentid" name="commentid" value="@ViewBag.commentid " />
             <input type="hidden" name="replyUsId" value="@ViewBag.replyUsId" />
             <input type="hidden" name="type" value="@ViewBag.type" />
-            <input type="text" class="form-control" id="content" name="content" style="width: 300px;" value="@ViewBag.conten " />
+            <input type="text" class="form-control" id="content" name="content" style="width: 300px;" value="" />
         </div>
-        <input type="hidden" id="userid" name="userid" value="@Session["Userid"]"/>
-        @*<button type="button" class="btn btn-warning" style="margin-right:30px;" id="btnUpdate">提交</button>*@
-        <input onclick="addReplyComment()" type="button" name="name" value="提交回复" class="btn btn-warning" style="margin-right: 30px;" id="rebtn"/>
-
+        <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
+        <input onclick="addReplyComment()" type="button" value="提交回复" class="btn btn-warning" style="margin-right: 30px;" id="rebtn" />
+        <span class="succs" style="color: red"></span>
     </form>
 </div>
 </body>

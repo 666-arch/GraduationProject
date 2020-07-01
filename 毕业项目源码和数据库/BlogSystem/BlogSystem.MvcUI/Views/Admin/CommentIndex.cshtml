@@ -38,7 +38,9 @@
         <input type="submit" name="name" value="搜索" class="btn1" />
     </form>
     <br />
-
+    <div class="result-list">
+        <a id=" batchDel" href="javascript:void(0)" onclick="manyReportjilu_del()"><i class="icon-font"></i>批量删除</a>
+    </div>
     <div class="result-content">
         <table class="result-tab" width="100%">
             <tr>
@@ -54,13 +56,13 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td class="tc"><input name="id[]" type="checkbox" class="singleChoose"></td>
+                    <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
                     <td>@item.NickName</td>
                     <td>@item.Content</td>
                     <td>@item.CommentContent</td>
                     <td>@item.Title</td>
                     <td>@item.CreateTime</td>
-                    <td>@(item.IsHandle==false?"未处理":"已处理")</td>
+                    <td>@(item.IsHandle == false ? "未处理" : "已处理")</td>
                     <td>
                         <a class="link-update" onclick="HandleLayer('@item.Id')">授理</a>
                         <a class="link-del" onclick="Handle_del('@item.Id', this)">删除</a>
@@ -71,7 +73,7 @@
         <div class="list-page">
 
             每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
-            @Html.PagedListPager(Model, page => Url.Action("CommentIndex", new {page}))
+            @Html.PagedListPager(Model, page => Url.Action("CommentIndex", new { page }))
         </div>
     </div>
 </div>
@@ -81,21 +83,49 @@
             function(index) {
                 $.post("HandleReport", { id: id });
                 layer.msg('处理成功！', { icon: 1, time: 1000 });
-                window.location.reload();   //刷新
+                window.location.reload(); //刷新
             });
     }
 
     function Handle_del(id, obj) {
         //参数1：询问,参数2：回调函数（参数自动补齐）
-        layer.confirm('确定要删除吗？', function (index) {
-            //请求后台
-            $.post("RemoveCommentReportAdmin", { id: id });
-            //查找每个obj元素的父元素进行删除
-            $(obj).parents("tr").remove();
-            //提示
-            layer.msg('删除成功！', { icon: 1, time: 1000 });
-        });
+        layer.confirm('确定要删除吗？',
+            function(index) {
+                //请求后台
+                $.post("RemoveCommentReportAdmin", { id: id });
+                //查找每个obj元素的父元素进行删除
+                $(obj).parents("tr").remove();
+                //提示
+                layer.msg('删除成功！', { icon: 1, time: 1000 });
+            });
     }
 
+    //全选
+    $(".allChoose").on('change',
+        function() {
+            if ($(this).is(':checked')) {
+                $(".singleChoose").prop('checked', 'checked');
+            } else {
+                $(".singleChoose").prop('checked', '');
+            }
+        });
 
+    function manyReportjilu_del() {
+        var idStr = '';
+        $(".singleChoose").each(function () {
+            if ($(this)[0].checked) {
+                idStr += $(this).val() + ',';
+            }
+        });
+        if (!idStr) {
+            alert('请至少勾选一个进行删除');
+            return;
+        }
+        layer.confirm('确定要删除选中的数据吗？',
+            function(index) {
+                $.get("ManyRemoveReportJilu", { idStr: idStr });
+                layer.msg('删除成功', { icon: 1, time: 1000 });
+                window.location.reload();
+            });
+    }
 </script>

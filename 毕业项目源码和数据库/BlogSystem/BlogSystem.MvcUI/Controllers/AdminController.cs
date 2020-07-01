@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -19,7 +20,6 @@ namespace BlogSystem.MvcUI.Controllers
     public class AdminController : Controller
     {
         // GET: Admin
-
         //[MyAuthorize]
         //[HttpPost]
         public async Task<ActionResult> Index(int page=1)
@@ -213,7 +213,7 @@ namespace BlogSystem.MvcUI.Controllers
 
         public async Task<ActionResult> ArticleIndex(int page=1,string nickname="", string title = "", bool state=true) 
         {
-            int pagesize = 10;
+            int pagesize = 20;
             IArticleManger articleManger = new ArticleManger();
             var articles = await articleManger.GetAllArticlesByNickName(nickname, title, state);
             ViewBag.nickname = nickname;
@@ -230,6 +230,23 @@ namespace BlogSystem.MvcUI.Controllers
             IAdminManger adminManger=new AdminManger();
             var data= await adminManger.GetAllCommentReport(nickname, title,ishandle);
             return View(data.ToPagedList<CommentReportDto>(page,pageSize));
+        }
+
+        public async Task<ActionResult> Statistical(string search="")
+        {
+            IArticleManger articleManger=new ArticleManger();
+            IUserMnager userMnager=new UserManger();
+            List<CommentDto> coList = await articleManger.GetAllComment();
+            ViewBag.ccount = coList.Count();//统计评论
+            List<UserInformation> usList = await userMnager.GetAllUserByAdmin();
+            ViewBag.ucount = usList.Count();    //统计用户数量
+            List<BlogCategoryDto> cateList = await articleManger.GetAllBlogcategory();
+            ViewBag.catecount = cateList.Count();   //统计随笔数量
+
+            List<ArticleDto> arList = await articleManger.GetAllArticle(search);
+            ViewBag.arcount = arList.Count();
+
+            return View();
         }
 
         public async Task<ActionResult> EditUserAdmin(Guid id)
@@ -282,6 +299,20 @@ namespace BlogSystem.MvcUI.Controllers
             return View();
         }
 
+        public async Task<ActionResult> ManyRemoveReportJilu(string idStr)  //批量删除举报记录
+        {
+            IAdminManger admin = new AdminManger();
+            string str = idStr.Substring(0, idStr.LastIndexOf(','));
+            string[] idss = str.Split(',');
+            foreach (var item in idss)
+            {
+                Guid repid = Guid.Parse(item);
+                await admin.RemoveCommentReportAdmin(repid);
+            }
+            return View();
+        }
+
+
         public async Task<ActionResult> ManyRemoveCommentManger(string idStr)   //批量删除评论Manger
         {
             IAdminManger adminManger = new AdminManger();
@@ -292,6 +323,13 @@ namespace BlogSystem.MvcUI.Controllers
                 Guid aid = Guid.Parse(item);
                 await adminManger.RemoveCommentByAdmin(aid);
             }
+            return View();
+        }
+        [HttpPost]
+        public async Task<ActionResult> DeleteArticleAdmin(Guid articleid)
+        {
+            IArticleManger articleManger=new ArticleManger();
+            await articleManger.RemoveArticle(articleid);
             return View();
         }
     }

@@ -25,6 +25,8 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleDto>> GetAllArticlesByUserId(Guid userId);  //根据用户Id找文章
 
+        Task<List<ArticleDto>> GetAllTestData();
+
         Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title,bool state); //根据昵称找文章
 
         Task<List<ArticleToBlogcateDto>> GetAllArticlesByCategoryId(Guid blogcateId);  //根据类别找Id
@@ -86,7 +88,7 @@ namespace BlogSystem.IBLL
 
         Task<List<ReplyCommentsDto>> GetAllReplyCommentsInfo(Guid commentParentId);     //查询父评论下的所有回复
 
-        Task RemoveReturnComment(Guid id);
+        Task RemoveReturnComment(Guid id);  //删除回复
 
     }
 }
