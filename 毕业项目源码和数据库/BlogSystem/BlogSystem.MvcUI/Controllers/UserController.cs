@@ -28,6 +28,9 @@ namespace BlogSystem.MvcUI.Controllers
             IUserMnager userMag = new UserManger();
             List<FansDto> focusListCount = await userMag.GetAllFocusByUserid(userid); //我关注的人集合
             ViewBag.focusList = focusListCount;
+            string search = "";
+            ViewBag.allArt = await articleManger.GetAllArticle(search);
+
             ViewBag.focusListCount = focusListCount.Count(); //关注数
             List<FansDto> fansListCount = await userMag.GetAllFansByFocususerId(userid); //关注我的集合
             ViewBag.fansList = fansListCount;
@@ -67,42 +70,47 @@ namespace BlogSystem.MvcUI.Controllers
         [HttpPost]
         public ActionResult Login(string email, string password,bool remberme, LoginViewModel model)  //登录 ViewModel
         {
-            model.LoginName = email;
-            model.LoginPwd = password;
-            IUserMnager userMag = new UserManger();
-            Guid userid;
-            string nickname;
-            string imagepath;
-            if (userMag.Login(model.LoginName, model.LoginPwd, out userid, out nickname, out imagepath))
-            {
-                if (remberme)   //设置Cookie
+                IUserMnager userMag = new UserManger();
+                if (userMag.CheckUserIsFreeze(email))
                 {
-                    Response.Cookies.Add(
-                        new HttpCookie("LoginName")
+                    return Json(new { code = 1 });
+                }
+                model.LoginName = email;
+                model.LoginPwd = password;
+                Guid userid;
+                string nickname;
+                string imagepath;
+                if (userMag.Login(model.LoginName, model.LoginPwd, out userid, out nickname, out imagepath))
+                {
+                    if (remberme)   //设置Cookie
                     {
-                        Value = model.LoginName,
-                        Expires = DateTime.Now.AddDays(1)   
-                    });
-                    Response.Cookies.Add(
-                        new HttpCookie("Userid")
-                        {
-                            Value = userid.ToString(),
-                            Expires = DateTime.Now.AddDays(1)   
-                        });
+                        Response.Cookies.Add(
+                            new HttpCookie("LoginName")
+                            {
+                                Value = model.LoginName,
+                                Expires = DateTime.Now.AddDays(1)
+                            });
+                        Response.Cookies.Add(
+                            new HttpCookie("Userid")
+                            {
+                                Value = userid.ToString(),
+                                Expires = DateTime.Now.AddDays(1)
+                            });
+                    }
+                    else
+                    {
+                        Session["Userid"] = userid;
+                        Session["Logname"] = model.LoginName;
+                    }
+                    Session["Nickname"] = nickname;
+                    Session["defaultPhoto"] = imagepath;
+                    return Json(new { status = true, data = "登录成功" });
                 }
                 else
                 {
-                    Session["Userid"] = userid;
-                    Session["Logname"] = model.LoginName;
+                    return Json(new { status = false, data = "邮箱或密码错误请重新输入" });
                 }
-                Session["Nickname"] = nickname;
-                Session["defaultPhoto"] = imagepath;
-                return Json(new { status = true, data = "登录成功" });
-            }
-            else
-            {
-                return Json(new { status=false, data = "邮箱或密码错误请重新输入" });
-            }
+            
         }
         public ActionResult Register()
         {
@@ -161,7 +169,7 @@ namespace BlogSystem.MvcUI.Controllers
                 MailMessage _msg = new MailMessage("1437855583@qq.com", Email, "终于来啦!欢迎注册学智播客", "任何相关工作人员不会向您询问密码,请妥善保管!您的验证码是" + Session["y"]);//由第一个邮箱向第二个邮箱发送邮件
                 SmtpClient _client = new SmtpClient("smtp.qq.com", 587);//qq邮箱的服务器和端口 
                 _client.DeliveryMethod = SmtpDeliveryMethod.Network;//通过网络发送
-                _client.Credentials = new NetworkCredential("1437855583@qq.com", "fapovvwphlxzibih");//发件人的邮箱和密码 SMTP码
+                _client.Credentials = new NetworkCredential("1437855583@qq.com", "dsogrfxcyxshjhae");//发件人的邮箱和密码 SMTP码
                 _client.Send(_msg);
                 return Content("发送成功");
             }
@@ -215,6 +223,8 @@ namespace BlogSystem.MvcUI.Controllers
         public ActionResult DestructionLog()  //销毁Session, 退出登录
         {
             Session.Abandon();
+            HttpContext.Response.Cookies["Userid"].Expires = DateTime.Now.AddDays(-1);
+            HttpContext.Response.Cookies["LoginName"].Expires = DateTime.Now.AddDays(-1);
             return RedirectToAction("Login");
         }
         [BlogAuth]

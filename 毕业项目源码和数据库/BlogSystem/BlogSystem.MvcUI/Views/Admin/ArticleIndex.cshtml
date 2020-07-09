@@ -36,6 +36,9 @@
     <form name="myform" id="myform" method="post">
         <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="请输入作者" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
         <input type="text" id="title" name="title" value="@ViewBag.titles" placeholder="请输入文章标题" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+        <input type="text" placeholder="开始日期" name="date1" id="date1" autocomplete="off" class="layui-input" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid green">
+        —
+        <input type="text" placeholder="结束日期" name="date" id="date" autocomplete="off" class="layui-input" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid green">
         <select id="state" name="state" onchange="searchBystate()" lay-filter="aihao" style="height: 36px;">
             <option value="">---请选择---</option>
             <option value="true">已发布</option>
@@ -44,7 +47,8 @@
         <script>
             function searchBystate() {
                 var state = $("#state").find("option:selected").val();
-                // alert(state);
+                var form = document.getElementById("myform");
+                form.submit();
             }
         </script>
         <input type="submit" name="name" value="搜索" class="btn1" />
@@ -79,8 +83,9 @@
                         <td style="width:180px">@(item.State==true?"已发布":"草稿")</td>
                         <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
                         <td>
-                            <a class="link-update" href="/Article/DetailArticle?articleid=@item.Id" target="_blank">预览</a>
+                            @*<a class="link-update" onclick="Preview()" href="/Article/DetailArticle?articleid=@item.Id" target="_blank">预览</a>*@
                             @*<a class="article-delAdmin" href="/Article/DeleteArticleAdmin?articleid=@item.Id">移除文章</a>*@
+                            <a class="link-update" onclick="Preview('@item.Id')">预览</a>
                             <a class="art-del" onclick="art_del('@item.Id',this)">移除文章</a>
                         </td>
                     </tr>
@@ -93,6 +98,18 @@
         </div>
 </div>
 <script type="text/javascript">
+
+    function Preview(id)
+    {
+        layer.open({
+            type: 2,
+            titile: "文章预览",
+            maxmin: false,
+            shadeClose: true, //点击遮罩关闭层
+            area: ['760px', '600px'],
+            content: 'PreviewArticle?id='+id
+        })
+    }
 
     function art_del(articleid,obj) {
         layer.confirm('确定是否要移除此文章？',

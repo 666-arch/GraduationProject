@@ -26,16 +26,18 @@
     }
 </style>
 <div class="result-wrap">
-    <form id="sea">
+    <form id="sea" class="layui-form" action="" lay-filter="example">
         <div class="result-title">
-            <input type="text" name="linkname" value="@ViewBag.linkname" placeholder="输入链接名" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
-            <input type="submit" name="name" value="查询" class="btn1"/>
+            <input type="text" name="linkname" value="@ViewBag.linkname" placeholder="输入链接名" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+            <input type="text" name="desc" value="@ViewBag.desc" placeholder="输入链接描述"style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+            <input type="submit" name="name" value="查询" class="btn1" />
             <div class="result-list">
                 <a onclick="addLayers()" style="cursor: pointer"><i class="icon-font"></i>新增链接</a>
                 <a id=" batchDel" href="javascript:void(0)" onclick="manyLinks_del()"><i class="icon-font"></i>批量删除</a>
             </div>
         </div>
     </form>
+
         <div class="result-content">
             <table class="result-tab" width="100%">
                 <tr>
@@ -89,7 +91,6 @@
     }
 
     function link_del(id, obj) {
-        //参数1：询问,参数2：回调函数（参数自动补齐）
         layer.confirm('确定要删除吗？', function (index) {
             //请求后台
             $.post("RemoveLink", { id: id });

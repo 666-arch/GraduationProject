@@ -70,22 +70,21 @@ namespace BlogSystem.DAL
             return  _db.Set<T>().Where(m =>!m.IsRemoved).AsNoTracking();  //AsNoTracking性能比ToList<>快4.8倍
         }
 
-        public IQueryable<T> GetAllOrderAsync(bool asc = true)  
+        public IQueryable<T> GetAllByPageAsync(int pageSize, int pageIndex)
+        {
+            return GetAllAsync().Skip(pageSize * pageIndex).Take(pageSize);
+        }
+
+        public IQueryable<T> GetAllOrderAsync(bool asc = true)
         {
             var datas = GetAllAsync();  //得到所有数据
-            if (asc)
-            {
-                datas.OrderBy(m => m.CreateTime);  //升序
-            }
-            else
-            {
-                datas.OrderByDescending(m => m.CreateTime);  //降序
-            }
+            datas = asc ? datas.OrderBy(m => m.CreateTime) : datas.OrderByDescending(m => m.CreateTime);
             return datas;
         }
-        public IQueryable<T> GetAllByPageAsync(int PageSize = 10, int PageIndex = 0)
+
+        public IQueryable<T> GetAllByPageOrderAsync(int pageSize = 10, int pageIndex = 0, bool asc = true)
         {
-            throw new NotImplementedException();
+            return GetAllOrderAsync(asc).Skip(pageSize * pageIndex).Take(pageSize);
         }
 
         public async Task Saved()

@@ -40,9 +40,16 @@
                             </fieldset>
                             @foreach (var item in Model)
                             {
-                                <input name="categoryIds" type="checkbox" value="@item.Id" > <label for="checkbox1">@item.CategoryName</label>
+                                <input name="categoryIds" type="checkbox" value="@item.Id"> <label for="checkbox1">@item.CategoryName</label>
                             }
                             <br />
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>是否设置关闭评论功能</legend>
+                            </fieldset>
+                            <select name="IsClosingComments">
+                                <option value="false">否</option>
+                                <option value="true">是</option>
+                            </select>
                             <br />
                             <div class="layui-form-item">
                                 <button class="layui-btn" type="button" lay-filter="*" lay-submit id="btnAdd">立即发布</button>
@@ -82,7 +89,6 @@
                                     </tr>
                                 </tbody>
                             }
-
                         </table>
                         <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
                             <legend>添加分类</legend>

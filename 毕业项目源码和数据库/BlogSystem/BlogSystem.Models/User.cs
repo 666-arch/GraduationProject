@@ -22,5 +22,6 @@ namespace BlogSystem.Models
         public int FansCount { get; set; }  //粉丝数
         public int FocusCount { get; set; } //关注数
 
+        public bool IsFreeze { get; set; }  //账号是否冻结（管理员处理）
     }
 }

@@ -21,7 +21,11 @@ namespace BlogSystem.Models
         public User User { get; set; }
         public int GoodCounnt { get; set; }
         public int BadCount { get; set; }
-
         public bool State { get; set; }  //发布状态
+
+        public bool IsClosingComments { get; set; }     //是否关闭评论功能
+
+        public int IsStick { get; set; }      //置顶排序
+
     }
 }

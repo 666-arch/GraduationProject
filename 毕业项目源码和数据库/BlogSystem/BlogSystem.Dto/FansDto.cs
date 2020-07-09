@@ -14,5 +14,6 @@ namespace BlogSystem.Dto
         public string ImagePath { get; set; }
         public int FansCount { get; set; }
         public int FocusCount { get; set; }
+        public string Desc { get; set; }
     }
 }

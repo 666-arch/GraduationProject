@@ -17,5 +17,6 @@ namespace BlogSystem.Dto
         public string PersonalDescription { get; set; }
         public int FansCount { get; set; }
         public int FocusCount { get; set; }
+        public bool IsFreeze { get; set; }
     }
 }

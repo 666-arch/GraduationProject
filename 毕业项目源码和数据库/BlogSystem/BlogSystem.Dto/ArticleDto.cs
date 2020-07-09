@@ -20,6 +20,7 @@ namespace BlogSystem.Dto
         public bool State { get; set; } //发布状态
         public string[] CategoryNames { get; set; }
         public Guid[] CategoryIds { get; set; }
-        
+        public bool IsClosingComments { get; set; }
+        public int IsStick{ get; set; }
     }
 }

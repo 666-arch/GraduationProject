@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>layui</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+</head>
+<body>
+    
+    <table id="demo" lay-filter="test"></table>
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+            //第一个实例
+            table.render({
+                elem: '#demo'
+                , height: 312
+                , url: '/User/UserIndex' //数据接口
+                , page: true //开启分页
+                , cols: [
+                    [ //表头
+                    { field: 'Id', title: 'Id', width: 80, sort: true, fixed: 'left' }
+                    , { field: 'Eamil', title: '邮箱', width: 80 }
+                    , { field: 'Password', title: '密码', width: 80 }
+                    , { field: 'NickName', title: '昵称', width: 80, sort: true }
+                    , { field: 'ImagePath', title: '照片', width: 80 }
+                    , { field: 'PersonalDescription', title: '介绍', width: 177 }
+                    , { field: 'FansCount', title: '粉丝', width: 80, sort: true }
+                    , { field: 'FocusCount', title: '关注', width: 80, sort: true }
+                    , { field: 'CreateTime', title: '时间', width: 80 }
+                    ]
+                ],parseData: function(res){
+                    return {
+                        "code": res.code, //解析接口状态
+                        "msg": res.msg, //解析提示文本
+                        "data": res.data,//解析数据列表
+                        "count":res.count
+                    }
+                }
+            });
+        });
+    </script>
+   
+</body>
+</html>

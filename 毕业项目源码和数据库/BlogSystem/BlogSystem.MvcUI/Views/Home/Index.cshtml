@@ -7,7 +7,7 @@
     var usList = (List<UserInformation>)ViewBag.alluser;
     var coList = (List<CommentDto>)ViewBag.coList;
     var articleTocate = (List<ArticleToBlogcateDto>)ViewBag.articleTocateList;
-    var catelist = (List<BlogCategoryDto>) ViewBag.catelist;
+    var catelist = (List<BlogCategoryDto>)ViewBag.catelist;
     var sign = 1;
 }
 
@@ -19,12 +19,15 @@
         margin: 0;
         border-radius: 2px;
     }
+
     #test2 {
-        width: 760px;height: 160px;
+        width: 760px;
+        height: 160px;
     }
-    
+
     .element.style {
-        width: 760px;height: 160px;
+        width: 760px;
+        height: 160px;
     }
 </style>
 @model PagedList.IPagedList<ArticleDto>
@@ -34,10 +37,10 @@
     <div class="layui-row layui-col-space15">
         <div class="layui-col-md8">
             <div class="fly-panel" style="margin-bottom: 10px;">
-                <div class="layui-carousel" id="test1" >
+                <div class="layui-carousel" id="test1">
                     <div carousel-item="">
-                       <img src="/FrontPage/images/c1.jpg" style="max-width: 100%" /> 
-                       <img src="/FrontPage/images/c2.jpg" style="max-width: 100%"/> 
+                        <img src="/FrontPage/images/c1.jpg" style="max-width: 100%" />
+                        <img src="/FrontPage/images/c2.jpg" style="max-width: 100%" />
                     </div>
                 </div>
             </div>
@@ -47,7 +50,9 @@
                     <a href="" class="layui-this">综合</a>
                     <span class="fly-filter-right layui-hide-xs">
                         <a href="" class="layui-this">按最新</a>
+                        @*<a href="" onclick="searchFoucsArt()" class="layui-this">我关注的人发布的文章</a>*@
                     </span>
+                    
                 </div>
                 <ul class="fly-list">
                     @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
@@ -58,7 +63,7 @@
                             titlesub = titlesub.Substring(0, 15) + "...";
                         }
                         <li>
-                            <a  class="fly-avatar" >
+                            <a class="fly-avatar">
                                 <img src="~/FrontPage/images/@item.ImagePath" alt="@item.NickName" class="uimg">
                             </a>
                             <h2>
@@ -67,13 +72,13 @@
                             </h2>
                             <div class="fly-list-info">
                                 <a href="/User/UserHome?userid=@item.UserId" target="_blank">@item.NickName</a>
-                                <span>@item.CreateTime.ToString("yyyy-M-d dddd")</span>
+                                <span>post: @item.CreateTime.ToString("yyyy-M-d dddd")</span>
                             </div>
                         </li>
                     }
                     <ul>
                         <div style="text-align: center">
-                            @Html.PagedListPager(Model, page => Url.Action("Index", new {page}))
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
                             每页 @Model.PageSize 篇文章，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
                         </div>
                     </ul>
@@ -118,30 +123,30 @@
                 }
             </div>
 
-            <div class="fly-panel fly-link">
+            @*<div class="fly-panel fly-link">
                 <h3 class="fly-panel-title">随笔分类</h3>
                 @foreach (var item in articleTocate
                     .GroupBy(m => m.BlogCategoryId)
                     .Take(5)
-                    .OrderByDescending(m=>m.Count())
-                   
+                    .OrderByDescending(m => m.Count())
+
                     )
                 {
                     <dl class="fly-panel-main">
-                         <dd>
-                        @foreach (var items in item)
-                        {
-                            if (items.BlogCategoryId == item.Key)
+                        <dd>
+                            @foreach (var items in item)
                             {
+                                if (items.BlogCategoryId == item.Key)
+                                {
 
-                                <a href="#" onclick="FindArticleToCate('@item.Key')">@items.CateName (@item.Count())</a>                                                                
-                                break;
+                                    <a href="#" onclick="FindArticleToCate('@item.Key')">@items.CateName (@item.Count())</a>
+                                    break;
+                                }
                             }
-                        }
-                         <dd>
+                        <dd>
                     </dl>
                 }
-            </div>
+            </div>*@
 
             <div class="fly-panel fly-link">
                 <h3 class="fly-panel-title">文章热议</h3>
@@ -183,4 +188,20 @@
             content: 'ArticleByIndexCateId?blogcateid=' + blogcateid
         });
     }
+</script>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<ul class="layui-fixbar" id="ttoop">
+    <li class="layui-icon" lay-type="bar1" style="background-color:#009688">
+          
+    </li>
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(0, 150, 136); display: list-item;">
+        <i></i>
+    </li>
+</ul>
+<script>
+    $(function () {
+        $("#ttoop").click(function () {
+            $("html,body").animate({ scrollTop: 0 }, 1000);
+        });
+    })
 </script>

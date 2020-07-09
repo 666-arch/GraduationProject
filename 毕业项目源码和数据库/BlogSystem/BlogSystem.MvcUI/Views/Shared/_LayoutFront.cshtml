@@ -12,6 +12,8 @@
     <script src="~/Content/ueditor/third-party/SyntaxHighlighter/shCore.js"></script>
     <link href="~/Content/ueditor/third-party/SyntaxHighlighter/shCoreDefault.css" rel="stylesheet" />
     <script src="~/FrontPage/Sweet.js"></script>
+    <script src="~/FrontPage/layui/Content/Layui-KnifeZ/layui.js"></script>
+    <script src="~/FrontPage/layui/Content/ace/ace.js"></script>
 </head>
 <body>
     <div class="fly-header layui-bg-black">
@@ -40,7 +42,7 @@
 
                 <ul class="layui-nav fly-nav layui-hide-xs">
                     <li class="layui-nav-item">
-                        <a href="/Home/Index1"><i class="iconfont icon-ui"></i>学智博客</a>
+                        <a href="/Home/Index"><i class="iconfont icon-ui"></i>学智博客</a>
                     </li>
                     <li class="layui-nav-item">
                         <a href="/Home/Index"><i class="iconfont icon-jiaoliu"></i>关于我们</a>
@@ -52,7 +54,7 @@
                         <a class="fly-nav-avatar" href="javascript:;">
                             <cite class="layui-hide-xs">@Session["Nickname"]</cite>
                             <i class="iconfont icon-renzheng layui-hide-xs" title="认证信息：@Session["Nickname"]"></i>
-                            <i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>
+                            @*<i class="layui-badge fly-badge-vip layui-hide-xs">VIP3</i>*@
                             <img src="~/FrontPage/images/@Session["defaultPhoto"]" style="width: 36px; height: 36px; margin-left: 10px; border-radius: 100%;" />
                         </a>
                         <dl class="layui-nav-child">
@@ -166,8 +168,6 @@
                 elem: '#test1'
                 , arrow: 'always'
             });
-
-
             //图片轮播
             carousel.render({
                 elem: '#test1'
@@ -182,3 +182,76 @@
     @RenderSection("scripts", required: false)
 </body>
 </html>
+<script>
+    layui.use(['layedit', 'layer', 'jquery'], function () {
+        var form = layui.form;
+        var $ = layui.jquery,
+            
+            layedit = layui.layedit;
+        layedit.set({
+            //暴露layupload参数设置接口 --详细查看layupload参数说明
+            uploadImage: {
+                url: '/Attachment/LayUploadFile',
+                accept: 'image',
+                acceptMime: 'image/*',
+                exts: 'jpg|png|gif|bmp|jpeg',
+                size: '10240'
+            }
+            , uploadVideo: {
+                url: '/Attachment/LayUploadFile',
+                accept: 'video',
+                acceptMime: 'video/*',
+                exts: 'mp4|flv|avi|rm|rmvb',
+                size: '20480'
+            }
+            //右键删除图片/视频时的回调参数，post到后台删除服务器文件等操作，
+            //传递参数：
+            //图片： imgpath --图片路径
+            //视频： filepath --视频路径 imgpath --封面路径
+            , calldel: {
+                url: '/Attachment/DeleteFile'
+            }
+            //开发者模式 --默认为false
+            , devmode: true
+            //插入代码设置
+            , codeConfig: {
+                hide: true,  //是否显示编码语言选择框
+                default: 'javascript' //hide为true时的默认语言格式
+            }
+            , tool: [
+                'html', 'code', 'strong', 'italic', 'underline', 'del', 'addhr', '|', 'fontFomatt', 'colorpicker', 'face'
+                , '|', 'left', 'center', 'right', '|', 'link', 'unlink', 'image_alt', 'video', 'anchors'
+                , '|', 'fullScreen'
+            ]
+            , height: '90%'
+        });
+
+        var ieditor = layedit.build('layeditDemo');
+        layedit.getContent(ieditor);
+
+        form.verify({
+            content: function(value) {
+                return layedit.sync(ieditor);
+            }
+        });
+    })
+</script>
+@*<script>
+    $("#btnAddcomment").click(function () {
+        var va = $("#layeditDemo").val();
+        alert(va);
+        $.ajax({
+            type: "post",
+            url: "CreateComment",
+            async: true,
+            data: $("#form-comment-add").serialize(),
+            success: function (msg) {
+                if (msg.status === 1) {
+                    //alert('评论成功');
+                    $("#textton").text("评论成功");
+                    window.location.reload(); //刷新
+                }
+            }
+        });
+    });
+</script>*@

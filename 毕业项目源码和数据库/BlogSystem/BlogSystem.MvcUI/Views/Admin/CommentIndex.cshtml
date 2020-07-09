@@ -27,15 +27,22 @@
     }
 </style>
 <div class="result-wrap">
-    <form method="post">
+    <form method="post" id="clform">
         <input type="text" name="nickname" value="@ViewBag.nickname" placeholder="输入用户" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood">
         <input type="text" name="title" value="@ViewBag.titles" placeholder="输入文章" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood">
-        <select style="height: 36px;" id="ishandle" name="ishandle">
+        <input type="text" name="content" value="@ViewBag.content" placeholder="输入举报原因"style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
+        <select style="height: 36px;" id="ishandle" name="ishandle" onchange="searchIsChuli()">
             <option value="">---请选择---</option>
             <option value="false">未处理</option>
             <option value="true">已处理</option>
         </select>
         <input type="submit" name="name" value="搜索" class="btn1" />
+        <script>
+            function searchIsChuli() {
+                var form = document.getElementById("clform");
+                form.submit();
+            }
+        </script>
     </form>
     <br />
     <div class="result-list">
@@ -46,11 +53,13 @@
             <tr>
                 <th class="tc" width="5%"><input type="checkbox" class="allChoose" /></th>
                 <th>举报人</th>
+                <th>违规用户</th>
                 <th>举报原因</th>
                 <th>举报评论</th>
                 <th>所属文章</th>
                 <th>举报时间</th>
                 <th>是否处理</th>
+                <th>操作</th>
                 <th>操作</th>
             </tr>
             @foreach (var item in Model)
@@ -58,14 +67,32 @@
                 <tr>
                     <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
                     <td>@item.NickName</td>
-                    <td>@item.Content</td>
+                    <td>@item.ReportUserNickName</td>
+                    <td>@Html.Raw(@item.Content)</td>
                     <td>@item.CommentContent</td>
                     <td>@item.Title</td>
                     <td>@item.CreateTime</td>
                     <td>@(item.IsHandle == false ? "未处理" : "已处理")</td>
                     <td>
-                        <a class="link-update" onclick="HandleLayer('@item.Id')">授理</a>
+                        @if (item.IsHandle == false)
+                        {
+                            <a class="link-update" onclick="HandleLayer('@item.Id')">授理</a>
+                        }
+                        else
+                        {
+                            <a>处理成功</a>
+                        }
                         <a class="link-del" onclick="Handle_del('@item.Id', this)">删除</a>
+                    </td>
+                    <td>
+                        @if (item.IsFreeze == false)
+                        {
+                            <a class="link-freeze" onclick="User_freeze('@item.ReportUserId')">是否冻结此账号</a>
+                        }
+                        else
+                        {
+                            <a style="color:red">账号以冻结</a>
+                        }
                     </td>
                 </tr>
             }
@@ -83,6 +110,15 @@
             function(index) {
                 $.post("HandleReport", { id: id });
                 layer.msg('处理成功！', { icon: 1, time: 1000 });
+                window.location.reload(); //刷新
+            });
+    }
+
+    function User_freeze(id) {
+        layer.confirm('是否将此账号进行冻结?',
+            function(index) {
+                $.post("UserFreeze", { id: id });
+                layer.msg('冻结成功！', { icon: 1, time: 1000 });
                 window.location.reload(); //刷新
             });
     }
@@ -128,4 +164,5 @@
                 window.location.reload();
             });
     }
+
 </script>

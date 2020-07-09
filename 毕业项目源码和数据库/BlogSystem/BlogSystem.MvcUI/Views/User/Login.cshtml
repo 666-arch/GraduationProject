@@ -36,6 +36,15 @@
                         remberme:$("#remberme").prop("checked")
                     },
                     success: function (msg) {
+                        if (msg.code===1) {
+                            console.log(msg.code);
+                            swal({
+                                title: "抱歉，经核实该账号多次存在违规记录，此账号暂时被冻结",
+                                icon: "warning",
+                                showConfirmButton: false
+                            });
+                            return;
+                        }
                         if (!msg.status) {
                             console.log(msg.data);
                             swal({
@@ -44,7 +53,8 @@
                                 showConfirmButton: false
                             });
                             return;
-                        } else {
+                        }
+                        else {
                             swal({
                                 title: "登录成功",
                                 icon: "success",
@@ -73,16 +83,16 @@
                                 <label for="email" class="layui-form-label">邮箱</label>
                                 <div class="layui-input-inline">
                                     <input type="hidden" name="name" value="@ViewBag.uid" />
-                                    <input type="text" id="email" name="email" value="@ViewBag.name" autocomplete="off" class="layui-input">
+                                    <input type="text" id="email" name="email" value="@ViewBag.name" placeholder="输入您的邮箱" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
                             <div class="layui-form-item">
                                 <label for="password" class="layui-form-label">密码</label>
                                 <div class="layui-input-inline">
-                                    <input type="password" id="password" name="password" autocomplete="off" class="layui-input">
+                                    <input type="password" id="password" name="password" placeholder="输入您的密码" autocomplete="off" class="layui-input">
                                 </div>
                             </div>
-                            <input type="checkbox" id="remberme" checked="" />记住账号
+                            <input type="checkbox" id="remberme" checked="" />记住邮箱
                             <br />
                             <br />
                             <div class="layui-form-item">

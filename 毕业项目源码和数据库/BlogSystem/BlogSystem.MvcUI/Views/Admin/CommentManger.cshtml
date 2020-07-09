@@ -30,6 +30,7 @@
     <form method="post">
         <input type="text" name="nickname" value="@ViewBag.nickname" placeholder="输入用户" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood">
         <input type="text" name="title" value="@ViewBag.titles" placeholder="输入文章" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood">
+        <input type="text" name="content" value="@ViewBag.content" placeholder="输入评论内容" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood"/>
         <input type="submit" name="name" value="搜索" class="btn1" />
 
     </form>
@@ -48,17 +49,18 @@
                 <th>评论文章</th>
                 <th>评论时间</th>
                 <th>操作</th>
+
             </tr>
             @foreach (var item in Model)
             {
                 <tr>
                     <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
                     <td>@item.NickName</td>
-                    <td>@item.Content</td>
+                    <td>@Html.Raw(@item.Content)</td>
                     <td>@item.Title</td>
                     <td>@item.CreateTime</td>
                     <td>
-                        <a class="link-del" onclick="comment_del('@item.Id', this)">移除</a>
+                        <a class="link-del" onclick="comment_del('@item.Id', this)">违规移除</a>
                     </td>
                 </tr>
             }

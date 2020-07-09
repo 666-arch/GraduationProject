@@ -25,7 +25,7 @@ namespace BlogSystem.BLL
                     {
                         Eamil = email,
                         NickName = nickname,
-                        Password = password,
+                        Password = password, 
                         ImagePath = "0.png",
                         PersonalDescription = "个人说明可以让学者更多人了解你哦..."
                     });
@@ -52,7 +52,6 @@ namespace BlogSystem.BLL
                     userid = data.Id;  //获得用户id
                     nickname = data.NickName;
                     imagepath = data.ImagePath;
-
                     return true;
                 }
             }
@@ -233,6 +232,7 @@ namespace BlogSystem.BLL
                     .Select(m => new FansDto()
                 {
                     UserId = m.UserId,
+                    Desc=m.User.PersonalDescription,
                     FocusUserId = m.FocusUserId,
                     NickName = m.FocusUser.NickName,
                     ImagePath = m.FocusUser.ImagePath
@@ -252,12 +252,12 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<UserInformation>> GetAllUserByAdmin(string email,string nickname)   
+        public async Task<List<UserInformation>> GetAllUserByAdmin(string email,string nickname, string desc, string isfreeze)      //管理员查询用户
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
                var data= await userSvc.GetAllAsync()
-                    .Where(m => string.IsNullOrEmpty(email)&string.IsNullOrEmpty(nickname) || m.Eamil.Contains(email)&m.NickName.Contains(nickname))
+                    .Where(m => string.IsNullOrEmpty(email)&string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(desc)&string.IsNullOrEmpty(isfreeze) || m.Eamil.Contains(email)&m.NickName.Contains(nickname)&m.PersonalDescription.Contains(desc)&m.IsFreeze.ToString().Contains(isfreeze))
                     .Select(m => new UserInformation()
                 {
                     Id=m.Id,
@@ -266,8 +266,9 @@ namespace BlogSystem.BLL
                     Password = m.Password,
                     ImagePath = m.ImagePath,
                     PersonalDescription = m.PersonalDescription,
-                    CreateTime = m.CreateTime
-                }).ToListAsync();
+                    CreateTime = m.CreateTime,
+                    IsFreeze=m.IsFreeze
+                 }).ToListAsync();
                 return data;
             }
         }
@@ -275,7 +276,7 @@ namespace BlogSystem.BLL
         {
             using (IDAL.IUserService userSvc = new DAL.UserService())
             {
-                return await userSvc
+                var data= await userSvc
                      .GetAllAsync()
                      .OrderByDescending(m => m.FansCount)
                      .Select(m => new UserInformation()
@@ -286,8 +287,41 @@ namespace BlogSystem.BLL
                          Password = m.Password,
                          ImagePath = m.ImagePath,
                          PersonalDescription = m.PersonalDescription,
-                         CreateTime = m.CreateTime
+                         CreateTime = m.CreateTime,
+                         FansCount = m.FansCount,
+                         FocusCount = m.FocusCount
                      }).ToListAsync();
+                return data;
+            }
+        }
+
+        public async Task<List<UserInformation>> GetAllUserByAdminLayUi(int pageSize, int pageIndex)
+        {
+            using (IUserService userSvc = new UserService())
+            {
+                var data = await userSvc
+                    .GetAllByPageOrderAsync(pageSize,pageIndex)
+                    .Select(m => new UserInformation()
+                    {
+                        Id = m.Id,
+                        Eamil = m.Eamil,
+                        NickName = m.NickName,
+                        Password = m.Password,
+                        ImagePath = m.ImagePath,
+                        PersonalDescription = m.PersonalDescription,
+                        CreateTime = m.CreateTime,
+                        FansCount = m.FansCount,
+                        FocusCount = m.FocusCount
+                    }).ToListAsync();
+                return data;
+            }
+        }
+
+        public async Task<int> GetDataCount()
+        {
+            using (IUserService userService = new UserService())
+            {
+                return await userService.GetAllAsync().CountAsync();
             }
         }
 
@@ -433,6 +467,15 @@ namespace BlogSystem.BLL
                     data.IsBeReportUserConfirm = true;
                     await comSvc.EditAsync(data);
                 }
+            }
+        }
+
+        public bool CheckUserIsFreeze(string eamil)
+        {
+            using (IUserService userSvc = new UserService())
+            {
+                var result=userSvc.GetAllAsync().Any(m => m.Eamil == eamil&&m.IsFreeze==true);
+                return result;
             }
         }
     }

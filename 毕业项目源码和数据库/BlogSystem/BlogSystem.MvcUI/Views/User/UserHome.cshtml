@@ -312,7 +312,7 @@
                                                 <a href="/User/UserHome?userid=@item.UserId">
                                                     @item.NickName
                                                 </a>
-                                                @item.Content
+                                                @Html.Raw(@item.Content)
                                             </div>
                                             <br />
                                         }

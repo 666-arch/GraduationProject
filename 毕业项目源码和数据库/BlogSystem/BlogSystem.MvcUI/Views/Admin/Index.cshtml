@@ -7,9 +7,30 @@
     //var admin = (List<AdminDto>) ViewBag.admin;
 }
     <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <style>
+        .btn1 {
+            background-color: #20222A;
+            background-image: linear-gradient(to right,#20222A,#3E4251);
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            font-family: "微软雅黑";
+            -webkit-transition: all .3s;
+            color: #FFF;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+    </style>
     <div class="result-wrap">
-    <form action="Index.cshtml" method="post">
+    <form  method="post">
         <div class="result-title">
+            <input type="text" name="account" value="@ViewBag.account" placeholder="输入管理员名称" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+            <input type="submit" name="name" value="搜索" class="btn1" />
             <div class="result-list">
                 <a onclick="addLayer()" ><i class="icon-font"></i>添加管理员</a>
                 <a id="batchDel" onclick="manyAdmin_del()"><i class="icon-font"></i>批量删除</a>
@@ -19,15 +40,15 @@
             <table class="result-tab" width="100%">
                 <tr>
                     <th class="tc" width="5%"><input type="checkbox" class="allChoose" /></th>
-                    <th>用户名</th>
+                    <th>管理员</th>
                     <th>密码</th>
-                    <th>入职时间</th>
+                    <th>创建时间</th>
                     <th>操作</th>
                 </tr>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="tc"><input name="id[]" type="checkbox" class="singleChoose"></td>
+                        <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
                         <td>@item.Account</td>
                         <td>@item.Password</td>
                         <td>@item.CreateTime</td>
@@ -39,7 +60,6 @@
                 }
             </table>
             <div class="list-page">
-             
                 每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
                 @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
             </div>

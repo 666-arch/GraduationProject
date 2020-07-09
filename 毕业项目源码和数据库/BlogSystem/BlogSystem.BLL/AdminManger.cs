@@ -12,6 +12,7 @@ using System.Data.Entity;
 
 namespace BlogSystem.BLL
 {
+
     public class AdminManger : IAdminManger
     {
 
@@ -80,11 +81,13 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<AdminDto>> GetAllAdminInfo()
+        public async Task<List<AdminDto>> GetAllAdminInfo(string account)
         {
             using (IAdminService adminService = new AdminService())
             {
-               return await adminService.GetAllAsync().Select(m => new AdminDto()
+               return await adminService.GetAllAsync()
+                    .Where(m=>string.IsNullOrEmpty(account)||m.Account.Contains(account))
+                    .Select(m => new AdminDto()
                 {
                     Id = m.Id,
                     Account = m.Account,
@@ -93,6 +96,7 @@ namespace BlogSystem.BLL
                 }).ToListAsync();
             }
         }
+
         public async Task RemoveAdminById(Guid adminId)
         {
             using (IAdminService adminService = new AdminService())
@@ -104,6 +108,8 @@ namespace BlogSystem.BLL
                 }
             }
         }
+
+
         public async Task EditAdminById(Guid adminId, string account)       //修改管理员个人信息
         {
             using (IAdminService adminService = new AdminService())
@@ -142,12 +148,12 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<LinkDto>> GetAllLink(string linkname)
+        public async Task<List<LinkDto>> GetAllLink(string linkname,string desc)
         {
             using (ILinkService linkService = new LinkService())
             {
                 return await linkService.GetAllAsync()
-                    .Where(m=>string.IsNullOrEmpty(linkname)||m.Title.Contains(linkname))
+                    .Where(m=>string.IsNullOrEmpty(linkname)&string.IsNullOrEmpty(desc)||m.Title.Contains(linkname)&m.Describe.Contains(desc))
                     .Select(m => new LinkDto()
                 {
                     Id = m.Id,
@@ -217,14 +223,14 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<CommentDto>> GetAllCommentByAdmin(string nickname, string title)      //评论管理
+        public async Task<List<CommentDto>> GetAllCommentByAdmin(string nickname, string title,string content)      //评论管理
         {
             using (ICommentService commentService = new CommentService())
             {
                 return await commentService.GetAllAsync()
                     .Include(m => m.User)
                     .Include(m => m.Article)
-                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)||m.User.NickName.Contains(nickname)&m.Article.Title.Contains(title))
+                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title) & string.IsNullOrEmpty(content) || m.User.NickName.Contains(nickname)&m.Article.Title.Contains(title)&m.Content.Contains(content))
                     .OrderByDescending(m=>m.CreateTime)
                     .Select(m => new CommentDto()
                 {
@@ -238,13 +244,13 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title, string ishandle)    //模糊查询
+        public async Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title, string ishandle, string content)    //模糊查询
         {
             using (ICommentReportService creSvc = new CommentReportService())
             {
                var data= await creSvc.GetAllAsync()
-                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)&string.IsNullOrEmpty(ishandle)||
-                              m.User.NickName.Contains(nickname)&m.Comment.Article.Title.Contains(title)&m.IsHandle.ToString().Contains(ishandle))
+                    .Where(m=>string.IsNullOrEmpty(nickname)&string.IsNullOrEmpty(title)&string.IsNullOrEmpty(ishandle) & string.IsNullOrEmpty(content) ||
+                              m.User.NickName.Contains(nickname)&m.Comment.Article.Title.Contains(title)&m.IsHandle.ToString().Contains(ishandle)&m.Content.Contains(content))
                     .Where(m=>m.IsRemoved==false)
                     .Include(m => m.Comment)
                     .Include(m => m.User)
@@ -252,12 +258,15 @@ namespace BlogSystem.BLL
                     .Select(m => new CommentReportDto()
                     {
                         Id=m.Id,
+                        ReportUserId=m.Comment.User.Id,
                         Content = m.Content,    //举报原因
                         NickName = m.User.NickName,     //举报人
+                        ReportUserNickName=m.Comment.User.NickName,  //被举报人
                         CommentContent = m.Comment.Content,      //被举报的评论
                         CreateTime=m.CreateTime,
                         Title=m.Comment.Article.Title,
-                        IsHandle=m.IsHandle     //是否已授理
+                        IsHandle=m.IsHandle,     //是否已授理
+                        IsFreeze=m.Comment.User.IsFreeze
                     }).ToListAsync();
                return data;
             }
@@ -292,6 +301,28 @@ namespace BlogSystem.BLL
                 if (data!=null)
                 {
                     await comRepSvc.RemoveAsync(data);
+                }
+            }
+        }
+
+        public async Task RemoveUserByAdmin(Guid userId)
+        {
+            using (IUserService userService = new UserService())
+            {
+                var data=await userService.GetAllAsync().Where(m => m.Id == userId).FirstOrDefaultAsync();
+                await userService.RemoveAsync(data);
+            }
+        }
+
+        public async Task EditUserFreezeByAdmin(Guid userid)    //管理员有权冻结用户账号
+        {
+            using (IUserService userService = new UserService())
+            {
+                var data=await userService.GetAllAsync().FirstAsync(m => m.Id == userid);
+                if (data!=null)
+                {
+                    data.IsFreeze = true;
+                    await userService.EditAsync(data);
                 }
             }
         }

@@ -23,35 +23,35 @@ namespace BlogSystem.MvcUI.Controllers
         }
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<ActionResult> CreateArticle(string title, string content,Guid userid,Guid[] categoryIds, bool state=true) //已发布
+        public async Task<ActionResult> CreateArticle(string title, string content,Guid userid,Guid[] categoryIds, bool IsClosingComments, bool state=true) //已发布
         {
             IArticleManger articleManger = new ArticleManger();
             if (categoryIds==null)  //用户可以选择对文章不进行分类
             {
-                await articleManger.CreateArticle(title, content, userid, state); //调用为添加分类的博客新增
+                await articleManger.CreateArticle(title, content, userid, IsClosingComments, state); //调用为添加分类的博客新增
                 //return RedirectToAction("UserHome", "User", new { userid = userid });
                 return Json(new { status = 1, data = "发布成功" });
             }
             else
             {
-                await articleManger.CreateArticle(title, content, categoryIds, userid, state);
+                await articleManger.CreateArticle(title, content, categoryIds, userid, IsClosingComments, state);
                 //return RedirectToAction("UserHome", "User", new { userid = userid });
                 return Json(new { status = 1, data = "发布成功" });
             }
         }
         [HttpPost]
         [ValidateInput(false)]  //富文本防恶意字符串输入
-        public async Task<ActionResult> IsCreateArticle(string title, string content, Guid userid, Guid[] categoryIds, bool state = false) //保存草稿
+        public async Task<ActionResult> IsCreateArticle(string title, string content, Guid userid, Guid[] categoryIds, bool IsClosingComments, bool state = false) //保存草稿
         {
             IArticleManger articleManger = new ArticleManger();
             if (categoryIds == null)
             {
-                await articleManger.CreateArticle(title, content, userid, state); 
+                await articleManger.CreateArticle(title, content, userid, IsClosingComments, state); 
                 return Json(new { status = 1, data = "成功保存到草稿箱" });
             }
             else
             {
-                await articleManger.CreateArticle(title, content, categoryIds, userid, state);
+                await articleManger.CreateArticle(title, content, categoryIds, userid, IsClosingComments, state);
                 return Json(new { status = 1, data = "成功保存到草稿箱" }); 
             }
         }
@@ -74,6 +74,7 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.createtime = articledetail.CreateTime;
             ViewBag.auser = articledetail.NickName;
             ViewBag.astate = articledetail.State;
+            ViewBag.IsClosingComments = articledetail.IsClosingComments;
             //foreach (var item in articledetail.CategoryNames)   //类别名称
             //{
             //    ViewBag.acatename = item;
@@ -137,10 +138,10 @@ namespace BlogSystem.MvcUI.Controllers
 
         [HttpPost]
         [ValidateInput(false)]
-        public async Task<ActionResult> EditArticle(Guid actid, string title, string content, Guid[] categoryIds) //修改文章(删除、添加)
+        public async Task<ActionResult> EditArticle(Guid actid, string title, string content, Guid[] categoryIds, bool IsClosingComments) //修改文章(删除、添加)
         {
             IArticleManger articleManger = new ArticleManger();
-            await articleManger.EditArticle(actid, title, content, categoryIds);
+            await articleManger.EditArticle(actid, title, content, categoryIds, IsClosingComments);
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
@@ -149,7 +150,7 @@ namespace BlogSystem.MvcUI.Controllers
             Guid userid = Guid.Parse(Session["Userid"].ToString());
             IArticleManger articleManger = new ArticleManger();
             await articleManger.CreateComment(userid, articleid, content);
-            return RedirectToAction("DetailArticle", new { articleid = articleid });
+            return Json(new { status = 1 });
         }
 
         [HttpPost]
@@ -327,7 +328,6 @@ namespace BlogSystem.MvcUI.Controllers
         [HttpPost]
         public async Task<ActionResult> ReturnCommentsView(Guid commentParentId, Guid returnUsId, int type, Guid targId, string content, Guid userid)
         {
-             
              Guid commentParentsId = targId;   
              Guid replyToTargetCommentId = commentParentId;
              IArticleManger article=new ArticleManger();
@@ -340,6 +340,13 @@ namespace BlogSystem.MvcUI.Controllers
             IArticleManger article=new ArticleManger();
             await article.RemoveReturnComment(id);
             return Json(new {code = 100});
+        }
+        [HttpPost]
+        public async Task<ActionResult> StickyPosts(Guid articleid)
+        {
+            IArticleManger articleManger = new ArticleManger();
+            await articleManger.EditStickyPostsByArticle(articleid);
+            return Json(new { code = 100 });
         }
     }
 }

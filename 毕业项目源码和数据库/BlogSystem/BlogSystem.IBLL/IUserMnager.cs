@@ -36,8 +36,13 @@ namespace BlogSystem.IBLL
 
         Task Unfollow(Guid userid, Guid focusid);  //取消关注
 
-        Task<List<Dto.UserInformation>> GetAllUserByAdmin(string email,string nickname);        //管理员查询用户
+        Task<List<Dto.UserInformation>> GetAllUserByAdmin(string email,string nickname, string desc, string isfreeze);        //管理员查询用户
+
         Task<List<Dto.UserInformation>> GetAllUserByAdmin();        //管理员查询用户
+
+        Task<List<Dto.UserInformation>> GetAllUserByAdminLayUi(int pageSize,int pageIndex);
+
+        Task<int> GetDataCount();
 
         Task<List<Dto.UserInformation>> GetAllUserlike(string email,string nickname);   //模糊查询用户
 
@@ -50,5 +55,8 @@ namespace BlogSystem.IBLL
         Task<List<CommentReportDto>> Bereported(Guid beRepuserid);      //处理被举报人信息
 
         Task EditeIsConfirmByBeReportUser(Guid userId);     //被举报人确认反馈信息
+
+        bool CheckUserIsFreeze(string eamil);
+
     }
 }

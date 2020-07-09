@@ -5,11 +5,11 @@
 }
 <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
 <div id="main" style="width: 500px;height:300px;"></div>
-<div id="main1" style="width: 500px;height:300px; float: right; position: relative; bottom: 302px; right: 100px;"></div>
+@*<div id="main1" style="width: 500px;height:300px; float: right; position: relative; bottom: 302px; right: 100px;"></div>*@
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
-    var myChart1 = echarts.init(document.getElementById('main1'));
+    //var myChart1 = echarts.init(document.getElementById('main1'));
     // 指定图表的配置项和数据
     var option = {
         title: {
@@ -33,100 +33,100 @@
     };
     var colors = ['#5793f3', '#d14a61', '#675bba'];
 
-    var option1 = {
-        color: colors,
-        tooltip: {
-            trigger: 'none',
-            axisPointer: {
-                type: 'cross'
-            }
-        },
-        legend: {
-            data:['2020 文章发布数据统计']
-        },
-        grid: {
-            top: 70,
-            bottom: 50
-        },
-        xAxis: [
-            {
-                type: 'category',
-                axisTick: {
-                    alignWithLabel: true
-                },
-                axisLine: {
-                    onZero: false,
-                    lineStyle: {
-                        color: colors[1]
-                    }
-                },
-                axisPointer: {
-                    label: {
-                        formatter: function (params) {
-                            return '文章数据  ' + params.value
-                                + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
-                        }
-                    }
-                },
-                data: []
-            }
-        ],
-        yAxis: [
-            {
-                type: 'value'
-            }
-        ],
-        series: [
-            {
-                name: '2020 文章发布数据统计',
-                type: 'line',
-                smooth: true,
-                data: []
-            }
-        ]
-    };
+    //var option1 = {
+    //    color: colors,
+    //    tooltip: {
+    //        trigger: 'none',
+    //        axisPointer: {
+    //            type: 'cross'
+    //        }
+    //    },
+    //    legend: {
+    //        data:['2020 文章发布数据统计']
+    //    },
+    //    grid: {
+    //        top: 70,
+    //        bottom: 50
+    //    },
+    //    xAxis: [
+    //        {
+    //            type: 'category',
+    //            axisTick: {
+    //                alignWithLabel: true
+    //            },
+    //            axisLine: {
+    //                onZero: false,
+    //                lineStyle: {
+    //                    color: colors[1]
+    //                }
+    //            },
+    //            axisPointer: {
+    //                label: {
+    //                    formatter: function (params) {
+    //                        return '文章数据  ' + params.value
+    //                            + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+    //                    }
+    //                }
+    //            },
+    //            data: []
+    //        }
+    //    ],
+    //    yAxis: [
+    //        {
+    //            type: 'value'
+    //        }
+    //    ],
+    //    series: [
+    //        {
+    //            name: '2020 文章发布数据统计',
+    //            type: 'line',
+    //            smooth: true,
+    //            data: []
+    //        }
+    //    ]
+    //};
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
-    myChart1.setOption(option1);
+    //myChart1.setOption(option1);
 
-    var dates=[];    //时间date数组（实际用来盛放X轴坐标值）
-    var number = [];    //数据数组（实际用来盛放Y坐标值）
+    //var dates=[];    //时间date数组（实际用来盛放X轴坐标值）
+    //var number = [];    //数据数组（实际用来盛放Y坐标值）
 
-    $.ajax({
-        type: "post",
-        async: true, //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
-        url: "TestServlet", //请求发送到TestServlet处
-        data: {},
-        dataType: "json", //返回数据形式为json
-        success: function(result) {
-            //请求成功时执行该函数内容，result即为服务器返回的json对象
-            if (result) {
-                for (var i = 0; i < result.length; i++) {
-                    dates.push(result[i].name); //挨个取出类别并填入类别数组
-                }
-                for (var i = 0; i < result.length; i++) {
-                    number.push(result[i].num); //挨个取出销量并填入销量数组
-                }
-                myChart1.hideLoading(); //隐藏加载动画
-                myChart1.setOption({ //加载数据图表
-                    xAxis: {
-                        data: names
-                    },
-                    series: [
-                        {
-                            // 根据名字对应到相应的系列
-                            name: '2020 文章发布数据统计',
-                            data: number
-                        }
-                    ]
-                });
-            }
-        },
-        error: function(errorMsg) {
-            //请求失败时执行该函数
-            alert("图表请求数据失败!");
-            myChart.hideLoading();
-        }
-    });
+    //$.ajax({
+    //    type: "post",
+    //    async: true, //异步请求（同步请求将会锁住浏览器，用户其他操作必须等待请求完成才可以执行）
+    //    url: "TestServlet", //请求发送到TestServlet处
+    //    data: {},
+    //    dataType: "json", //返回数据形式为json
+    //    success: function(result) {
+    //        //请求成功时执行该函数内容，result即为服务器返回的json对象
+    //        if (result) {
+    //            for (var i = 0; i < result.length; i++) {
+    //                dates.push(result[i].name); //挨个取出类别并填入类别数组
+    //            }
+    //            for (var i = 0; i < result.length; i++) {
+    //                number.push(result[i].num); //挨个取出销量并填入销量数组
+    //            }
+    //            myChart1.hideLoading(); //隐藏加载动画
+    //            myChart1.setOption({ //加载数据图表
+    //                xAxis: {
+    //                    data: names
+    //                },
+    //                series: [
+    //                    {
+    //                        // 根据名字对应到相应的系列
+    //                        name: '2020 文章发布数据统计',
+    //                        data: number
+    //                    }
+    //                ]
+    //            });
+    //        }
+    //    },
+    //    error: function(errorMsg) {
+    //        //请求失败时执行该函数
+    //        alert("图表请求数据失败!");
+    //        myChart.hideLoading();
+    //    }
+    //});
 </script>

@@ -57,6 +57,13 @@
                                 <input name="categoryIds" type="checkbox" value="@item.Id" checked="@IsCheck"> <label for="checkbox1">@item.CategoryName</label>
                             }
                             <br />
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>是否设置关闭评论功能</legend>
+                            </fieldset>
+                            <select name="IsClosingComments">
+                                <option value="false">否</option>
+                                <option value="true">是</option>
+                            </select>
                             <br />
                             <div class="layui-form-item">
                                 <button class="layui-btn" type="submit" lay-filter="*" lay-submit id="btnEdit">保存修改并发布</button>
@@ -128,6 +135,7 @@
                                     <th>发布状态</th>
                                     <th>发布时间</th>
                                     <th>操作</th>
+                                    <th>操作</th>
                                 </tr>
                             </thead>
                             @foreach (var item in ViewBag.article as List<ArticleDto>)
@@ -147,6 +155,17 @@
                                         <td>
                                             <a href="/Article/RemoveArticleById?articleid=@item.Id" onclick="return confirm('你确定要删除这篇文章吗？')">删除文章</a>
                                         </td>
+                                        <td>
+                                            @if (item.IsStick == 0)
+                                            {
+
+                                                <a href="#" style="color:red" onclick="SetSticky('@item.Id')" id="SetSti">设置置顶</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" style="color:red" onclick="SetSticky('@item.Id')" id="SetSti">取消置顶</a>
+                                            }
+                                        </td>
                                     </tr>
                                 </tbody>
                             }
@@ -157,6 +176,24 @@
         </div>
     </div>
 </div>
+<script>
+    function SetSticky(articleid) {
+        $.ajax({
+            type: "post",
+            url: "/Article/StickyPosts",
+            data: {
+                articleid:articleid
+            },
+            success: function (msg) {
+                if (msg.code === 100) {
+                    alert('置顶成功!');
+                    window.location.reload();
+                }
+            }
+        })
+    }
+
+</script>
 <p id="ArticleContent" hidden>
     @ViewBag.acontent
 </p>

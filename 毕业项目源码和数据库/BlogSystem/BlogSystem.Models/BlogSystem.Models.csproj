@@ -89,6 +89,18 @@
     <Compile Include="Migrations\202006210200062_createReplyComments.Designer.cs">
       <DependentUpon>202006210200062_createReplyComments.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202007040733244_createFieldIsClosingComments.cs" />
+    <Compile Include="Migrations\202007040733244_createFieldIsClosingComments.Designer.cs">
+      <DependentUpon>202007040733244_createFieldIsClosingComments.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007070255523_createFieldIsStick.cs" />
+    <Compile Include="Migrations\202007070255523_createFieldIsStick.Designer.cs">
+      <DependentUpon>202007070255523_createFieldIsStick.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202007080325287_createFieldIsFreeze.cs" />
+    <Compile Include="Migrations\202007080325287_createFieldIsFreeze.Designer.cs">
+      <DependentUpon>202007080325287_createFieldIsFreeze.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReplyComments.cs" />
@@ -119,6 +131,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202006210200062_createReplyComments.resx">
       <DependentUpon>202006210200062_createReplyComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007040733244_createFieldIsClosingComments.resx">
+      <DependentUpon>202007040733244_createFieldIsClosingComments.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007070255523_createFieldIsStick.resx">
+      <DependentUpon>202007070255523_createFieldIsStick.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202007080325287_createFieldIsFreeze.resx">
+      <DependentUpon>202007080325287_createFieldIsFreeze.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

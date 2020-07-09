@@ -21,7 +21,7 @@ namespace BlogSystem.MvcUI.Controllers
         [BlogAuth]
         public async Task<ActionResult> Index(int page=1,string search = "")
         {
-            int pagesize = 30;
+            int pagesize =36;
             IArticleManger articleManger = new ArticleManger();
             IUserMnager userMnager = new UserManger();
             List<UserInformation> usList=await userMnager.GetAllUserByAdmin();
@@ -35,7 +35,8 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.articleTocateList = await articleManger.GetAllArticleTocate();
             IAdminManger adminManger = new AdminManger();
             string linkname = "";
-            ViewBag.links=await adminManger.GetAllLink(linkname);
+            string desc = "";
+            ViewBag.links=await adminManger.GetAllLink(linkname, desc);
             var data = await articleManger.GetAllArticle(search);
             ViewBag.catelist= await articleManger.GetAllBlogcategory();
 

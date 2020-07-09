@@ -112,299 +112,280 @@
                     </p>
                 </div>
             </div>
-
-            <div class="fly-panel detail-box" id="flyReply">
-                <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
-                    <legend>评论</legend>
-                </fieldset>
-                <ul class="jieda" id="jieda">
-                    @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
-                    {
-                        <li>
-                            <div class="detail-about detail-about-reply">
-                                <a class="fly-avatar">
-                                    <img src="/FrontPage/images/@item.ImagePath" />
-                                </a>
-                                <div class="fly-detail-user">
-                                    <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
-                                        @item.NickName
+            @if (@ViewBag.IsClosingComments == true)
+            {
+                <p style="color:red">作者已关闭评论功能</p>
+            }
+            else
+            {
+                <div class="fly-panel detail-box" id="flyReply">
+                    <fieldset class="layui-elem-field layui-field-title" style="text-align: center;">
+                        <legend>评论</legend>
+                    </fieldset>
+                    <ul class="jieda" id="jieda">
+                        @foreach (var item in Model.OrderByDescending(m => m.CreateTime))
+                        {
+                            <li>
+                                <div class="detail-about detail-about-reply">
+                                    <a class="fly-avatar">
+                                        <img src="/FrontPage/images/@item.ImagePath" />
                                     </a>
+                                    <div class="fly-detail-user">
+                                        <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
+                                            @item.NickName
+                                        </a>
+                                    </div>
+                                    <div class="detail-hits">
+                                        <span>@item.CreateTime</span>
+                                    </div>
                                 </div>
-                                <div class="detail-hits">
-                                    <span>@item.CreateTime</span>
+                                <div class="detail-body layui-text jieda-body photos">
+                                    @Html.Raw(@item.Content)
                                 </div>
-                            </div>
-                            <div class="detail-body layui-text jieda-body photos">
-                                @item.Content
-                            </div>
-                            <div class="jieda-reply">
-                                @if (Guid.Parse(Session["Userid"].ToString()) != item.UserId)
-                                {
-                                    <span><a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a></span>
-                                    <span> <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> </span>//父评论Id
-                                    @*<input type="hidden" value="" id="replyUsId"/>*@//被回复人Id
-                                }
-                                <input type="hidden" value="@item.Id" id="commentParentId" />@*针对评论的回复查询*@
-                            </div>
-                            @*<p style="color: #999;">
-                                    <a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
-                                        @item.NickName
-                                    </a>
-                                    <br />
-                                    <span>
-                                        @item.Content
-                                        @item.CreateTime
-                                    </span>
+                                <div class="jieda-reply">
                                     @if (Guid.Parse(Session["Userid"].ToString()) != item.UserId)
                                     {
-                                        <a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a>
-                                        <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> //父评论Id
-
-                                        <input type="hidden" value="@item.Id" id="commentParentId" />//针对评论的回复查询
+                                        <span><a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a></span>
+                                        <span> <a style="color: red" onclick="ReplyComment('@item.Id','@item.UserId')" href="#">回复</a> </span>//父评论Id
+                                        @*<input type="hidden" value="" id="replyUsId"/>*@//被回复人Id
                                     }
-                                    <ul>
-                                        <li id="replyData">
+                                    <input type="hidden" value="@item.Id" id="commentParentId" />@*针对评论的回复查询*@
+                                </div>
 
-                                        </li>
-                                    </ul>
-                                </p>*@
-                            <script type="text/javascript">
-                                function CommentReport(id) {
-                                    layer.open({
-                                        type: 2,
-                                        title: '请输入举报内容',
-                                        maxmin: false,
-                                        resize: false,
-                                        anim: 1,
-                                        shadeClose: true,
-                                        area: ['500px', '350px'],
-                                        content: 'ReportByComm?id=' + id
-                                    });
-                                }
-                                //针对评论回复
-                                function ReplyComment(commentid, replyUsId, type = 0) {
-                                    layer.open({
-                                        type: 2,
-                                        title: '请输入回复内容',
-                                        maxmin: false,
-                                        resize: false,
-                                        anim: 2,
-                                        shadeClose: true,
-                                        area: ['500px', '350px'],
-                                        content: 'ReplyCommentsView?commentid=' + commentid + '&replyUsId=' + replyUsId + '&type=' + type
-                                    });
-                                }
-                            </script>
-                            @try
-                            {
-                                if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
+                                <script type="text/javascript">
+                                    function CommentReport(id) {
+                                        layer.open({
+                                            type: 2,
+                                            title: '请输入举报内容',
+                                            maxmin: false,
+                                            resize: false,
+                                            anim: 1,
+                                            shadeClose: true,
+                                            area: ['500px', '350px'],
+                                            content: 'ReportByComm?id=' + id
+                                        });
+                                    }
+                                    //针对评论回复
+                                    function ReplyComment(commentid, replyUsId, type = 0) {
+                                        layer.open({
+                                            type: 2,
+                                            title: '请输入回复内容',
+                                            maxmin: false,
+                                            resize: false,
+                                            anim: 2,
+                                            shadeClose: true,
+                                            area: ['500px', '350px'],
+                                            content: 'ReplyCommentsView?commentid=' + commentid + '&replyUsId=' + replyUsId + '&type=' + type
+                                        });
+                                    }
+                                </script>
+                                @try
                                 {
-                                    <a href="/Article/RemoveCommentByUser?commentid=@item.Id" class="cm-link" onclick="return confirm('你确定要删除你的评论吗？')">删除评论</a>
-                                    <a href="#" class="link-update" onclick="updateLayer('@item.Id')">修改</a>
-                                    <hr />
-                                }
-                            }
-                            catch (Exception e)
-                            {
-
-                            }
-                        </li>
-                        <li id="das">
-                            <div class="detail-about detail-about-reply">
-                                <a class="fly-avatar" id=reimg>
-                                    @*<img src="/FrontPage/images/@item.ImagePath" />*@
-                                </a>
-                                <div class="fly-detail-user" id="reusers">
-                                    @*<a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
-
-                                        </a>*@
-                                </div>
-                                <div class="detail-hits">
-                                    @*<span>@item.CreateTime</span>*@
-                                </div>
-                            </div>
-                            <div class="detail-body layui-text jieda-body photos" id="contents">
-                                @*@item.Content*@
-
-                            </div>
-                            <div class="jieda-reply" id="returns">
-                                @*<span><a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a></span>*@
-                                <span> @*<a style="color: red" onclick="ReplyComment()" href="#">回复</a>*@ </span>
-
-                                @*<input type="hidden" value="" id="replyUsId"/>被回复人Id*@
-                                @*<input type="hidden" value="@item.Id" id="commentParentId" />针对评论的回复查询*@
-                            </div>
-                        </li>
-                    }
-                </ul>
-                <input type="hidden" id="uusid" value="@ViewBag.uid" />
-                <input type="hidden" id="seionusid" value="@Guid.Parse(Session["Userid"].ToString())" />
-                <script>
-                    window.onload = function () {
-                        var commparentId = $("#commentParentId").val();
-                        var uusid = $("#uusid").val();
-                        var seionusid = $("#seionusid").val();
-                        $.ajax({
-                            type: "get",
-                            url: "GetReplyComment",
-                            dataType: "json",
-                            data: {
-                                commparentId: uusid
-                            },
-                            success: function (msg) {
-                                if (msg.code === 100) {
-                                    console.log(msg.data);
-                                    var arr = msg.data;
-                                    var das = "";
-                                    var hrefs = "/User/UserHome?userid=";
-                                    arr.forEach(function (items) {
-                                        if (items.ReplierId === uusid) {
-                                            var tn = "楼主";
-                                        } else {
-                                            var tn = "";
-                                        }
-                                        if (items.ReplierId === seionusid) {
-                                            var sc = "删除";
-                                        } else {
-                                            var sc = "";
-                                        }
-
-                                        das += '<div class="detail-about detail-about-reply">' +
-                                            '<a class="fly-avatar">' + '<img src="/FrontPage/images/' + items.ImagePath + '"/>' + '<a class="fly-avatar">' +
-                                            '<div class="fly-detail-user">' + '<a href=' + hrefs + items.ReplierId + ' class="fly-link" style="font-size: 16px;">' + items.NickName + '</a>' + tn + '回复：' + '</div>' +
-
-                                            '</div>' +
-                                            '<div class="detail-body layui-text jieda-body photos">' + '<a>' + '@@' + items.ByReplyNickName + '</a>' + '<p>' + items.ReplyContent + '</p>' + '</div>' +
-                                            '<div class="jieda-reply">' +
-                                            '<span>' + '<a style="color: gray" onclick="returnComm(' + "'" + items.Id + "'" + ',' + "'" + items.ReplierId + "'" + ',' + "'" + items.CommentParentId + "'" + ')">' + '回复' + '</a>' + '</span>' +
-                                            '<span>' + '<a style="color: gray" onclick="deleteReturnComn(' + "'" + items.Id + "'" + ')">' + sc + '</a>' + '</span>' +
-                                            '</div>' +
-                                            '<input type="hidden" value="' + items.ReplierId + '"/>' +
-                                            '<input type="hidden" value="' + items.Id + '">';;
-                                    });
-                                    $("#das").html(das);
-                                }
-                            }
-                        });
-                    }
-                </script>
-                <script>
-                    //针对回复的回复
-                    function returnComm(commentParentId, returnUsId, targId) {
-                        layer.open({
-                            type: 2,
-                            title: '请输入回复内容',
-                            maxmin: false,
-                            resize: false,
-                            anim: 2,
-                            shadeClose: true,
-                            area: ['500px', '350px'],
-                            content: 'ReturnCommentsView?commentParentId=' + commentParentId + '&returnUsId=' + returnUsId + '&targId=' + targId
-                        });
-                    }
-
-                    function deleteReturnComn(id) {
-                        $.ajax({
-                            type: "post",
-                            url: "DeleteReturnComment",
-                            data: { id: id },
-                            success: function (msg) {
-                                if (msg.code === 100) {
-                                    alert('您已删除回复');
-                                    window.location.reload();
-                                }
-                            }
-                        });
-                    }
-                </script>
-
-                <div class="layui-form layui-form-pane">
-                    <form id="form-comment-add" name="form-comment-add" enctype="multipart/form-data">
-                        <div class="layui-form-item layui-form-text">
-                            <input type="hidden" id="coID" name="coID" />
-                            <input type="hidden" id="articleid" name="articleid" value="@ViewBag.actid " />
-                            <a name="comment"></a>
-                            <div class="layui-input-block">
-                                <textarea id="content" name="content" required lay-verify="required" placeholder="请输入内容(字符限制50)" class="layui-textarea fly-editor" style="height: 150px;" maxlength="25"></textarea>
-                            </div>
-                            <script>
-                                $("#btnAddcomment").click(function () {
-                                    if ($("#content").val()) {
-                                        alert('请输入评论!');
-                                        return;
+                                    if (Guid.Parse(Session["Userid"].ToString()) == item.UserId)
+                                    {
+                                        <a href="/Article/RemoveCommentByUser?commentid=@item.Id" class="cm-link" onclick="return confirm('你确定要删除你的评论吗？')">删除评论</a>
+                                        <a href="#" class="link-update" onclick="updateLayer('@item.Id')">修改</a>
+                                        <hr />
                                     }
-                                });
-                            </script>
-                        </div>
-                        <div class="layui-form-item">
-                            <input class="layui-btn" type="submit" lay-filter="*" lay-submit id="btnAddcomment" value="提交评论">
-                        </div>
-                    </form>
-                </div>
-                @try //管理员预览文章避免用户session为空异常
-                {
-                    if (ViewBag.astate == true && Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
-                    {
-                        <form>
-                            <div id="good" style="float: right">
-                                <a onclick="Recommend()" id="goods" style="cursor: pointer"> 好文推荐 </a>
+                                }
+                                catch (Exception e)
+                                {
+
+                                }
+                            </li>
+                            <li id="das">
+                                <div class="detail-about detail-about-reply">
+                                    <a class="fly-avatar" id=reimg>
+                                        @*<img src="/FrontPage/images/@item.ImagePath" />*@
+                                    </a>
+                                    <div class="fly-detail-user" id="reusers">
+                                        @*<a href="/User/UserHome?userid=@item.UserId" class="fly-link" style="font-size: 16px;">
+
+                                            </a>*@
+                                    </div>
+                                    <div class="detail-hits">
+                                        @*<span>@item.CreateTime</span>*@
+                                    </div>
+                                </div>
+                                <div class="detail-body layui-text jieda-body photos" id="contents">
+                                    @*@item.Content*@
+
+                                </div>
+                                <div class="jieda-reply" id="returns">
+                                    @*<span><a style="color: red" onclick="CommentReport('@item.Id')" href="#">举报</a></span>*@
+                                    <span> @*<a style="color: red" onclick="ReplyComment()" href="#">回复</a>*@ </span>
+
+                                    @*<input type="hidden" value="" id="replyUsId"/>被回复人Id*@
+                                    @*<input type="hidden" value="@item.Id" id="commentParentId" />针对评论的回复查询*@
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <input type="hidden" id="uusid" value="@ViewBag.uid" />
+                    <input type="hidden" id="seionusid" value="@Guid.Parse(Session["Userid"].ToString())" />
+                    <script>
+                        window.onload = function () {
+                            var commparentId = $("#commentParentId").val();
+                            var uusid = $("#uusid").val();
+                            var seionusid = $("#seionusid").val();
+                            $.ajax({
+                                type: "get",
+                                url: "GetReplyComment",
+                                dataType: "json",
+                                data: {
+                                    commparentId: uusid
+                                },
+                                success: function (msg) {
+                                    if (msg.code === 100) {
+                                        console.log(msg.data);
+                                        var arr = msg.data;
+                                        var das = "";
+                                        var hrefs = "/User/UserHome?userid=";
+                                        arr.forEach(function (items) {
+                                            if (items.ReplierId === uusid) {
+                                                var tn = "作者";
+                                            } else {
+                                                var tn = "";
+                                            }
+                                            if (items.ReplierId === seionusid) {
+                                                var sc = "删除";
+                                            } else {
+                                                var sc = "";
+                                            }
+                                            das += '<div class="detail-about detail-about-reply">' +
+                                                '<a class="fly-avatar">' + '<img src="/FrontPage/images/' + items.ImagePath + '"/>' + '<a class="fly-avatar">' +
+                                                '<div class="fly-detail-user">' + '<a href=' + hrefs + items.ReplierId + ' class="fly-link" style="font-size: 16px;">' + items.NickName + '</a>' + tn + '回复：' + '</div>' +
+
+                                                '</div>' +
+                                                '<div class="detail-body layui-text jieda-body photos">' + '<a>' + '@@' + items.ByReplyNickName + '</a>' + '<p>' + items.ReplyContent + '</p>' + '</div>' +
+                                                '<div class="jieda-reply">' +
+                                                '<span>' + '<a style="color: gray" onclick="returnComm(' + "'" + items.Id + "'" + ',' + "'" + items.ReplierId + "'" + ',' + "'" + items.CommentParentId + "'" + ')">' + '回复' + '</a>' + '</span>' +
+                                                '<span>' + '<a style="color: gray" onclick="deleteReturnComn(' + "'" + items.Id + "'" + ')">' + sc + '</a>' + '</span>' +
+                                                '</div>' +
+                                                '<input type="hidden" value="' + items.ReplierId + '"/>' +
+                                                '<input type="hidden" value="' + items.Id + '">';;
+                                        });
+                                        $("#das").html(das);
+                                    }
+                                }
+                            });
+                        }
+                    </script>
+                    <script>
+                        //针对回复的回复
+                        function returnComm(commentParentId, returnUsId, targId) {
+                            layer.open({
+                                type: 2,
+                                title: '请输入回复内容',
+                                maxmin: false,
+                                resize: false,
+                                anim: 2,
+                                shadeClose: true,
+                                area: ['500px', '350px'],
+                                content: 'ReturnCommentsView?commentParentId=' + commentParentId + '&returnUsId=' + returnUsId + '&targId=' + targId
+                            });
+                        }
+
+                        function deleteReturnComn(id) {
+                            $.ajax({
+                                type: "post",
+                                url: "DeleteReturnComment",
+                                data: { id: id },
+                                success: function (msg) {
+                                    if (msg.code === 100) {
+                                        alert('您已删除回复');
+                                        window.location.reload();
+                                    }
+                                }
+                            });
+                        }
+                    </script>
+
+                    <div class="layui-form layui-form-pane">
+                        <form id="form-comment-add" name="form-comment-add" enctype="multipart/form-data">
+                            <div class="layui-form-item layui-form-text">
+                                <input type="hidden" id="coID" name="coID" />
+                                <input type="hidden" id="articleid" name="articleid" value="@ViewBag.actid " />
+                                <a name="comment"></a>
+                                @*<div>
+                                        <textarea id="layeditDemo"></textarea>
+                                    </div>*@
+                                <p id="textton" style="color:red"></p>
+                                <div class="layui-input-block">
+                                    <textarea id="content" name="content"   placeholder="请输入内容(字符限制50)" class="layui-textarea fly-editor" style="height: 150px;" maxlength="25"></textarea>
+                                    @*<textarea id="layeditDemo" name="content" lay-verify="content"></textarea>*@
+                                </div>
+                                @*<script>
+                                        $("#btnAddcomment").click(function () {
+                                            if (!$("#layeditDemo").val()) {
+                                                alert('请输入评论内容!');
+                                                return;
+                                            }
+                                        });
+                                    </script>*@
                             </div>
-                            <div id="bad">
-                                <a onclick="Opposition()" id="bads" style="cursor: pointer"> 反对 </a>
+                            <div class="layui-form-item">
+                                <input class="layui-btn" type="button" lay-filter="*" lay-submit id="btnAddcomment" value="提交评论">
                             </div>
                         </form>
+                    </div>
+                    @try //管理员预览文章避免用户session为空异常
+                    {
+                        if (ViewBag.astate == true && Guid.Parse(Session["Userid"].ToString()) != @ViewBag.uid)
+                        {
+                            <form>
+                                <div id="good" style="float: right">
+                                    <a onclick="Recommend()" id="goods" style="cursor: pointer"> 好文推荐 </a>
+                                </div>
+                                <div id="bad">
+                                    <a onclick="Opposition()" id="bads" style="cursor: pointer"> 反对 </a>
+                                </div>
+                            </form>
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    <p>管理员不可见</p>
-                }
-                <a id="aa" href="#top" target="_self" style="color: blue">返回顶部</a>
+                    catch (Exception e)
+                    {
+                        <p>管理员不可见</p>
+                    }
 
-                <script>
-                    $(function () {
-                        $("#aa").click(function () {
-                            $("html,body").animate({ scrollTop: 0 }, 1000);
-                        });
-                    })
-                </script>
-                <script>
-                    function Recommend() {
-                        $.ajax({
-                            type: "post",
-                            url: "Recommend",
-                            dataType: "json",
-                            data: {
-                                articleid: $("#articleid").val()
-                            },
-                            success: function (msg) {
-                                if (msg.code === 100) {
-                                    console.log(msg.data.GoodCount);
-                                    //$("#good").text(msg.GoodCount);
-                                    $("#good").text("点赞成功");
+                    <script>
+                        function Recommend() {
+                            $.ajax({
+                                type: "post",
+                                url: "Recommend",
+                                dataType: "json",
+                                data: {
+                                    articleid: $("#articleid").val()
+                                },
+                                success: function (msg) {
+                                    if (msg.code === 100) {
+                                        console.log(msg.data.GoodCount);
+                                        //$("#good").text(msg.GoodCount);
+                                        $("#good").text("点赞成功");
+                                    }
                                 }
-                            }
-                        });
-                    }
-                    function Opposition() {
-                        $.ajax({
-                            type: "post",
-                            url: "Opposition",
-                            dataType: "json",
-                            data: {
-                                articleid: $("#articleid").val()
-                            },
-                            success: function (msg) {
-                                if (msg.code === 100) {
-                                    console.log(msg.data.BadCount);
-                                    //$("#good").text(msg.BadCount);
-                                    $("#bad").text("反对成功");
+                            });
+                        }
+                        function Opposition() {
+                            $.ajax({
+                                type: "post",
+                                url: "Opposition",
+                                dataType: "json",
+                                data: {
+                                    articleid: $("#articleid").val()
+                                },
+                                success: function (msg) {
+                                    if (msg.code === 100) {
+                                        console.log(msg.data.BadCount);
+                                        //$("#good").text(msg.BadCount);
+                                        $("#bad").text("反对成功");
+                                    }
                                 }
-                            }
-                        });
-                    }
-                </script>
-            </div>
+                            });
+                        }
+                    </script>
+                </div>
+            }
         </div>
         <div class="layui-col-md4">
             <div class="fly-panel">
@@ -586,26 +567,26 @@
     </div>
 </div>
 
-<script>
+@*<script>
     $("#btnAddcomment").click(function () {
-        if (!$("#content").val()) {
-            alert('请输入评论');
-            return;
-        } else {
-            $.ajax({
-                type: "post",
-                url: "CreateComment",
-                data: $("#form-comment-add").serialize(),
-                success: function (msg) {
-                    if (msg.status === 1) {
-                        alert('评论成功');
-                        window.location.reload(); //刷新
-                    }
+        var va = $("#layeditDemo").val();
+        alert(va);
+        $.ajax({
+            type: "post",
+            url: "CreateComment",
+            data:
+            {
+                content: va
+            },
+            success: function (msg) {
+                if (msg.status === 1) {
+                    alert('评论成功');
+                    window.location.reload(); //刷新
                 }
-            });
-        }
+            }
+        });
     });
-</script>
+</script>*@
 
 <script>
     function AddTextareaValue(value, cID) {
@@ -628,4 +609,35 @@
             content: 'EditCommentByuser?id=' + id
         });
     }
+</script>
+<script>
+    $("#btnAddcomment").click(function () {
+        var va = $("#content").val();
+        //alert(va);
+        $.ajax({
+            type: "post",
+            url: "CreateComment",
+            async: true,
+            data: $("#form-comment-add").serialize(),
+            success: function (msg) {
+                if (msg.status === 1) {
+                    //alert('评论成功');
+                    $("#textton").text("评论成功...");
+                    window.setTimeout(window.location.reload(),2000); //刷新
+                }
+            }
+        });
+    });
+</script>
+<ul class="layui-fixbar" id="ttoop">
+    <li class="layui-icon layui-fixbar-top" lay-type="top" style="background-color: rgb(0, 150, 136); display: list-item;">
+        <i></i>
+    </li>
+</ul>
+<script>
+    $(function () {
+        $("#ttoop").click(function () {
+            $("html,body").animate({ scrollTop: 0 }, 1000);
+        });
+    })
 </script>

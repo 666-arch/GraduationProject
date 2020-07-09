@@ -9,9 +9,9 @@ namespace BlogSystem.IBLL
 {
     public interface IArticleManger
     {
-        Task CreateArticle(string title,string content,Guid[] categoryIds,Guid UserId,bool state);  //新增文章（已分类）
+        Task CreateArticle(string title,string content,Guid[] categoryIds,Guid UserId, bool IsClosingComments,bool state);  //新增文章（已分类）
 
-        Task CreateArticle(string title, string content, Guid UserId, bool state);  //新增文章（未分类的文章）
+        Task CreateArticle(string title, string content, Guid UserId, bool IsClosingComments,bool state);  //新增文章（未分类的文章）
 
         Task CreateCategory(string name, Guid UserId);  //添加文章类别
 
@@ -27,8 +27,8 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleDto>> GetAllTestData();
 
-        Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title,bool state); //根据昵称找文章
-
+        Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title,bool state, DateTime? start, DateTime? end); //根据昵称找文章
+        Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title, bool state); //根据昵称找文章
         Task<List<ArticleToBlogcateDto>> GetAllArticlesByCategoryId(Guid blogcateId);  //根据类别找Id
 
         Task<List<ArticleDto>> GetAllArticlesByState(bool state);   //根据发布状态查询（默认是false）
@@ -45,7 +45,7 @@ namespace BlogSystem.IBLL
 
         Task<int> RemoveArticle(Guid articleId); //根据id删除文章
 
-        Task EditArticle(Guid articleId,string title, string content, Guid[] categoryIds);  //修改文章
+        Task EditArticle(Guid articleId,string title, string content, Guid[] categoryIds,bool IsClosingComments);  //修改文章
 
         Task CreateComment(Guid userid,Guid articleId,string content); //用户添加评论文章
 
@@ -89,6 +89,10 @@ namespace BlogSystem.IBLL
         Task<List<ReplyCommentsDto>> GetAllReplyCommentsInfo(Guid commentParentId);     //查询父评论下的所有回复
 
         Task RemoveReturnComment(Guid id);  //删除回复
+
+        Task EditStickyPostsByArticle(Guid id);
+
+        Task<List<ArticleDto>> GetAllStickyPostsByArticle();
 
     }
 }

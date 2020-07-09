@@ -27,6 +27,10 @@
                         if (msg.code===100) {
                             $(".succs").text("回复成功");
                             $("#rebtn").hide();
+                            //让打开这个窗口的父窗口刷新,然后本子窗口关闭
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
                         }
                     }
                 });
@@ -47,6 +51,9 @@
             <input type="hidden" name="replyUsId" value="@ViewBag.replyUsId" />
             <input type="hidden" name="type" value="@ViewBag.type" />
             <input type="text" class="form-control" id="content" name="content" style="width: 300px;" value="" />
+            <textarea class="form-control">
+
+            </textarea>
         </div>
         <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
         <input onclick="addReplyComment()" type="button" value="提交回复" class="btn btn-warning" style="margin-right: 30px;" id="rebtn" />

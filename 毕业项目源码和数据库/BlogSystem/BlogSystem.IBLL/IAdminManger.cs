@@ -16,7 +16,7 @@ namespace BlogSystem.IBLL
 
         Task<AdminDto> GetAllAdminById(Guid adminId);       //查询管理员个人基本信息
 
-        Task<List<AdminDto>> GetAllAdminInfo();     //查询所有管理员信息
+        Task<List<AdminDto>> GetAllAdminInfo(string account);     //查询所有管理员信息
 
         Task RemoveAdminById(Guid adminId);     //根据管理员Id删除
 
@@ -26,7 +26,7 @@ namespace BlogSystem.IBLL
 
         Task RemoveLinkById(Guid id);       //删除链接
 
-        Task<List<LinkDto>> GetAllLink(string linkname);       //查询所有链接
+        Task<List<LinkDto>> GetAllLink(string linkname,string desc);       //查询所有链接
 
         Task<LinkDto> GetAllLinkById(Guid id);  //查询单个链接
 
@@ -35,14 +35,18 @@ namespace BlogSystem.IBLL
         Task EditUserByAdmin(Guid userid, string newpassword);  //管理员修改用户密码
         Task<UserInformation> EditUserIdByAdmin(Guid userid);
 
-        Task<List<CommentDto>> GetAllCommentByAdmin(string nickname,string title);  //评论管理
+        Task<List<CommentDto>> GetAllCommentByAdmin(string nickname,string title,string content);  //评论管理
 
-        Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title, string ishandle);
+        Task<List<CommentReportDto>> GetAllCommentReport(string nickname, string title, string ishandle, string content);
 
         Task EditHandleReport(Guid id, bool Ishandle = true); //处理举报信息
 
         Task RemoveCommentByAdmin(Guid commentid);  //管理员删除评论
 
         Task RemoveCommentReportAdmin(Guid reportId);       //管理员删除评论举报记录
+
+        Task RemoveUserByAdmin(Guid userId);
+
+        Task EditUserFreezeByAdmin(Guid userid);
     }
 }

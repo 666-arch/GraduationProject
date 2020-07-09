@@ -20,8 +20,10 @@
                 data: $("#form-return").serialize(),
                 success:function(msg) {
                         alert('回复成功');
-                        widows.onload.reload();
-                    
+                        //让打开这个窗口的父窗口刷新,然后本子窗口关闭
+                        window.parent.location.reload();
+                        var index = parent.layer.getFrameIndex(window.name);
+                        parent.layer.close(index);
                 }
             });
         }
@@ -31,7 +33,9 @@
 <div class="" style="align-items: center; padding: 40px;">
         @*@ViewBag.commentParentId
         @ViewBag.returnUsId
-        @ViewBag.type*@
+        @ViewBag.type
+            针对回复的回复
+        *@
     <form id="form-return" method="post">
         <div class="form-group">
             <label for="content">回复:</label>
@@ -39,7 +43,10 @@
             <input type="hidden" id="targId" name="targId" value="@ViewBag.targId " />
             <input type="hidden" name="returnUsId" value="@ViewBag.returnUsId" />
             <input type="hidden" name="type" value="@ViewBag.type" />
-            <input type="text" class="form-control" id="content" name="content" style="width: 300px;" value="@ViewBag.conten " />
+            @*<input type="text" class="form-control" id="content" name="content" style="width: 300px;" value="@ViewBag.conten " />*@
+            <textarea class="form-control" id="content" name="content" >
+                
+            </textarea>
         </div>
         <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
         @*<button type="button" class="btn btn-warning" style="margin-right:30px;" id="btnUpdate">提交</button>*@

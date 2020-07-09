@@ -43,7 +43,8 @@
             <div class="form-group">
                 <label for="content">评论信息:</label>
                 <input type="hidden" id="cid" name="cid" value="@ViewBag.id" />
-                <input type="text" class="form-control" id="content" name="content" style="width:300px;" value="@ViewBag.conten "/>
+                
+                <textarea  id="content" name="content" class="form-control">@ViewBag.conten</textarea>
             </div>
             <button type="button" class="btn btn-warning" style="margin-right:30px;" id="btnUpdate">保存修改</button>
         </form>

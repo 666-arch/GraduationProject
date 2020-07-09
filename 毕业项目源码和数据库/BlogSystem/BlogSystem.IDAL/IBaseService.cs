@@ -23,9 +23,11 @@ namespace BlogSystem.IDAL
 
         IQueryable<T> GetAllAsync();  //查询所有
 
-        IQueryable<T> GetAllByPageAsync(int PageSize =10, int PageIndex = 0);  //分页查询
+        IQueryable<T> GetAllByPageAsync(int pageSize, int pageIndex);  //分页查询
 
         IQueryable<T> GetAllOrderAsync(bool asc = true);  //默认true升序
+
+        IQueryable<T> GetAllByPageOrderAsync(int pageSize = 10, int pageIndex = 0, bool asc = true);
 
     }
 }

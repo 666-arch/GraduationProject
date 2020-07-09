@@ -7,18 +7,14 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
-using System.Data.Entity.SqlServer;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace BlogSystem.BLL
 {
     public class ArticleManger : IArticleManger
     {
-        public async Task CreateArticle(string title, string content, Guid[] categoryIds, Guid UserId, bool state)  //添加用户选择了分类的博客
+        public async Task CreateArticle(string title, string content, Guid[] categoryIds, Guid UserId, bool IsClosingComments, bool state)  //添加用户选择了分类的博客
         {
             using (var articleSvc = new ArticleService())
             {
@@ -27,7 +23,8 @@ namespace BlogSystem.BLL
                     Title = title,
                     Content = content,
                     State = state,
-                    UserId = UserId
+                    UserId = UserId,
+                    IsClosingComments= IsClosingComments
                 };
                 await articleSvc.CreateAsync(article);
                 Guid articleId = article.Id;//拿到新增的文章id
@@ -47,7 +44,7 @@ namespace BlogSystem.BLL
             }
         }
 
-        public async Task CreateArticle(string title, string content, Guid UserId, bool state)  //添加未分类的博客
+        public async Task CreateArticle(string title, string content, Guid UserId, bool IsClosingComments,bool state)  //添加未分类的博客
         {
             using (var articleSvc = new ArticleService())
             {
@@ -56,7 +53,8 @@ namespace BlogSystem.BLL
                     Title = title,
                     Content = content,
                     State = state,
-                    UserId = UserId
+                    UserId = UserId,
+                    IsClosingComments= IsClosingComments
                 };
                 await articleSvc.CreateAsync(article);
             }
@@ -72,7 +70,7 @@ namespace BlogSystem.BLL
                 });
             }
         }
-        public async Task EditArticle(Guid articleId, string title, string content, Guid[] categoryIds)  //修改文章
+        public async Task EditArticle(Guid articleId, string title, string content, Guid[] categoryIds, bool IsClosingComments)  //修改文章
         {
             using (IArticleService articleSvc = new ArticleService())
             {
@@ -81,7 +79,7 @@ namespace BlogSystem.BLL
                 article.Content = content;
                 article.State = true;  //保存修改发布状态改为true
                 article.CreateTime = DateTime.Now;     //将发布时间设置为当前时间
-
+                article.IsClosingComments = IsClosingComments;
                 await articleSvc.EditAsync(article);
                 using (IArticleToCategoryService articleToCategorySvc = new ArticleToCategoryService())
                 {
@@ -122,7 +120,6 @@ namespace BlogSystem.BLL
                 return await categorySvc.GetAllAsync().Where(m => m.UserId == userId).Where(m => m.IsRemoved == false).Select(m => new BlogCategoryDto()
                 {
                     Id = m.Id,
-                   
                     CategoryName = m.CategoryName,
                     CreateTime = m.CreateTime
                 }).ToListAsync();
@@ -210,7 +207,8 @@ namespace BlogSystem.BLL
                        BadCount = m.BadCount,
                        UserId = m.UserId,
                        ImagePath=m.User.ImagePath,
-                       State=m.State
+                       State=m.State,
+                       IsClosingComments=m.IsClosingComments
                    }).FirstAsync();
 
                 using (IArticleToCategoryService articleToCategorySvc = new ArticleToCategoryService())
@@ -269,24 +267,69 @@ namespace BlogSystem.BLL
             throw new NotImplementedException();
         }
 
-        public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title, bool state)   //后台模糊查询（根据作者查询）
+        public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title, bool state, DateTime? start, DateTime? end)   //后台模糊查询（根据作者查询）
         {
             using (IArticleService articleService = new ArticleService())
             {
-                var data=await articleService.GetAllAsync()
+                //DateTime sta = Convert.ToDateTime(start);
+                //DateTime en = Convert.ToDateTime(end);
+                if (start.ToString()!= "0001/1/1 0:00:00"|| end.ToString() != "0001/1/1 0:00:00")
+                {
+                    var data = await articleService.GetAllAsync()
                     .Include(m => m.User)
-                    .Where(m=>m.State==state)
-                    .Where(m => string.IsNullOrEmpty(nickName)&string.IsNullOrEmpty(title) || m.User.NickName.Contains(nickName)&m.Title.Contains(title))
-                    .OrderByDescending(m=>m.CreateTime)
+                    .Where(m => m.State == state)
+                    .Where(m => string.IsNullOrEmpty(nickName) & string.IsNullOrEmpty(title) || m.User.NickName.Contains(nickName) & m.Title.Contains(title))
+
+                    .Where(m => m.CreateTime >= start & m.CreateTime <= end)
+                    .OrderByDescending(m => m.CreateTime)
                     .Select(m => new ArticleDto()
                     {
-                        Id=m.Id,
+                        Id = m.Id,
                         Title = m.Title,
                         NickName = m.User.NickName,
                         State = m.State,
                         CreateTime = m.CreateTime,
                     }).ToListAsync();
-                return data;
+                    return data;
+                }
+                else
+                {
+                    var data = await articleService.GetAllAsync()
+                    .Include(m => m.User)
+                    .Where(m => m.State == state)
+                    .Where(m => string.IsNullOrEmpty(nickName) & string.IsNullOrEmpty(title) || m.User.NickName.Contains(nickName) & m.Title.Contains(title))
+                    .OrderByDescending(m => m.CreateTime)
+                    .Select(m => new ArticleDto()
+                    {
+                        Id = m.Id,
+                        Title = m.Title,
+                        NickName = m.User.NickName,
+                        State = m.State,
+                        CreateTime = m.CreateTime,
+                    }).ToListAsync();
+                    return data;
+                }
+            }
+        }
+        public async Task<List<ArticleDto>> GetAllArticlesByNickName(string nickName, string title, bool state)   //后台模糊查询（根据作者查询）
+        {
+            using (IArticleService articleService = new ArticleService())
+            {
+                
+                    var data = await articleService.GetAllAsync()
+                    .Include(m => m.User)
+                    .Where(m => m.State == state)
+                    .Where(m => string.IsNullOrEmpty(nickName) & string.IsNullOrEmpty(title) || m.User.NickName.Contains(nickName) & m.Title.Contains(title))
+                    .OrderByDescending(m => m.CreateTime)
+                    .Select(m => new ArticleDto()
+                    {
+                        Id = m.Id,
+                        Title = m.Title,
+                        NickName = m.User.NickName,
+                        State = m.State,
+                        CreateTime = m.CreateTime,
+                    }).ToListAsync();
+                    return data;
             }
         }
         public async Task<List<ArticleDto>> GetAllArticlesByUserId(Guid userId)
@@ -296,7 +339,6 @@ namespace BlogSystem.BLL
                 var data= await articleSvc.GetAllAsync()
                     .Include(m => m.User)
                     .Where(m => m.UserId == userId)
-                    
                     .Where(m=>m.IsRemoved==false)
                     .Select(m => new ArticleDto()
                     {
@@ -306,7 +348,8 @@ namespace BlogSystem.BLL
                         GoodCount = m.GoodCounnt,
                         BadCount = m.BadCount,
                         CreateTime = m.CreateTime,
-                        State = m.State
+                        State = m.State,
+                        IsStick=m.IsStick
                     }).ToListAsync();
                 return data;
                 //using (IArticleToCategoryService articleToCategorySvc = new ArticleToCategoryService())
@@ -484,8 +527,10 @@ namespace BlogSystem.BLL
                 {
                     ArticleId = m.ArticleId,
                     Title = m.Article.Title,
-                    CreateTime = m.CreateTime
-                }).ToListAsync();
+                    CreateTime = m.CreateTime,
+                    Content=m.Content
+                })
+                    .ToListAsync();
                 return data;
             }
         }
@@ -782,6 +827,31 @@ namespace BlogSystem.BLL
                 var data=await replyComments.GetAllAsync().Where(m => m.Id == id).FirstAsync();
                 await replyComments.RemoveAsync(data);
             }
+        }
+
+        public async Task EditStickyPostsByArticle(Guid id)  //设置文章置顶
+        {
+            using (IArticleService article = new ArticleService())
+            {
+                var data=await article.GetAllAsync().FirstAsync(m => m.Id == id);
+                if (data!=null)
+                {
+                    if (data.IsStick == 0)  //设置置顶
+                    {
+                        data.IsStick = 1;
+                    }
+                    else
+                    {
+                        data.IsStick = 0;   //取消置顶
+                    }
+                    await article.EditAsync(data);
+                }
+            }
+        }
+
+        public async Task<List<ArticleDto>> GetAllStickyPostsByArticle()
+        {
+            throw new NotImplementedException();
         }
     }
 }
