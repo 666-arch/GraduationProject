@@ -48,5 +48,6 @@ namespace BlogSystem.IBLL
         Task RemoveUserByAdmin(Guid userId);
 
         Task EditUserFreezeByAdmin(Guid userid);
+        Task EditUserRestoreByAdmin(Guid userid);
     }
 }

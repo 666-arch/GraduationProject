@@ -1,0 +1,17 @@
+﻿@using BlogSystem.Dto
+@model List<CommentDto>
+<ul class="fly-list">
+        @foreach (var item in Model) //访问前五条数据
+        {
+
+            var titlesub = item.Content;
+            if (titlesub.Length>15)
+            {
+                titlesub = titlesub.Substring(0, 15) + "...";
+            }
+            <li>
+                 @titlesub &nbsp; <span><i class="iconfont icon-pinglun1"></i>@Model.Count()</span>
+            </li>
+
+        }
+    </ul>

@@ -94,5 +94,6 @@ namespace BlogSystem.IBLL
 
         Task<List<ArticleDto>> GetAllStickyPostsByArticle();
 
+        Task<List<ArticleDto>> GetAllArticleIsFreeze(string search);
     }
 }

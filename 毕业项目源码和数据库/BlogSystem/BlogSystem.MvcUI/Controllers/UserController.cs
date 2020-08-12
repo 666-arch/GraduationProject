@@ -166,7 +166,7 @@ namespace BlogSystem.MvcUI.Controllers
             try
             {
                 Session["y"] = randomnumber(4);//随机数存入session
-                MailMessage _msg = new MailMessage("1437855583@qq.com", Email, "终于来啦!欢迎注册学智播客", "任何相关工作人员不会向您询问密码,请妥善保管!您的验证码是" + Session["y"]);//由第一个邮箱向第二个邮箱发送邮件
+                MailMessage _msg = new MailMessage("1437855583@qq.com", Email, "学智播客", "任何相关工作人员不会向您询问密码,请妥善保管!您的验证码是" + Session["y"]);//由第一个邮箱向第二个邮箱发送邮件
                 SmtpClient _client = new SmtpClient("smtp.qq.com", 587);//qq邮箱的服务器和端口 
                 _client.DeliveryMethod = SmtpDeliveryMethod.Network;//通过网络发送
                 _client.Credentials = new NetworkCredential("1437855583@qq.com", "dsogrfxcyxshjhae");//发件人的邮箱和密码 SMTP码
@@ -266,6 +266,7 @@ namespace BlogSystem.MvcUI.Controllers
             ViewBag.createtime = user.CreateTime.Day;
             ViewBag.uid = user.Id;
             ViewBag.img = user.ImagePath;
+            ViewBag.isfreeze = user.IsFreeze;
             IArticleManger articleManger = new ArticleManger();
             Guid userids = Guid.Parse(Session["Userid"].ToString());
             List<FansDto> fansList = await userMag.GetAllFansByuserId(userids, userid);  //查看当前用户是否存在关注记录

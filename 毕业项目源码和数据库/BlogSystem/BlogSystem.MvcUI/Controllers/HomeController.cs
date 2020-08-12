@@ -21,10 +21,11 @@ namespace BlogSystem.MvcUI.Controllers
         [BlogAuth]
         public async Task<ActionResult> Index(int page=1,string search = "")
         {
+            ViewBag.sea = search;
             int pagesize =36;
             IArticleManger articleManger = new ArticleManger();
             IUserMnager userMnager = new UserManger();
-            List<UserInformation> usList=await userMnager.GetAllUserByAdmin();
+            List<UserInformation> usList=await userMnager.GetAllUserByAdminUnder();
             ViewBag.alluser = usList;   //所有博主
             ViewBag.ucount = usList.Count();    //统计博客数量
             List<CommentDto> coList =await articleManger.GetAllComment();
@@ -37,7 +38,8 @@ namespace BlogSystem.MvcUI.Controllers
             string linkname = "";
             string desc = "";
             ViewBag.links=await adminManger.GetAllLink(linkname, desc);
-            var data = await articleManger.GetAllArticle(search);
+            //var data = await articleManger.GetAllArticle(search);
+            var data = await articleManger.GetAllArticleIsFreeze(search);   //除开账号冻结发布的文章
             ViewBag.catelist= await articleManger.GetAllBlogcategory();
 
             return View(data.ToPagedList<ArticleDto>(page,pagesize));

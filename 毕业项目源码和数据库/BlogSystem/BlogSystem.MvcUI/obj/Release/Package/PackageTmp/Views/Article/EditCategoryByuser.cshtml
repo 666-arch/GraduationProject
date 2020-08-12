@@ -1,0 +1,50 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btnUpdate").click(function () {
+                if (!$('#categoryname').val()) {
+                    alert('请输入要修改的类别');
+                    return;
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "EditCategoryByuser",
+                        data: $("#form-cate-update").serialize(),
+                        success: function () {
+                            alert('修改成功');
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+    <title>EditCategoryByuser</title>
+</head>
+<body>
+    <div class="" style="align-items:center;padding:40px;">
+        <form id="form-cate-update" method="post">
+            <div class="form-group">
+                <label for="categoryname">标签类别:</label>
+                <input type="hidden" id="cateid" name="cateid" value="@ViewBag.id" />
+                <input type="text" class="form-control" id="categoryname" name="categoryname" style="width:300px;" value="@ViewBag.categoryname" />
+            </div>
+            <button type="button" class="btn btn-warning" style="margin-right:30px;" id="btnUpdate">保存修改</button>
+        </form>
+    </div>
+</body>
+</html>

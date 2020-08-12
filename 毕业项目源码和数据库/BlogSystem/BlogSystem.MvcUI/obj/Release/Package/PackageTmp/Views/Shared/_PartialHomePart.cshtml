@@ -1,0 +1,23 @@
+﻿
+
+<div class="fly-panel fly-column">
+    <div class="layui-container">
+        <ul class="layui-clear">
+            <li class="layui-hide-xs layui-this"><a href="/">首页</a></li>
+            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><span class="fly-mid"></span></li>
+            <!-- 用户登入后显示 -->
+            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/User/UserHome?userid=@Session["Userid"]">我发表的博客</a></li>
+            <li class="layui-hide-xs layui-hide-sm layui-show-md-inline-block"><a href="/User/Index">我评论的博客</a></li>
+            <li>
+                <a href="/Article/CreateArticle?userid=@Session["Userid"]" class="layui-btn">添加随笔</a>
+            </li>
+        </ul>
+        <div class="fly-column-right layui-hide-xs">
+            <form action="~/Home/Index" method="post">
+                <input type="text" id="search" name="search" value="" placeholder="输入文章、作者等关键字"  style="height: 32px; width: 220px;border-radius: 3px; border: 1px solid burlywood"/>
+                <input type="submit" name="title" value="搜索" class="layui-btn" />
+            </form>
+            @*<span class="fly-search"><i class="layui-icon"></i></span>*@
+        </div>
+    </div>
+</div>

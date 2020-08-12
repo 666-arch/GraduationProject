@@ -34,5 +34,5 @@ F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createReplyComments.resources
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createFieldIsClosingComments.resources
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createFieldIsStick.resources
-F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.csprojAssemblyReference.cache
 F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.Migrations.createFieldIsFreeze.resources
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.Models\obj\Debug\BlogSystem.Models.csprojAssemblyReference.cache

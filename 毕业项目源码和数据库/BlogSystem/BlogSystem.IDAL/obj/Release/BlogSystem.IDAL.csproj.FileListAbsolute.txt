@@ -1,0 +1,12 @@
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\BlogSystem.IDAL.dll
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\BlogSystem.IDAL.pdb
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\BlogSystem.Models.dll
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\EntityFramework.dll
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\BlogSystem.Models.pdb
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\BlogSystem.Models.dll.config
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\EntityFramework.xml
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\bin\Release\zh-Hans\EntityFramework.resources.dll
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\obj\Release\BlogSystem.IDAL.csprojAssemblyReference.cache
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\obj\Release\BlogSystem.IDAL.csproj.CopyComplete
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\obj\Release\BlogSystem.IDAL.dll
+F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.IDAL\obj\Release\BlogSystem.IDAL.pdb

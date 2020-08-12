@@ -392,5 +392,12 @@ namespace BlogSystem.MvcUI.Controllers
             await adminManger.EditUserFreezeByAdmin(id);
             return View();
         }
+
+        public async Task<ActionResult> UserRestore(Guid id)
+        {
+            IAdminManger adminManger = new AdminManger();
+            await adminManger.EditUserRestoreByAdmin(id);
+            return View();
+        }
     }
 }

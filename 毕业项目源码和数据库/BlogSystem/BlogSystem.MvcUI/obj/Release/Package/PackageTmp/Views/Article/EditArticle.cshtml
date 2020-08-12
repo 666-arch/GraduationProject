@@ -1,0 +1,270 @@
+﻿@using BlogSystem.Dto
+
+@{
+    ViewBag.Title = "CreateArticle";
+    Layout = "~/Views/Shared/_LayoutFront.cshtml";
+}
+@model List<BlogCategoryDto>
+
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+
+<div class="layui-container fly-marginTop">
+    <div class="fly-panel" pad20 style="padding-top: 5px;">
+        <!--<div class="fly-none">没有权限</div>-->
+        <div class="layui-form layui-form-pane">
+            <div class="layui-tab layui-tab-brief" lay-filter="user">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">发布博客</li>
+                    <li data-type="collection" lay-id="collection">编辑分类</li>
+                    <li data-type="collection" lay-id="collection">编辑博客</li>
+                </ul>
+                <div class="layui-form layui-tab-content" id="LAY_ucm" style="padding: 20px 0;">
+                    <div class="layui-tab-item layui-show">
+                        @* 用户发布文章区域 *@
+                        <form method="post" id="form-article-add" name="form-article-add" enctype="multipart/form-data">
+                            @* 对应的文章修改id *@
+                            <input type="hidden" name="actid" value="@ViewBag.actid " />
+
+                            <div class="layui-row layui-col-space15 layui-form-item">
+                                <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
+                                <div class="layui-col-md9">
+                                    <label for="title" class="layui-form-label">标题</label>
+                                    <div class="layui-input-block">
+                                        <input type="text" id="title" name="title" value="@ViewBag.atitle " required lay-verify="required" autocomplete="off" class="layui-input">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="layui-form-item layui-form-text">
+                                <div class="layui-input-block">
+                                    <textarea id="editor" name="content" type="text/plain" style="width:1024px;height:500px;"></textarea>
+                                </div>
+                            </div>
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>选择分类</legend>
+                            </fieldset>
+                            @foreach (var item in ViewBag.ategoryIds)
+                            {
+                                var IsCheck = false;
+                                foreach (var item1 in ViewBag.cateids)
+                                {
+                                    if (item1 == item.Id)
+                                    {
+                                        IsCheck = true;
+                                        break;
+                                    }
+                                }
+                                <input name="categoryIds" type="checkbox" value="@item.Id" checked="@IsCheck"> <label for="checkbox1">@item.CategoryName</label>
+                            }
+                            <br />
+                            <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                                <legend>是否设置关闭评论功能</legend>
+                            </fieldset>
+                            <select name="IsClosingComments">
+                                <option value="false">否</option>
+                                <option value="true">是</option>
+                            </select>
+                            <br />
+                            <div class="layui-form-item">
+                                <button class="layui-btn" type="submit" lay-filter="*" lay-submit id="btnEdit">保存修改并发布</button>
+                                <p style="color:red">注：保存后文章状态是已发布哦！</p>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="layui-tab-item ">
+                        <table class="layui-table" lay-even="" lay-skin="nob">
+                            <colgroup>
+                                <col width="150">
+                                <col width="150">
+                                <col width="100">
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>添加时间</th>
+                                    <th>操作</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tbody>
+                                    <tr>
+                                        <td>@item.CategoryName</td>
+                                        <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
+                                        <td>
+                                            @*<a href="#">编辑</a>*@
+                                            <a href="#" class="link-update" onclick="updateLayer('@item.Id')">编辑</a>
+                                        </td>
+                                        <td>
+                                            <a href="/Article/RemoveCategoryByUser?cateid=@item.Id" onclick="return confirm('你确定要删除这个分类吗？')">删除</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+
+                        </table>
+                        <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+                            <legend>添加分类</legend>
+                        </fieldset>
+                        <label class="layui-form-label">名称</label>
+                        <form id="form-add-categoryname" name="form-add-categoryname" enctype="multipart/form-data">
+                            <div class="layui-input-block">
+                                <input type="hidden" id="uid" name="userid" value="@Session["Userid"]" />
+                                <input type="text" id="categoryname" name="categoryname" autocomplete="off" placeholder="请输入分类名称" class="layui-input" style="width:300px;">
+                            </div>
+                            <br />
+                            <br />
+                            <button class="layui-btn" type="submit" id="btnAddCategoryname">添加</button>
+                        </form>
+                    </div>
+
+                    <div class="layui-tab-item ">
+                        <table class="layui-table" lay-even="" lay-skin="nob">
+                            <colgroup>
+                                <col width="180">
+                                <col width="150">
+                                <col width="150">
+                                <col>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th>标题</th>
+                                    <th>发布状态</th>
+                                    <th>发布时间</th>
+                                    <th>操作</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in ViewBag.article as List<ArticleDto>)
+                            {
+                                var titlesub = item.Title;
+                                if (titlesub.Length > 10)
+                                {
+                                    titlesub = titlesub.Substring(0, 10) + "...";
+                                }
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            <a href="/Article/DetailArticle?articleid=@item.Id" target="_blank">@titlesub</a>
+                                        </td>
+                                        <td>@(item.State==true?"已发布":"草稿")</td>
+                                        <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
+                                        <td>
+                                            <a href="/Article/RemoveArticleById?articleid=@item.Id" onclick="return confirm('你确定要删除这篇文章吗？')">删除文章</a>
+                                        </td>
+                                        <td>
+                                            @if (item.IsStick == 0)
+                                            {
+
+                                                <a href="#" style="color:red" onclick="SetSticky('@item.Id')" id="SetSti">设置置顶</a>
+                                            }
+                                            else
+                                            {
+                                                <a href="#" style="color:red" onclick="SetSticky('@item.Id')" id="SetSti">取消置顶</a>
+                                            }
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function SetSticky(articleid) {
+        $.ajax({
+            type: "post",
+            url: "/Article/StickyPosts",
+            data: {
+                articleid:articleid
+            },
+            success: function (msg) {
+                if (msg.code === 100) {
+                    alert('置顶成功!');
+                    window.location.reload();
+                }
+            }
+        })
+    }
+
+</script>
+<p id="ArticleContent" hidden>
+    @ViewBag.acontent
+</p>
+
+<script type="text/javascript">
+    //初始化编辑器
+    var ue = UE.getEditor('editor');
+</script>
+
+<script>
+    var u = $('#ArticleContent').text();
+    ue.ready(function () {
+        //设置富文本的内容
+        ue.setContent(u);
+    })
+</script>
+<script>
+    $("#btnEdit").click(function () {
+        if (!$('#title').val()) {
+            alert("请输入标题！");
+            return;
+        }
+        else {
+            $.ajax({
+                type: "post",
+                url: "EditArticle",
+                data: $("#form-article-add").serialize(),
+                dataType: "json",
+                success: function (msg) {
+                      alert('修改成功');
+                }
+            });
+        }
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#btnAddCategoryname").click(function () {
+            if (!$('#categoryname').val()) {
+                alert("请输入您要添加的类别！");
+                return;
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "/Article/CreateBlogCategory",
+                    data: $("#form-add-categoryname").serialize(),
+                    success: function (msg) {
+                        if (msg.status) {
+                            layer.msg(msg.data, { icon: 1 });
+                            window.location.reload();
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    function updateLayer(id) {
+        layer.open({
+            type: 2,
+            title: "修改标签类别",
+            maxmin: false,
+            shadeClose: true,
+            area: ['550px', '400px'],
+            content: 'EditCategoryByuser?id=' + id
+        })
+    }
+</script>
+
+<script>
+    SyntaxHighlighter.all();
+</script>

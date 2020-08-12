@@ -58,5 +58,6 @@ namespace BlogSystem.IBLL
 
         bool CheckUserIsFreeze(string eamil);
 
+        Task<List<UserInformation>> GetAllUserByAdminUnder();
     }
 }

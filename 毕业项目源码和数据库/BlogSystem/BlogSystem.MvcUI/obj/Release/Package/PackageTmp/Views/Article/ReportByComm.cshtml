@@ -1,0 +1,46 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <title>ReportByComm</title>
+    <script>
+        function addReport() {
+            $.ajax({
+                type: "post",
+                url: "ReportByComm",
+                dataType: "json",
+                data: $("#form-report").serialize(),
+                success: function (msg) {
+                    console.log(msg.data);
+                    $(".succs").text(msg.data);
+                    $("#rebtn").hide();
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="" style="align-items:center;padding:40px;">
+        <form id="form-report" method="post">
+            <div class="form-group">
+                <label for="content">举报原因:</label>
+                <input type="hidden" id="commentid" name="commentid" value="@ViewBag.commentid " />
+                <input type="text" class="form-control" id="content" name="content" style="width:300px;" value="@ViewBag.conten " />
+            </div>
+            <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
+            @*<button type="button" class="btn btn-warning" style="margin-right:30px;" id="btnUpdate">提交</button>*@
+            <input onclick="addReport()" type="button" name="name" value="提交" class="btn btn-warning" style="margin-right:30px;" id="rebtn"/>
+            <span class="succs" style="color: red"></span>
+        </form>
+    </div>
+</body>
+</html>

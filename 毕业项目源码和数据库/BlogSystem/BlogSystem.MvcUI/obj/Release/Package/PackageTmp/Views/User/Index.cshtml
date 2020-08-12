@@ -1,0 +1,193 @@
+﻿@using BlogSystem.Dto
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutFront.cshtml";
+    var artCollect = (List<ArticleCollectDto>) ViewBag.artCollect;
+}
+@model List<ArticleDto>
+
+    <div class="layui-container fly-marginTop fly-user-main">
+        <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+            <li class="layui-nav-item">
+                <a href="/User/UserHome?userid=@Session["Userid"]">
+                    <i class="layui-icon">&#xe609;</i>
+                    我的主页
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/User/Index">
+                    <i class="layui-icon">&#xe612;</i>
+                    用户中心
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/User/BasicSetting?userid=@Session["Userid"] ">
+                    <i class="layui-icon">&#xe620;</i>
+                    基本设置
+                </a>
+            </li>
+            <li class="layui-nav-item">
+                <a href="/User/UserMessage">
+                    <i class="layui-icon">&#xe611;</i>
+                    我的消息
+                </a>
+            </li>
+        </ul>
+
+        <div class="site-tree-mobile layui-hide">
+            <i class="layui-icon">&#xe602;</i>
+        </div>
+        <div class="site-mobile-shade"></div>
+
+        <div class="site-tree-mobile layui-hide">
+            <i class="layui-icon">&#xe602;</i>
+        </div>
+        <div class="site-mobile-shade"></div>
+
+        <div class="fly-panel fly-panel-user" pad20>
+            <div class="layui-tab layui-tab-brief" lay-filter="user">
+                <ul class="layui-tab-title" id="LAY_mine">
+                    <li data-type="mine-jie" lay-id="index" class="layui-this">我发布的文章（<span>@Model.Count()</span>）</li>
+                    <li data-type="collection" data-url="/collection/find/" lay-id="collection">我评论的文章（<span>@(ViewBag.articleByCommentUidCount == null ? "0" : ViewBag.articleByCommentUidCount)</span>）</li>
+                    <li data-type="collection" data-url="/collection/find/" lay-id="Focus">我的关注（<span>@ViewBag.focusListCount</span>）</li>
+                    <li data-type="collection" data-url="/collection/find/" lay-id="Fans">我的粉丝（<span>@ViewBag.fansListCount</span>）</li>
+                    <li data-type="collection" data-url="/collection/find/" lay-id="collect">我的收藏（<span>@ViewBag.artCollectCount </span>）</li>
+                    <li data-type="collection" data-url="/collection/find/" lay-id="collect">关注用户发布的文章</li>
+                </ul>
+                <div class="layui-tab-content" style="padding: 20px 0;">
+                    <div class="layui-tab-item layui-show">
+                        <ul class="mine-view jie-row">
+                            @foreach (var item in Model.OrderByDescending(m => m.IsStick))
+                            {
+                                <li>
+                                    <a class="jie-title" href="/Article/DetailArticle?articleid=@item.Id" target="_blank">@item.Title</a>
+                                    <i>@item.CreateTime</i>
+                                    <a class="mine-edit" href="/Article/EditArticle?articleid=@item.Id">编辑</a>
+                                    @if (!item.State)
+                                    {
+                                        <span class="layui-badge layui-bg-green fly-detail-column">草稿</span>
+                                    }
+                                    else if(item.IsStick==1)
+                                    {
+                                        <span class="layui-badge layui-bg-red fly-detail-column">已置顶</span>
+                                    }
+                                    else
+                                    {
+                                        
+                                        <span class="layui-badge layui-bg-green fly-detail-column">已发布</span>
+                                    }
+                                    <em>@(item.GoodCount)推荐/@(item.BadCount)反对</em>
+                                </li>
+                            }
+                        </ul>
+                        <div id="LAY_page"></div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <ul class="mine-view jie-row">
+                            @if (ViewBag.articleByCommentUid == null)
+                            {
+                                @*<li>还没有评论的文章</li>
+                    return;*@
+                            }
+                            else
+                            {
+                                foreach (var item in ViewBag.articleByCommentUid as List<CommentDto>)
+                                {
+                                    <li>
+                                        <a class="jie-title" href="/Article/DetailArticle?articleid=@item.ArticleId" target="_blank">@item.Title</a>
+                                        <span style="color:black">@Html.Raw(@item.Content)</span>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <i>@item.CreateTime</i>
+                                        @*<em>@(item.GoodCount)推荐/@(item.BadCount)反对</em>*@
+                                    </li>
+                                }
+                            }
+                        </ul>
+                        <div id="LAY_page1"></div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <ul class="mine-view jie-row">
+                            @foreach (var item in ViewBag.focusList)
+                            {
+                                <li style="float:left">
+                                    <img src="~/FrontPage/images/@item.ImagePath" style="width:50px;height:50px;" />
+                                    <span>昵称：</span>
+                                    <a class="jie-title" href="/User/UserHome?userid=@item.FocusUserId" target="_blank">@item.NickName</a>
+
+                                    @*<span>个人说明：</span>
+                        <a href="#">@item.Desc</a>*@
+                                </li>
+                            }
+                        </ul>
+                        <div id="LAY_page2"></div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <ul class="mine-view jie-row">
+                            @foreach (var item in ViewBag.fansList)
+                            {
+                                <li style="float:left">
+                                    <img src="~/FrontPage/images/@item.ImagePath" style="width:50px;height:50px;" />
+                                    <span>昵称：</span>
+                                    <a class="jie-title" href="/User/UserHome?userid=@item.UserId" target="_blank">@item.NickName</a>
+                                </li>
+                            }
+                        </ul>
+                        <div id="LAY_page3"></div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <ul class="mine-view jie-row">
+                            @foreach (var collect in artCollect)
+                            {
+                                <li>
+                                    <a href="/Article/DetailArticle?articleid=@collect.ArticleId">@collect.Title</a>
+                                    <span class="layui-badge layui-bg-green fly-detail-column">已收藏</span>
+                                </li>
+                            }
+                        </ul>
+                        <div id="LAY_page3"></div>
+                    </div>
+
+                    <div class="layui-tab-item">
+                        <ul class="mine-view jie-row">
+                            @foreach (var item in ViewBag.focusList as List<FansDto>)
+                            {
+                                foreach (var items in ViewBag.allArt as List<ArticleDto>)
+                                {
+                                    if (items.UserId == item.FocusUserId)
+                                    {
+                                        <li>
+                                            <a class="jie-title" href="/Article/DetailArticle?articleid=@items.Id" target="_blank">@items.Title</a>
+                                            <a class="jie-title" href="/User/UserHome?userid=@item.FocusUserId" target="_blank">@item.NickName</a>
+                                            <span class="layui-badge layui-bg-orange fly-detail-column">作者</span>
+                                        </li>
+                                    }
+                                }
+                            }
+                        </ul>
+                        <div id="LAY_page2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+    //举报人举报成功后信息反馈机制
+    window.onload=function() {
+        $.ajax({
+            type: "get",
+            url: "ReportFeedback",
+            dataType: "json",
+            success: function (msg) {
+                if (msg.code === 100) {
+                    alert('系统信息：您的举报信息反馈进度已更新，在我的消息中点击确认后将不再提示');
+                } else {
+                    return;
+                }
+            }
+        });
+    }
+</script>

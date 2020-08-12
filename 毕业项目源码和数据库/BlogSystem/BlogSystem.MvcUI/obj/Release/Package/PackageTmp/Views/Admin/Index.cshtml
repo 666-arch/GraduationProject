@@ -1,0 +1,131 @@
+﻿@using BlogSystem.Dto
+@using PagedList.Mvc
+@model PagedList.IPagedList<AdminDto>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+    //var admin = (List<AdminDto>) ViewBag.admin;
+}
+    <link href="~/Content/PagedList.css" rel="stylesheet" />
+    <style>
+        .btn1 {
+            background-color: #20222A;
+            background-image: linear-gradient(to right,#20222A,#3E4251);
+            display: inline-block;
+            height: 38px;
+            line-height: 38px;
+            padding: 0 18px;
+            font-family: "微软雅黑";
+            -webkit-transition: all .3s;
+            color: #FFF;
+            white-space: nowrap;
+            text-align: center;
+            font-size: 14px;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+        }
+    </style>
+    <div class="result-wrap">
+    <form  method="post">
+        <div class="result-title">
+            <input type="text" name="account" value="@ViewBag.account" placeholder="输入管理员名称" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+            <input type="submit" name="name" value="搜索" class="btn1" />
+            <div class="result-list">
+                <a onclick="addLayer()" ><i class="icon-font"></i>添加管理员</a>
+                <a id="batchDel" onclick="manyAdmin_del()"><i class="icon-font"></i>批量删除</a>
+            </div>
+        </div>
+        <div class="result-content">
+            <table class="result-tab" width="100%">
+                <tr>
+                    <th class="tc" width="5%"><input type="checkbox" class="allChoose" /></th>
+                    <th>管理员</th>
+                    <th>密码</th>
+                    <th>创建时间</th>
+                    <th>操作</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
+                        <td>@item.Account</td>
+                        <td>@item.Password</td>
+                        <td>@item.CreateTime</td>
+                        <td>
+                            <a class="link-update" onclick="updateLayer('@item.Id')">修改</a>
+                            <a class="link-del" onclick="user_del('@item.Id',this)">删除</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="list-page">
+                每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
+                @*@Html.PagedListPager(Model, page => Url.Action("Index", new { page }))*@
+            </div>
+        </div>
+    </form>
+</div>
+<script type="text/javascript">
+    function addLayer() {
+        layer.open({
+            type: 2,//设置层类型,2:iframe层
+            title: '新增用户',//信息标题
+            maxmin: true,//窗口是否显示最大化最小化
+            shadeClose: false,//是否通过点击关闭遮罩层
+            area: ['550px', '400px'],//iframe长宽
+            content: 'CreateAdmin'//可用传入任意类型,这里是一个URL
+        });
+    }
+
+    function user_del(id, obj) {
+        //参数1：询问,参数2：回调函数（参数自动补齐）
+        layer.confirm('确定要删除吗？', function (index) {
+            //请求后台
+            $.post("RemoveAdminById", { id: id });
+            //查找每个obj元素的父元素进行删除
+            $(obj).parents("tr").remove();
+            //提示
+            layer.msg('删除成功！', { icon: 1, time: 1000 });
+        });
+    }
+    function updateLayer(id) {
+        layer.open({
+            type: 2,
+            title: '修改用户信息',
+            maxmin: true,
+            area: ['550px', '400px'],
+            content: 'EditAdmin?id=' + id
+        });
+    }
+
+    $('.allChoose').on('change',
+        function() {
+            if ($(this).is(':checked')) {
+                $('.singleChoose').prop('checked', 'checked');
+            } else {
+                $('.singleChoose').prop('checked', '');
+            }
+        });
+
+    function manyAdmin_del() {
+        var idStr = '';
+        $(".singleChoose").each(function () {
+            if ($(this)[0].checked) {
+                idStr += $(this).val() + ',';
+            }
+        });
+        if (!idStr) {
+            alert('请至少勾选一个进行删除！');
+            return;
+        }
+        layer.confirm('确定要删除选中的吗？',
+            function(index) {
+                $.get("ManyRemoveAdmin", { idStr: idStr });
+                layer.msg('删除成功！', { icon: 1, time: 2000 });
+                window.location.reload(); //重新刷新
+            });
+
+    }
+</script>
+

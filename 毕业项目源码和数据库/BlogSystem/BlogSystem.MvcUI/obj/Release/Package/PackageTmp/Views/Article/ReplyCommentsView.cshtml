@@ -1,0 +1,64 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    <title>ReplyCommentsView</title>
+    <script>
+        function addReplyComment() {
+            if (!$("#content").val()) {
+                alert('请输入回复内容');
+                return;
+            } else {
+                $.ajax({
+                    type: "post",
+                    url: "ReplyCommentsView",
+                    dataType:"json",
+                    data: $("#form-reply").serialize(),
+                    success:function(msg) {
+                        if (msg.code===100) {
+                            $(".succs").text("回复成功");
+                            $("#rebtn").hide();
+                            //让打开这个窗口的父窗口刷新,然后本子窗口关闭
+                            window.parent.location.reload();
+                            var index = parent.layer.getFrameIndex(window.name);
+                            parent.layer.close(index);
+                        }
+                    }
+                });
+            }
+            
+        }
+    </script>
+</head>
+<body>
+<div class="" style="align-items: center; padding: 40px;">
+    @*@ViewBag.commentid
+    @ViewBag.replyUsId
+    @ViewBag.type*@
+    <form id="form-reply" method="post">
+        <div class="form-group">
+            <label for="content">回复:</label>
+            <input type="hidden" id="commentid" name="commentid" value="@ViewBag.commentid " />
+            <input type="hidden" name="replyUsId" value="@ViewBag.replyUsId" />
+            <input type="hidden" name="type" value="@ViewBag.type" />
+            <input type="text" class="form-control" id="content" name="content" style="width: 300px;" value="" />
+            <textarea class="form-control">
+
+            </textarea>
+        </div>
+        <input type="hidden" id="userid" name="userid" value="@Session["Userid"]" />
+        <input onclick="addReplyComment()" type="button" value="提交回复" class="btn btn-warning" style="margin-right: 30px;" id="rebtn" />
+        <span class="succs" style="color: red"></span>
+    </form>
+</div>
+</body>
+</html>

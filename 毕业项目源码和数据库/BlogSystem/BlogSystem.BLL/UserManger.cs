@@ -130,7 +130,8 @@ namespace BlogSystem.BLL
                         FansCount = m.FansCount,
                         FocusCount = m.FocusCount,
                         PersonalDescription = m.PersonalDescription, 
-                        CreateTime = m.CreateTime
+                        CreateTime = m.CreateTime,
+                        IsFreeze=m.IsFreeze
                     }).FirstAsync(); 
                 }
                 else
@@ -294,7 +295,30 @@ namespace BlogSystem.BLL
                 return data;
             }
         }
-
+        public async Task<List<UserInformation>> GetAllUserByAdminUnder()        //管理员查询所有用户
+        {
+            using (IDAL.IUserService userSvc = new DAL.UserService())
+            {
+                var data = await userSvc
+                     .GetAllAsync()
+                     .Where(m=>m.IsFreeze==false)
+                     .OrderByDescending(m => m.FansCount)
+                     .Select(m => new UserInformation()
+                     {
+                         Id = m.Id,
+                         Eamil = m.Eamil,
+                         NickName = m.NickName,
+                         Password = m.Password,
+                         ImagePath = m.ImagePath,
+                         PersonalDescription = m.PersonalDescription,
+                         CreateTime = m.CreateTime,
+                         FansCount = m.FansCount,
+                         FocusCount = m.FocusCount
+                     }).ToListAsync();
+                return data;
+            }
+        }
+        
         public async Task<List<UserInformation>> GetAllUserByAdminLayUi(int pageSize, int pageIndex)
         {
             using (IUserService userSvc = new UserService())

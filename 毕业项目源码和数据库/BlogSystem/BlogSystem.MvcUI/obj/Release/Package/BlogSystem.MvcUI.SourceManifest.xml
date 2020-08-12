@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<sitemanifest>
+  <IisApp path="F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.MvcUI\obj\Release\Package\PackageTmp" />
+  <setAcl path="F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.MvcUI\obj\Release\Package\PackageTmp" setAclResourceType="Directory" />
+  <setAcl path="F:\毕业设计\毕业项目源码和数据库\BlogSystem\BlogSystem.MvcUI\obj\Release\Package\PackageTmp" setAclUser="anonymousAuthenticationUser" setAclResourceType="Directory" />
+</sitemanifest>

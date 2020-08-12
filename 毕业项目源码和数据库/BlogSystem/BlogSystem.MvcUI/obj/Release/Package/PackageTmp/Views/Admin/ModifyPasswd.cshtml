@@ -1,0 +1,73 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/BackPage/css/admin_login.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/FrontPage/layui/layui.js"></script>
+    <link href="~/FrontPage/layui/css/layui.css" rel="stylesheet" />
+    <script>
+        $(document).ready(function () {
+            $("#btn-modify").click(function(){
+                if (!$('#password').val()) {
+                    alert('请输入要修改的密码');
+                    return;
+                } if ($('#password').val()==$('#pwd').val()) {
+                    alert('不能和旧密码一致');
+                    return;
+                } if ($('#password').val()!=$('#newPassword').val()) {
+                    alert('两次密码输入不一致');
+                    return;
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "ModifyPasswd",
+                        data: $("#form-modify-pwd").serialize(),
+                        success: function () {
+                            alert('密码重置成功');
+                            window.setTimeout("window.location.href='Login'", 1000);
+                        }
+                    })
+                }
+            })
+        })
+    </script>
+    <title>修改密码</title>
+</head>
+<body>
+    <div class="admin_login_wrap">
+        <h1>修改密码</h1>
+        <div class="adming_login_border">
+            <div class="admin_input">
+                <form id="form-modify-pwd">
+                    <ul class="admin_items">
+                        <li>
+                            <input type="hidden" id="adminId" name="adminId" value="@ViewBag.id" />
+                            <input type="hidden" id="pwd" name="pwd" value="@ViewBag.pwd" />
+                            <label for="account">用户名：</label>
+                            <input type="text" name="account" value="@ViewBag.account " id="user" size="35" class="admin_input_style" readonly />
+                        </li>
+                        <li>
+                            <label for="password">密码：</label>
+                            <input type="password" name="password" value="" id="password" size="35" class="admin_input_style" />
+                        </li>
+                        <li>
+                            <label for="newPassword">请重复输入密码：</label>
+                            <input type="password" name="newPassword" value="" id="newPassword" size="35" class="admin_input_style" />
+                        </li>
+                        <li>
+                            <button type="button" tabindex="3" class="btn btn-primary" id="btn-modify">提交修改</button>
+                        </li>
+                    </ul>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

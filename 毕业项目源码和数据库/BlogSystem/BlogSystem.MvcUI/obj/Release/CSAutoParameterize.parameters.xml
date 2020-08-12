@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="BlogContext-Web.config Connection String" description="BlogContext 由应用程序在 web.config 中用来访问数据库的连接字符串。" defaultValue="server=.;database=BlogSystem;uid=sa;pwd=123456" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="F:\\毕业设计\\毕业项目源码和数据库\\BlogSystem\\BlogSystem\.MvcUI\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='BlogContext']/@connectionString" />
+  </parameter>
+</parameters>

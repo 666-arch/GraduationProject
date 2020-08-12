@@ -1,0 +1,85 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link href="~/BackPage/css/admin_login.css" rel="stylesheet" />
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <link href="~/FrontPage/layui/css/layui.css" rel="stylesheet" />
+    <script src="~/FrontPage/layui/layui.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#btn-submit").click(function() {
+                if (!$('#account').val()) {
+                    alert('请输入账号');
+                    return;
+                }
+                if (!$('#password').val()) {
+                    alert('请输入密码');
+                    return;
+                } else {
+                    $.ajax({
+                        type: "post",
+                        url: "Login",
+                        data: $("#form-login").serialize(),
+
+                        success: function (data) {
+                            window.location.href = 'Index';
+                            //if (data.Success) {
+                                
+                            //    window.token = data.Token;
+                            //    $.ajax({
+                            //        url: "/Admin/Index",
+                            //        method: "post",
+                            //        headers: { "auth": window.token },//通过请求头来发送token
+                            //        data: {
+                            //            andOperation: ["best buy", "first"],
+                            //            from: "0",
+                            //            to:"2000"
+                            //        },
+                            //        success: function (data) {
+                            //            console.log(data);
+                            //            window.location.href = 'Index';
+                            //        }
+                            //    });
+                            //} else {
+                            //    alert("登录失败:" + data.Message);
+                            //}
+                        }
+                    });
+                }
+            });
+        })
+    </script>
+
+    <title>后台登录</title>
+</head>
+<body>
+    <div class="admin_login_wrap" >
+        <h1>学智博客</h1>
+        <div class="admin_input">
+            <form id="form-login" method="post">
+                <ul class="admin_items">
+                    <li>
+                        <label for="account">用户名：</label>
+                        <input type="text" name="account" id="account" value="" size="35" class="admin_input_style" />
+                    </li>
+                    <li>
+                        <label for="password">密码：</label>
+                        <input type="password" name="password" id="password" value="" size="35" class="admin_input_style" />
+                    </li>
+                    <li>
+                        <button type="button" tabindex="3" value="提交" class="btn btn-primary" id="btn-submit">登录</button>
+                    </li>
+                </ul>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -326,5 +326,17 @@ namespace BlogSystem.BLL
                 }
             }
         }
+        public async Task EditUserRestoreByAdmin(Guid userid)    //管理员有权冻结用户账号
+        {
+            using (IUserService userService = new UserService())
+            {
+                var data = await userService.GetAllAsync().FirstAsync(m => m.Id == userid);
+                if (data != null)
+                {
+                    data.IsFreeze = false;
+                    await userService.EditAsync(data);
+                }
+            }
+        }
     }
 }

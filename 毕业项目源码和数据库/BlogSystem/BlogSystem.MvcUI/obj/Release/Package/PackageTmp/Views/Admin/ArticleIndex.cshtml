@@ -1,0 +1,132 @@
+﻿@using BlogSystem.Dto
+@using PagedList.Mvc
+@model PagedList.IPagedList<ArticleDto>
+@{
+    ViewBag.Title = "ArticleIndex";
+    Layout = "~/Views/Shared/_LayoutBack.cshtml";
+}
+<link href="~/Content/PagedList.css" rel="stylesheet" />
+<style>
+    .btn1 {
+        background-color: #FF5722;
+        display: inline-block;
+        height: 38px;
+        line-height: 38px;
+        padding: 0 18px;
+        font-family: "微软雅黑";
+        -webkit-transition: all .3s;
+        color: #FFF;
+        white-space: nowrap;
+        text-align: center;
+        font-size: 14px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
+    }
+</style>
+<div class="search-wrap">
+    <div class="search-content">
+        <form action="/jscss/admin/design/index" method="post">
+            <table class="search-tab">
+            </table>
+        </form>
+    </div>
+</div>
+<div class="result-wrap">
+    <form name="myform" id="myform" method="post">
+        <input type="text" id="nickname" name="nickname" value="@ViewBag.nickname" placeholder="请输入作者" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+        <input type="text" id="title" name="title" value="@ViewBag.titles" placeholder="请输入文章标题" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid burlywood" />
+        <input type="text" placeholder="开始日期" name="date1" id="date1" autocomplete="off" class="layui-input" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid green">
+        —
+        <input type="text" placeholder="结束日期" name="date" id="date" autocomplete="off" class="layui-input" style="height: 32px; width: 220px; border-radius: 3px; border: 1px solid green">
+        <select id="state" name="state" onchange="searchBystate()" lay-filter="aihao" style="height: 36px;">
+            <option value="">---请选择---</option>
+            <option value="true">已发布</option>
+            <option value="false">未发布</option>
+        </select>
+        <script>
+            function searchBystate() {
+                var state = $("#state").find("option:selected").val();
+                var form = document.getElementById("myform");
+                form.submit();
+            }
+        </script>
+        <input type="submit" name="name" value="搜索" class="btn1" />
+        <div class="result-title">
+            <div class="result-list">
+                @*<a id="batchDel" href="javascript:void(0)" onclick="manyArticles_del()"><i class="icon-font"></i>批量删除</a>*@
+            </div>
+        </div>
+    </form>
+        <div class="result-content">
+            <table class="result-tab" width="100%" style="text-align:center">
+                <tr style="text-align:center">
+                    <th class="tc" width="5%"><input class="allChoose" name="" type="checkbox"></th>
+                    <th style="text-align:center">标题</th>
+                    <th style="text-align:center">作者</th>
+                    <th style="text-align:center">发布状态</th>
+                    <th style="text-align:center">更新时间</th>
+                    <th style="text-align:center">操作</th>
+                </tr>
+                @foreach (var item in Model)
+                {
+
+                    var title = item.Title;
+                    if (title.Length > 16)  //最多只取16个字符放在表格中，免得多了，影响布局的美观！
+                    {
+                        title = title.Substring(0, 15) + "...";
+                    }
+                    <tr>
+                        <td class="tc"><input name="id[]" value="@item.Id" type="checkbox" class="singleChoose"></td>
+                        <td>@title</td>
+                        <td>@item.NickName</td>
+                        <td style="width:180px">@(item.State==true?"已发布":"草稿")</td>
+                        <td>@(item.CreateTime.ToString("yyyy-MM-dd"))</td>
+                        <td>
+                            @*<a class="link-update" onclick="Preview()" href="/Article/DetailArticle?articleid=@item.Id" target="_blank">预览</a>*@
+                            @*<a class="article-delAdmin" href="/Article/DeleteArticleAdmin?articleid=@item.Id">移除文章</a>*@
+                            <a class="link-update" onclick="Preview('@item.Id')">预览</a>
+                            <a class="art-del" onclick="art_del('@item.Id',this)">移除文章</a>
+                        </td>
+                    </tr>
+                }
+            </table>
+            <div class="list-page">
+                每页 @Model.PageSize 条记录，共 @Model.PageCount 页，当前第 @Model.PageNumber 页
+                @Html.PagedListPager(Model, page => Url.Action("ArticleIndex", new { page }))
+            </div>
+        </div>
+</div>
+<script type="text/javascript">
+
+    function Preview(id)
+    {
+        layer.open({
+            type: 2,
+            titile: "文章预览",
+            maxmin: false,
+            shadeClose: true, //点击遮罩关闭层
+            area: ['760px', '600px'],
+            content: 'PreviewArticle?id='+id
+        })
+    }
+
+    function art_del(articleid,obj) {
+        layer.confirm('确定是否要移除此文章？',
+            function(index) {
+                $.post("DeleteArticleAdmin", { articleid: articleid });
+                $(obj).parent("tr").remove();
+                layer.msg('移除成功!',{icon:1,time:1000});
+            });
+    }
+
+    $(".allChoose").on('change',
+        function() {
+            if ($(this).is(':checked')) {
+                $(".singleChoose").prop('checked', 'checked');
+            } else {
+                $(".singleChoose").prop('checked', '');
+            }
+        });
+
+</script>

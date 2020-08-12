@@ -388,7 +388,30 @@ namespace BlogSystem.BLL
                     }).ToListAsync();
             }
         }
+        public async Task<List<ArticleDto>> GetAllArticleIsFreeze(string search) //查询所有文章显示在主页(用户也可模糊查询)
+        {
+            using (IArticleService articleSvc = new ArticleService())
+            {
+                return await articleSvc.GetAllAsync().Include(m => m.User)
+                    .Where(m => m.State == true&m.User.IsFreeze==false)
+                    .Where(m => string.IsNullOrEmpty(search) || m.Title.Contains(search) || m.User.NickName.Contains(search))
+                    .Select(m => new ArticleDto()
+                    {
+                        Id = m.Id,
+                        Title = m.Title,
+                        Content = m.Content,
+                        CreateTime = m.CreateTime,
+                        GoodCount = m.GoodCounnt,
+                        BadCount = m.BadCount,
+                        ImagePath = m.User.ImagePath,
+                        State = true,
+                        NickName = m.User.NickName,
+                        UserId = m.UserId
 
+                    }).ToListAsync();
+            }
+        }
+        
         public async Task CreateComment(Guid userid, Guid articleId, string content)  //用户评论文章
         {
             using (ICommentService commentSvc = new CommentService())
@@ -438,7 +461,6 @@ namespace BlogSystem.BLL
                         CreateTime=m.CreateTime,
                         UserId=m.UserId,
                         Content=m.Content
-                     
                     }).ToListAsync();
                 return data;
             }
@@ -534,7 +556,6 @@ namespace BlogSystem.BLL
                 return data;
             }
         }
-
 
         public async Task RemoveCommentByUserId(Guid commentid)   //用户删除评论
         {
@@ -676,6 +697,7 @@ namespace BlogSystem.BLL
             using (IUserService user = new UserService())
             {
                 var data= await user.GetAllAsync()
+                    .Where(m=>m.IsFreeze==false)
                     .OrderBy(m=>Guid.NewGuid())
                     .Take(5)
                     .Select(m => new UserInformation()
