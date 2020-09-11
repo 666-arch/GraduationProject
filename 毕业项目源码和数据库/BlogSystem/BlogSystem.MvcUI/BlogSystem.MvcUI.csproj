@@ -887,6 +887,8 @@
     <Content Include="FrontPage\layui\Content\Layui-KnifeZ\font\iconfont.svg" />
     <Content Include="FrontPage\layui\Content\Layui-KnifeZ\font\iconfont.ttf" />
     <Content Include="FrontPage\layui\Content\Layui-KnifeZ\font\iconfont.woff" />
+    <Content Include="ClassDiagram1.cd" />
+    <Content Include="ClassDiagram2.cd" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />

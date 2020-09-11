@@ -145,6 +145,7 @@ namespace BlogSystem.MvcUI.Controllers
             return RedirectToAction("Index", "Home");
         }
         [HttpPost]
+        //发布评论
         public async Task<ActionResult> CreateComment(Guid articleid, string content)
         {
             Guid userid = Guid.Parse(Session["Userid"].ToString());
