@@ -155,6 +155,7 @@ namespace BlogSystem.MvcUI.Controllers
         }
 
         [HttpPost]
+        //查询
         public async Task<ActionResult> Recommend(Guid articleid)
         {
             IArticleManger articleManger = new ArticleManger();
@@ -278,6 +279,7 @@ namespace BlogSystem.MvcUI.Controllers
             return View();
         }
         [HttpPost]
+        //举报评论
         public async Task<ActionResult> ReportByComm(Guid userid, Guid commentid, string content)
         {
             IArticleManger article=new ArticleManger();

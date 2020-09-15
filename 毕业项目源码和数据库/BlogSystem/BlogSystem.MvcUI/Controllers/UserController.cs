@@ -21,6 +21,7 @@ namespace BlogSystem.MvcUI.Controllers
     {
         // GET: User
         [BlogAuth]
+        //用户主页
         public async Task<ActionResult> Index()
         {
             Guid userid = Guid.Parse(Session["Userid"].ToString());
@@ -46,7 +47,6 @@ namespace BlogSystem.MvcUI.Controllers
                 ViewBag.articleByCommentUid = articleByCommentUidList;  //保存评论的文章集合
                 ViewBag.articleByCommentUidCount = articleByCommentUidList.Count(); //保存评论文章数
             }
-
             List<ArticleCollectDto> articleCollectList=await userMag.GetAllArticleCollectByUser(userid);    //我的收藏
             ViewBag.artCollect = articleCollectList;
             ViewBag.artCollectCount = articleCollectList.Count();
@@ -190,6 +190,7 @@ namespace BlogSystem.MvcUI.Controllers
         }
         [BlogAuth]
         [HttpGet]
+        //用户基本设置
         public async Task<ActionResult> BasicSetting(Guid userid)  //显示个人信息
         {
             IUserMnager userMag = new UserManger();
@@ -211,7 +212,8 @@ namespace BlogSystem.MvcUI.Controllers
         }
         [BlogAuth]
         [HttpPost]
-        public async Task<ActionResult> SetPassword(string newPassword, string pwd) //修改密码
+        //修改密码
+        public async Task<ActionResult> SetPassword(string newPassword, string pwd) 
         {
             string emails = Session["Logname"].ToString();
             IUserMnager userMag = new UserManger();
