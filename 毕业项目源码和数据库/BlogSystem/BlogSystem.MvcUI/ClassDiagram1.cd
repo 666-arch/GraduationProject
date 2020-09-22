@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="BlogSystem.MvcUI.Controllers.ArticleController">
-    <Position X="4.25" Y="0.5" Width="2" />
+    <Position X="4.25" Y="1" Width="2" />
     <Members>
       <Method Name="CancelCollectByUser" Hidden="true" />
       <Method Name="CreateArticle" Hidden="true" />
@@ -18,6 +18,9 @@
       <Method Name="Opposition" Hidden="true" />
       <Method Name="RemoveArticleById" Hidden="true" />
       <Method Name="RemoveCategoryByUser" Hidden="true" />
+      <Method Name="ReplyCommentsView" Hidden="true" />
+      <Method Name="ReportByComm" Hidden="true" />
+      <Method Name="ReturnCommentsView" Hidden="true" />
       <Method Name="StickyPosts" Hidden="true" />
     </Members>
     <TypeIdentifier>
